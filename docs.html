@@ -274,6 +274,16 @@ body{font-family:'Inter',-apple-system,sans-serif;font-size:14px;line-height:1.6
   color:var(--text-3);margin-top:.35rem;text-transform:uppercase;
 }
 
+/* ── INTRO BODY ── */
+.intro-body{padding:2rem 2.25rem 2.5rem 3rem;display:flex;flex-direction:column;gap:1.75rem;max-width:720px}
+.intro-section-title{
+  font-family:'Source Serif 4',Georgia,serif;
+  font-size:.82rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;
+  color:var(--accent);margin-bottom:.55rem;
+}
+.intro-body p{font-size:.88rem;line-height:1.75;color:var(--text-2)}
+.intro-body strong{color:var(--text);font-weight:600}
+
 /* ── sem aside (intro) ── */
 .hide-aside .doc-aside{display:none}
 .hide-aside .doc-main{flex:1}
@@ -359,7 +369,7 @@ body{font-family:'Inter',-apple-system,sans-serif;font-size:14px;line-height:1.6
         <div class="intro-hero">
           <span class="hero-eyebrow">MDMS Brasil · Recife</span>
           <h1 class="hero-title"><em>Inquérito APS por WhatsApp</em> — Guia de replicação</h1>
-          <p class="hero-lead">Documentação das etapas e subetapas do inquérito realizado em Recife. Desenvolvido para que outras equipes possam <strong>replicar ou adaptar</strong> a metodologia em seus contextos institucionais.</p>
+          <p class="hero-lead">Uma metodologia de baixo custo e alto alcance para avaliar a qualidade da Atenção Primária à Saúde pela perspectiva do usuário — usando o <strong>WhatsApp</strong> como canal de coleta e o <strong>e-SUS APS</strong> como base amostral.</p>
         </div>
 
         <!-- Stat row -->
@@ -415,6 +425,22 @@ body{font-family:'Inter',-apple-system,sans-serif;font-size:14px;line-height:1.6
               <div class="etapa-card-desc">Limpeza e validação da base, ponderação e análises de representatividade, elaboração de relatórios técnicos e analíticos.</div>
               <div class="etapa-card-sub">3 subetapas</div>
             </div>
+          </div>
+        </div>
+
+        <!-- Contexto e relevância -->
+        <div class="intro-body">
+          <div class="intro-section">
+            <h2 class="intro-section-title">Por que isso é relevante</h2>
+            <p>Avaliar a qualidade da Atenção Primária à Saúde a partir da perspectiva do usuário é essencial para orientar decisões de gestão — mas pesquisas desse tipo historicamente enfrentam dois obstáculos: <strong>custo operacional elevado</strong> e <strong>longos ciclos de coleta</strong>. Inquéritos telefônicos tradicionais exigem estrutura de call center; pesquisas presenciais demandam equipe de campo extensiva. O resultado é que dados sobre a experiência do usuário chegam ao gestor com meses de defasagem, limitando sua utilidade para o planejamento.</p>
+          </div>
+          <div class="intro-section">
+            <h2 class="intro-section-title">O que este inquérito demonstra</h2>
+            <p>Ao utilizar o WhatsApp como canal de entrega — plataforma presente no cotidiano de mais de 90% dos brasileiros — o estudo <strong>reduz drasticamente o custo e o tempo do ciclo de coleta</strong>, ao mesmo tempo em que amplia o alcance para populações dificilmente atingidas por outros meios. A base cadastral do e-SUS APS elimina a necessidade de listagem de domicílios, permitindo sorteio probabilístico direto a partir dos próprios registros do sistema público de saúde.</p>
+          </div>
+          <div class="intro-section">
+            <h2 class="intro-section-title">Inovação metodológica</h2>
+            <p>O uso do <strong>PCATool-Brasil</strong> — instrumento validado para mensurar os atributos da atenção primária segundo o modelo de Barbara Starfield — foi adaptado para linguagem conversacional no WhatsApp, viabilizando a coleta em escala sem perda de rigor científico. O delineamento quase-experimental, comparando unidades USF e USF+, gera evidência causal direta para decisões de política de APS.</p>
           </div>
         </div>
       </div>
