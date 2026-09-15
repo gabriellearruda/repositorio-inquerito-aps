@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Etapas do Inquérito — APS Recife</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,300;8..60,400;8..60,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --sidebar-bg:  #0A1356;
+  --sidebar-w:   272px;
+  --header-h:    48px;
+  --content-bg:  #FDFBF7;
+  --right-bg:    #F5F2EC;
+  --right-w:     320px;
+
+  --accent:      #101B7A;
+  --accent-2:    #FFCB37;
+  --coral:       #E36A57;
+  --rule:        rgba(22,36,92,0.12);
+  --rule-dark:   rgba(255,255,255,0.07);
+
+  --text:        #1A1A2E;
+  --text-2:      #4F5360;
+  --text-3:      #9194A1;
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{height:100%}
+body{font-family:'Inter',-apple-system,sans-serif;font-size:14px;line-height:1.65;background:var(--content-bg);color:var(--text-2);height:100%;overflow:hidden}
+
+/* ── HEADER ── */
+.doc-header{
+  position:fixed;top:0;left:0;right:0;z-index:300;height:var(--header-h);
+  background:var(--sidebar-bg);border-bottom:1px solid var(--rule-dark);
+  display:flex;align-items:center;
+}
+.dh-brand{
+  width:var(--sidebar-w);flex-shrink:0;
+  display:flex;align-items:center;gap:.6rem;
+  padding:0 1.4rem;border-right:1px solid var(--rule-dark);
+}
+.dh-logo{
+  font-family:Georgia,'Times New Roman',serif;font-size:.9rem;font-weight:700;
+  color:#fff;text-decoration:none;line-height:1.2;
+}
+.dh-logo span{color:var(--accent-2);font-weight:400;font-size:.75rem;display:block;letter-spacing:.02em}
+.dh-center{flex:1;padding:0 1.5rem}
+.dh-title{font-size:.8rem;color:rgba(255,255,255,.45);font-weight:500}
+.dh-right{padding:0 1.25rem;display:flex;align-items:center;gap:1rem}
+.dh-back{font-size:.72rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,.35);text-decoration:none;transition:color .15s}
+.dh-back:hover{color:rgba(255,255,255,.8);text-decoration:none}
+.dh-tag{font-size:.68rem;font-weight:700;color:var(--accent-2);background:rgba(255,203,55,.12);padding:.15rem .55rem;letter-spacing:.04em}
+
+/* ── SHELL ── */
+.doc-shell{display:flex;height:100%}
+
+/* ── SIDEBAR ── */
+.doc-nav{
+  width:var(--sidebar-w);flex-shrink:0;
+  background:var(--sidebar-bg);
+  height:100%;overflow-y:auto;
+  padding:1.5rem 0 4rem;
+  border-right:1px solid var(--rule-dark);
+}
+.doc-nav::-webkit-scrollbar{width:3px}
+.doc-nav::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:2px}
+
+.nav-group{margin-bottom:.5rem}
+.nav-group-label{
+  font-size:.6rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;
+  color:rgba(255,255,255,.22);padding:.75rem 1.4rem .35rem;display:block;
+}
+.nav-etapa{
+  display:flex;align-items:center;gap:.6rem;width:100%;text-align:left;
+  padding:.38rem 1.4rem;border:none;background:none;cursor:pointer;
+  font-size:.79rem;font-weight:600;color:rgba(255,255,255,.45);
+  font-family:inherit;transition:color .12s,background .12s;
+}
+.nav-etapa:hover{color:rgba(255,255,255,.85);background:rgba(255,255,255,.04)}
+.nav-etapa.active{color:#fff;background:rgba(255,255,255,.07)}
+.nav-etapa-num{
+  width:20px;height:20px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:.65rem;font-weight:700;flex-shrink:0;
+  border:1.5px solid rgba(255,255,255,.2);color:rgba(255,255,255,.35);
+}
+.nav-etapa.active .nav-etapa-num{border-color:var(--accent-2);color:var(--accent-2);background:rgba(255,203,55,.1)}
+
+.nav-sub{
+  display:block;width:100%;text-align:left;
+  padding:.3rem 1.4rem .3rem 3.2rem;border:none;background:none;cursor:pointer;
+  font-size:.75rem;color:rgba(255,255,255,.35);font-family:inherit;
+  transition:color .12s,background .12s;border-left:none;
+}
+.nav-sub:hover{color:rgba(255,255,255,.75);background:rgba(255,255,255,.03)}
+.nav-sub.active{color:var(--accent-2);font-weight:600;background:rgba(255,203,55,.05)}
+
+/* ── CONTENT ── */
+.doc-content{flex:1;min-width:0;display:flex;height:100%;overflow:hidden}
+
+.doc-main{flex:1;min-width:0;overflow-y:auto;background:var(--content-bg)}
+.doc-main::-webkit-scrollbar{width:5px}
+.doc-main::-webkit-scrollbar-thumb{background:var(--rule);border-radius:3px}
+
+/* ── RIGHT PANEL ── */
+.doc-aside{
+  width:var(--right-w);flex-shrink:0;
+  background:var(--right-bg);border-left:1px solid var(--rule);
+  overflow-y:auto;
+}
+.doc-aside::-webkit-scrollbar{width:3px}
+.doc-aside::-webkit-scrollbar-thumb{background:var(--rule);border-radius:2px}
+
+/* ── PANEL visibility ── */
+.doc-panel{display:none}.doc-panel.active{display:block}
+
+/* ── SECTION LAYOUT ── */
+.section-wrap{padding:2.5rem 2.25rem;border-bottom:1px solid var(--rule);max-width:640px}
+.aside-wrap{padding:2rem 1.5rem;border-bottom:1px solid var(--rule)}
+
+/* ── TYPOGRAPHY ── */
+.etapa-badge{
+  display:inline-flex;align-items:center;gap:.4rem;
+  font-size:.65rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--accent);margin-bottom:.6rem;
+}
+.etapa-badge-num{
+  width:18px;height:18px;border-radius:50%;background:var(--accent);
+  color:#fff;display:flex;align-items:center;justify-content:center;
+  font-size:.6rem;font-weight:700;flex-shrink:0;
+}
+.section-title{
+  font-family:Georgia,'Times New Roman',serif;font-size:1.4rem;font-weight:700;
+  color:var(--text);margin-bottom:.6rem;line-height:1.25;
+}
+.section-lead{font-size:.87rem;color:var(--text-2);line-height:1.75;margin-bottom:1.25rem}
+
+.sub-badge{
+  font-size:.6rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--accent);margin-bottom:.35rem;display:block;margin-top:1.75rem;
+}
+.sub-title{
+  font-family:Georgia,'Times New Roman',serif;font-size:1.05rem;font-weight:700;
+  color:var(--text);margin-bottom:.5rem;line-height:1.3;
+}
+.body-text{font-size:.84rem;color:var(--text-2);line-height:1.75;margin-bottom:.65rem}
+.body-text:last-child{margin-bottom:0}
+
+/* ── WIP ── */
+.wip{
+  display:inline-flex;align-items:center;gap:.4rem;
+  font-size:.72rem;color:var(--text-3);
+  border:1px solid var(--rule);padding:.3rem .7rem;margin-top:.35rem;
+}
+.wip::before{content:'○';font-size:.6rem}
+
+/* ── ASIDE labels ── */
+.aside-label{
+  font-size:.62rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--text-3);margin-bottom:.6rem;display:block;
+}
+.aside-section{margin-bottom:1.5rem}
+.aside-section:last-child{margin-bottom:0}
+
+/* ── LINK ITEM ── */
+.link-item{
+  display:flex;align-items:flex-start;gap:.5rem;
+  padding:.45rem 0;border-bottom:1px solid var(--rule);font-size:.8rem;
+}
+.link-item:last-child{border-bottom:none}
+.link-item a{color:var(--accent);text-decoration:none;line-height:1.4}
+.link-item a:hover{text-decoration:underline}
+.link-type{
+  font-size:.6rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--text-3);border:1px solid var(--rule);padding:.1rem .4rem;flex-shrink:0;margin-top:.1rem;
+}
+
+/* ── APRENDIZADO ITEM ── */
+.aprendizado-item{
+  padding:.55rem 0;border-bottom:1px solid var(--rule);
+  font-size:.81rem;color:var(--text-2);line-height:1.6;
+  display:flex;gap:.5rem;align-items:flex-start;
+}
+.aprendizado-item:last-child{border-bottom:none}
+.aprendizado-item::before{content:'→';color:var(--accent);font-weight:700;flex-shrink:0;margin-top:.05rem}
+
+/* ── SUBETAPA LIST (overview) ── */
+.subetapa-list{margin:1.25rem 0;display:flex;flex-direction:column;gap:0}
+.subetapa-row{
+  display:flex;align-items:flex-start;gap:.75rem;
+  padding:.75rem 0;border-bottom:1px solid var(--rule);cursor:pointer;
+  transition:background .1s;
+}
+.subetapa-row:first-child{border-top:1px solid var(--rule)}
+.subetapa-row:hover .subetapa-name{color:var(--accent)}
+.subetapa-idx{
+  font-family:Georgia,serif;font-size:.75rem;font-weight:700;color:var(--text-3);
+  flex-shrink:0;padding-top:.05rem;min-width:24px;
+}
+.subetapa-name{font-size:.85rem;color:var(--text);font-weight:500;transition:color .12s;line-height:1.5}
+
+/* ── HERO (intro panel) ── */
+.intro-hero{
+  background:var(--accent);
+  padding:2.5rem 2.25rem 2.25rem 3rem;
+  position:relative;overflow:hidden;
+}
+.intro-hero::after{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at 80% 50%, rgba(255,255,255,.04) 0%, transparent 70%);
+  pointer-events:none;
+}
+.hero-eyebrow{
+  font-family:'Inter',sans-serif;font-size:.6rem;font-weight:700;
+  letter-spacing:.22em;text-transform:uppercase;
+  color:rgba(255,203,55,.85);margin-bottom:.6rem;display:block;
+}
+.hero-title{
+  font-family:'Source Serif 4',Georgia,serif;
+  font-size:2.2rem;font-weight:300;
+  line-height:1.1;letter-spacing:-.015em;
+  color:#fff;max-width:700px;margin-bottom:.6rem;
+}
+.hero-title em{font-style:italic;color:rgba(240,131,115,.9);font-weight:300}
+.hero-lead{
+  font-family:'Inter',sans-serif;font-size:.82rem;line-height:1.65;
+  color:rgba(255,255,255,.65);max-width:500px;
+}
+.hero-lead strong{color:#fff}
+
+/* ── STAT ROW ── */
+.stat-row{
+  display:flex;gap:2rem;padding:1.1rem 2.25rem 1.1rem 3rem;
+  border-bottom:1px solid var(--rule);flex-wrap:wrap;
+  align-items:center;
+}
+.stat-item{}
+.stat-num{
+  font-family:'Source Serif 4',Georgia,serif;
+  font-size:1.4rem;font-weight:600;color:var(--accent);
+  line-height:1;display:block;margin-bottom:.15rem;
+}
+.stat-label{
+  font-size:.62rem;font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--text-3);
+}
+
+/* ── ETAPA CARDS ── */
+.etapa-cards{display:flex;flex-direction:column;gap:0;padding:0 2.25rem 1.5rem 3rem}
+.etapa-card{
+  display:flex;align-items:flex-start;gap:1rem;
+  padding:.85rem 0;border-bottom:1px solid var(--rule);
+  cursor:pointer;transition:background .1s;
+}
+.etapa-card:first-child{border-top:1px solid var(--rule);margin-top:1rem}
+.etapa-card:hover .etapa-card-title{color:var(--accent)}
+.etapa-card-num{
+  font-family:'Source Serif 4',Georgia,serif;
+  font-size:.85rem;font-weight:600;color:var(--accent);
+  flex-shrink:0;padding-top:.15rem;min-width:24px;
+}
+.etapa-card-body{}
+.etapa-card-title{
+  font-family:'Source Serif 4',Georgia,serif;
+  font-size:1rem;font-weight:600;color:var(--text);
+  margin-bottom:.25rem;line-height:1.3;transition:color .12s;
+}
+.etapa-card-desc{font-size:.82rem;color:var(--text-2);line-height:1.6}
+.etapa-card-sub{
+  font-size:.68rem;font-weight:600;letter-spacing:.06em;
+  color:var(--text-3);margin-top:.35rem;text-transform:uppercase;
+}
+
+/* ── sem aside (intro) ── */
+.hide-aside .doc-aside{display:none}
+.hide-aside .doc-main{flex:1}
+
+/* ── RESPONSIVE ── */
+@media(max-width:960px){
+  :root{--right-w:0px}
+  .doc-aside{display:none}
+}
+@media(max-width:680px){
+  :root{--sidebar-w:240px}
+  .doc-nav{position:fixed;left:-240px;top:0;height:100vh;z-index:200;transition:left .22s;width:240px}
+  .doc-nav.open{left:0}
+  .doc-content{margin-left:0}
+  .dh-brand{width:auto}
+  .section-wrap{padding:1.75rem 1.25rem}
+}
+</style>
+</head>
+<body>
+
+<div class="doc-shell" style="padding-top:0">
+
+  <!-- Sidebar -->
+  <nav class="doc-nav" id="docNav">
+    <div class="nav-group">
+      <span class="nav-group-label">Visão geral</span>
+      <button class="nav-etapa active" data-panel="intro">
+        <span class="nav-etapa-num">→</span>
+        Introdução
+      </button>
+    </div>
+
+    <div class="nav-group">
+      <span class="nav-group-label">Etapas</span>
+
+      <button class="nav-etapa" data-panel="etapa1">
+        <span class="nav-etapa-num">1</span>
+        Planejamento temático e metodológico
+      </button>
+      <button class="nav-sub" data-panel="sub-1-1">Definição do objetivo</button>
+      <button class="nav-sub" data-panel="sub-1-2">Elaboração do projeto</button>
+      <button class="nav-sub" data-panel="sub-1-3">Submissão ao CEP</button>
+      <button class="nav-sub" data-panel="sub-1-4">Definição da amostra</button>
+      <button class="nav-sub" data-panel="sub-1-5">Elaboração do questionário</button>
+      <button class="nav-sub" data-panel="sub-1-6">Aprovação do questionário</button>
+      <button class="nav-sub" data-panel="sub-1-7">Estratégia de coleta</button>
+      <button class="nav-sub" data-panel="sub-1-8">Estratégia de monitoramento</button>
+
+      <button class="nav-etapa" data-panel="etapa2">
+        <span class="nav-etapa-num">2</span>
+        Preparação e testes
+      </button>
+      <button class="nav-sub" data-panel="sub-2-1">Pilotos de coleta</button>
+      <button class="nav-sub" data-panel="sub-2-2">Ajustes pós-piloto</button>
+      <button class="nav-sub" data-panel="sub-2-3">Sistemas tecnológicos</button>
+
+      <button class="nav-etapa" data-panel="etapa3">
+        <span class="nav-etapa-num">3</span>
+        Implementação da coleta
+      </button>
+      <button class="nav-sub" data-panel="sub-3-1">Execução da coleta</button>
+      <button class="nav-sub" data-panel="sub-3-2">Monitoramento contínuo</button>
+      <button class="nav-sub" data-panel="sub-3-3">Ajustes operacionais</button>
+
+      <button class="nav-etapa" data-panel="etapa4">
+        <span class="nav-etapa-num">4</span>
+        Consolidação e análise dos dados
+      </button>
+      <button class="nav-sub" data-panel="sub-4-1">Limpeza e validação</button>
+      <button class="nav-sub" data-panel="sub-4-2">Ponderação e análise</button>
+      <button class="nav-sub" data-panel="sub-4-3">Relatórios técnicos</button>
+    </div>
+  </nav>
+
+  <div class="doc-content">
+    <!-- Main -->
+    <div class="doc-main" id="docMain">
+
+      <!-- ══ INTRO ══ -->
+      <div class="doc-panel active" id="panel-intro">
+        <!-- Hero -->
+        <div class="intro-hero">
+          <span class="hero-eyebrow">MDMS Brasil · Recife</span>
+          <h1 class="hero-title"><em>Inquérito APS por WhatsApp</em> — Guia de replicação</h1>
+          <p class="hero-lead">Documentação das etapas e subetapas do inquérito realizado em Recife. Desenvolvido para que outras equipes possam <strong>replicar ou adaptar</strong> a metodologia em seus contextos institucionais.</p>
+        </div>
+
+        <!-- Stat row -->
+        <div class="stat-row">
+          <div class="stat-item">
+            <span class="stat-num">4</span>
+            <span class="stat-label">Etapas</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-num">14</span>
+            <span class="stat-label">Subetapas</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-num">USF / USF+</span>
+            <span class="stat-label">Unidades comparadas</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-num">WhatsApp</span>
+            <span class="stat-label">Canal de coleta</span>
+          </div>
+        </div>
+
+        <!-- Etapa cards -->
+        <div class="etapa-cards">
+          <div class="etapa-card" onclick="activatePanel('etapa1')">
+            <span class="etapa-card-num">1</span>
+            <div class="etapa-card-body">
+              <div class="etapa-card-title">Planejamento temático e metodológico</div>
+              <div class="etapa-card-desc">Definição do objetivo, projeto de pesquisa, aprovação ética, amostra, questionário e estratégias de coleta e monitoramento.</div>
+              <div class="etapa-card-sub">8 subetapas</div>
+            </div>
+          </div>
+          <div class="etapa-card" onclick="activatePanel('etapa2')">
+            <span class="etapa-card-num">2</span>
+            <div class="etapa-card-body">
+              <div class="etapa-card-title">Preparação e testes</div>
+              <div class="etapa-card-desc">Pilotos de coleta, ajustes pós-piloto e configuração dos sistemas tecnológicos de coleta e monitoramento.</div>
+              <div class="etapa-card-sub">3 subetapas</div>
+            </div>
+          </div>
+          <div class="etapa-card" onclick="activatePanel('etapa3')">
+            <span class="etapa-card-num">3</span>
+            <div class="etapa-card-body">
+              <div class="etapa-card-title">Implementação da coleta</div>
+              <div class="etapa-card-desc">Execução do campo, monitoramento contínuo de indicadores de desempenho e ajustes operacionais iterativos.</div>
+              <div class="etapa-card-sub">3 subetapas</div>
+            </div>
+          </div>
+          <div class="etapa-card" onclick="activatePanel('etapa4')">
+            <span class="etapa-card-num">4</span>
+            <div class="etapa-card-body">
+              <div class="etapa-card-title">Consolidação e análise dos dados</div>
+              <div class="etapa-card-desc">Limpeza e validação da base, ponderação e análises de representatividade, elaboração de relatórios técnicos e analíticos.</div>
+              <div class="etapa-card-sub">3 subetapas</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ ETAPA 1 ══ -->
+      <div class="doc-panel" id="panel-etapa1">
+        <div class="section-wrap">
+          <div class="etapa-badge"><span class="etapa-badge-num">1</span>Etapa 1</div>
+          <h1 class="section-title">Planejamento temático e metodológico</h1>
+          <p class="section-lead">Etapa fundacional do inquérito. Compreende todas as decisões de desenho — o que medir, em quem, com qual instrumento e como — antes de qualquer contato com os participantes.</p>
+          <div class="subetapa-list">
+            <div class="subetapa-row" onclick="activatePanel('sub-1-1')"><span class="subetapa-idx">1.1</span><span class="subetapa-name">Definição do objetivo da pesquisa</span></div>
+            <div class="subetapa-row" onclick="activatePanel('sub-1-2')"><span class="subetapa-idx">1.2</span><span class="subetapa-name">Elaboração do projeto de pesquisa</span></div>
+            <div class="subetapa-row" onclick="activatePanel('sub-1-3')"><span class="subetapa-idx">1.3</span><span class="subetapa-name">Submissão do projeto a um Comitê de Ética em Pesquisa</span></div>
+            <div class="subetapa-row" onclick="activatePanel('sub-1-4')"><span class="subetapa-idx">1.4</span><span class="subetapa-name">Definição da amostra</span></div>
+            <div class="subetapa-row" onclick="activatePanel('sub-1-5')"><span class="subetapa-idx">1.5</span><span class="subetapa-name">Elaboração do questionário</span></div>
+            <div class="subetapa-row" onclick="activatePanel('sub-1-6')"><span class="subetapa-idx">1.6</span><span class="subetapa-name">Aprovação do questionário</span></div>
+            <div class="subetapa-row" onclick="activatePanel('sub-1-7')"><span class="subetapa-idx">1.7</span><span class="subetapa-name">Definição da estratégia de coleta de dados</span></div>
+            <div class="subetapa-row" onclick="activatePanel('sub-1-8')"><span class="subetapa-idx">1.8</span><span class="subetapa-name">Definição da estratégia de monitoramento da coleta</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Subetapas 1.x -->
+      <div class="doc-panel" id="panel-sub-1-1">
+        <div class="section-wrap">
+          <span class="sub-badge">Etapa 1 · Subetapa 1.1</span>
+          <h2 class="sub-title">Definição do objetivo da pesquisa</h2>
+          <p class="body-text">Nesta subetapa define-se com precisão o que se deseja medir, o contexto institucional da pesquisa e quais perguntas orientadoras guiarão todas as decisões metodológicas subsequentes.</p>
+          <p class="body-text">No inquérito APS Recife, o objetivo central foi comparar a qualidade da atenção primária percebida pelos usuários de unidades USF e USF+ a partir de atributos do PCATool-Brasil.</p>
+          <span class="wip">Descrição detalhada em construção</span>
+        </div>
+      </div>
+
+      <div class="doc-panel" id="panel-sub-1-2">
+        <div class="section-wrap">
+          <span class="sub-badge">Etapa 1 · Subetapa 1.2</span>
+          <h2 class="sub-title">Elaboração do projeto de pesquisa</h2>
+          <p class="body-text">Formalização do protocolo de pesquisa — justificativa, objetivos, metodologia, plano amostral, instrumentos e cronograma. Documento necessário para submissão ao CEP.</p>
+          <span class="wip">Descrição detalhada em construção</span>
+        </div>
+      </div>
+
+      <div class="doc-panel" id="panel-sub-1-3">
+        <div class="section-wrap">
+          <span class="sub-badge">Etapa 1 · Subetapa 1.3</span>
+          <h2 class="sub-title">Submissão do projeto ao Comitê de Ética em Pesquisa</h2>
+          <p class="body-text">Pesquisas com seres humanos no Brasil requerem aprovação prévia de um CEP cadastrado na Plataforma Brasil. A submissão deve ocorrer antes de qualquer contato com participantes ou coleta de dados.</p>
+          <p class="body-text">O processo inclui a submissão do protocolo de pesquisa, TCLE (Termo de Consentimento Livre e Esclarecido) e toda documentação complementar exigida pelo sistema.</p>
+          <span class="wip">Descrição detalhada em construção</span>
+        </div>
+      </div>
+
+      <div class="doc-panel" id="panel-sub-1-4">
+        <div class="section-wrap">
+          <span class="sub-badge">Etapa 1 · Subetapa 1.4</span>
+          <h2 class="sub-title">Definição da amostra</h2>
+          <p class="body-text">Determinação do tamanho amostral, critérios de inclusão e exclusão, estratificação por unidade de saúde ou território, e método de seleção dos participantes.</p>
+          <p class="body-text">No inquérito Recife, a amostra foi estratificada por tipo de unidade (USF vs. USF+) e por distrito sanitário, com base em dados de cadastro do e-SUS e dados do Censo 2022.</p>
+          <span class="wip">Descrição detalhada em construção</span>
+        </div>
+      </div>
+
+      <div class="doc-panel" id="panel-sub-1-5">
+        <div class="section-wrap">
+          <span class="sub-badge">Etapa 1 · Subetapa 1.5</span>
+          <h2 class="sub-title">Elaboração do questionário</h2>
+          <p class="body-text">Adaptação do instrumento PCATool-Brasil para o formato conversacional do WhatsApp. O questionário foi desenvolvido em duas versões: Versão A (expandida, ~8 min) e Versão B (curta, ~3 min), testadas em desenho A/B para avaliar taxa de resposta.</p>
+          <p class="body-text">O instrumento inclui perguntas de triagem, perguntas sobre afiliação com a unidade e blocos temáticos do PCATool adaptados para linguagem conversacional simples.</p>
+          <span class="wip">Descrição detalhada em construção</span>
+        </div>
+      </div>
+
+      <div class="doc-panel" id="panel-sub-1-6">
+        <div class="section-wrap">
+          <span class="sub-badge">Etapa 1 · Subetapa 1.6</span>
+          <h2 class="sub-title">Aprovação do questionário</h2>
+          <p class="body-text">Revisão e validação do instrumento com especialistas em APS, gestores da Secretaria Municipal de Saúde de Recife e membros do comitê científico do programa MDMS. Inclui rodadas de feedback e ajuste de linguagem.</p>
+          <span class="wip">Descrição detalhada em construção</span>
+        </div>
+      </div>
+
+      <div class="doc-panel" id="panel-sub-1-7">
+        <div class="section-wrap">
+          <span class="sub-badge">Etapa 1 · Subetapa 1.7</span>
+          <h2 class="sub-title">Definição da estratégia de coleta de dados</h2>
+          <p class="body-text">Decisões sobre o canal de coleta (WhatsApp), plataforma de disparo de mensagens, fluxo de consentimento, janela temporal de resposta, número de tentativas de contato e critérios de encerramento de interação.</p>
+          <span class="wip">Descrição detalhada em construção</span>
+        </div>
+      </div>
+
+      <div class="doc-panel" id="panel-sub-1-8">
+        <div class="section-wrap">
+          <span class="sub-badge">Etapa 1 · Subetapa 1.8</span>
+          <h2 class="sub-title">Definição da estratégia de monitoramento da coleta</h2>
+          <p class="body-text">Definição de indicadores de desempenho da coleta (taxa de entrega, taxa de abertura, taxa de resposta, taxa de conclusão), frequência de acompanhamento e critérios de ajuste operacional durante o campo.</p>
+          <span class="wip">Descrição detalhada em construção</span>
+        </div>
+      </div>
+
+      <!-- ══ ETAPA 2 ══ -->
+      <div class="doc-panel" id="panel-etapa2">
+        <div class="section-wrap">
+          <div class="etapa-badge"><span class="etapa-badge-num">2</span>Etapa 2</div>
+          <h1 class="section-title">Preparação e testes</h1>
+          <p class="section-lead">Antes da coleta em escala, realizam-se pilotos para validar o instrumento, os sistemas tecnológicos e os fluxos operacionais. Os resultados dos pilotos informam ajustes finais antes do campo definitivo.</p>
+          <div class="subetapa-list">
+            <div class="subetapa-row" onclick="activatePanel('sub-2-1')"><span class="subetapa-idx">2.1</span><span class="subetapa-name">Realização de pilotos de coleta (grupo focal, testes de coleta)</span></div>
+            <div class="subetapa-row" onclick="activatePanel('sub-2-2')"><span class="subetapa-idx">2.2</span><span class="subetapa-name">Ajustes de questionário, amostra e instrumentos a partir dos pilotos</span></div>
+            <div class="subetapa-row" onclick="activatePanel('sub-2-3')"><span class="subetapa-idx">2.3</span><span class="subetapa-name">Preparação e ajustes dos sistemas tecnológicos de coleta e monitoramento</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="doc-panel" id="panel-sub-2-1">
+        <div class="section-wrap">
+          <span class="sub-badge">Etapa 2 · Subetapa 2.1</span>
+          <h2 class="sub-title">Realização de pilotos de coleta</h2>
+          <p class="body-text">Condução de um ou mais pilotos com subamostras da população-alvo para avaliar compreensão do instrumento, taxa de resposta e funcionamento técnico do fluxo de mensagens.</p>
+          <p class="body-text">No inquérito Recife, o piloto incluiu um grupo focal presencial para avaliação da linguagem e um piloto de disparo via WhatsApp com amostra reduzida de ~500 contatos por unidade de saúde piloto.</p>
+          <span class="wip">Descrição detalhada em construção</span>
+        </div>
+      </div>
+
+      <div class="doc-panel" id="panel-sub-2-2">
+        <div class="section-wrap">
+          <span class="sub-badge">Etapa 2 · Subetapa 2.2</span>
+          <h2 class="sub-title">Ajustes pós-piloto</h2>
+          <p class="body-text">Com base nos resultados do piloto, realizam-se ajustes no questionário (linguagem, ordem das perguntas, opções de resposta), no plano amostral (tamanho da lista de reserva, critérios de exclusão) e nos instrumentos de monitoramento.</p>
+          <span class="wip">Descrição detalhada em construção</span>
+        </div>
+      </div>
+
+      <div class="doc-panel" id="panel-sub-2-3">
+        <div class="section-wrap">
+          <span class="sub-badge">Etapa 2 · Subetapa 2.3</span>
+          <h2 class="sub-title">Sistemas tecnológicos de coleta e monitoramento</h2>
+          <p class="body-text">Configuração e teste da plataforma de mensageria, do sistema de gestão do questionário conversacional e dos painéis de monitoramento em tempo real. Inclui testes de integração, carga e segurança.</p>
+          <span class="wip">Descrição detalhada em construção</span>
+        </div>
+      </div>
+
+      <!-- ══ ETAPA 3 ══ -->
+      <div class="doc-panel" id="panel-etapa3">
+        <div class="section-wrap">
+          <div class="etapa-badge"><span class="etapa-badge-num">3</span>Etapa 3</div>
+          <h1 class="section-title">Implementação da coleta</h1>
+          <p class="section-lead">Execução do inquérito em escala, com monitoramento contínuo e capacidade de ajuste iterativo para garantir qualidade e representatividade da amostra ao longo do campo.</p>
+          <div class="subetapa-list">
+            <div class="subetapa-row" onclick="activatePanel('sub-3-1')"><span class="subetapa-idx">3.1</span><span class="subetapa-name">Execução da coleta segundo o desenho metodológico validado</span></div>
+            <div class="subetapa-row" onclick="activatePanel('sub-3-2')"><span class="subetapa-idx">3.2</span><span class="subetapa-name">Monitoramento contínuo de indicadores de desempenho</span></div>
+            <div class="subetapa-row" onclick="activatePanel('sub-3-3')"><span class="subetapa-idx">3.3</span><span class="subetapa-name">Ajustes operacionais iterativos</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="doc-panel" id="panel-sub-3-1">
+        <div class="section-wrap">
+          <span class="sub-badge">Etapa 3 · Subetapa 3.1</span>
+          <h2 class="sub-title">Execução da coleta</h2>
+          <p class="body-text">Disparos das mensagens de convite via WhatsApp para a lista amostral, seguindo o protocolo de tentativas (número de dias, horários de disparo, mensagens de lembrete). Gestão da lista de reserva para reposição de perdas.</p>
+          <span class="wip">Descrição detalhada em construção</span>
+        </div>
+      </div>
+
+      <div class="doc-panel" id="panel-sub-3-2">
+        <div class="section-wrap">
+          <span class="sub-badge">Etapa 3 · Subetapa 3.2</span>
+          <h2 class="sub-title">Monitoramento contínuo</h2>
+          <p class="body-text">Acompanhamento diário (ou mais frequente) das taxas de entrega, abertura, resposta e conclusão por unidade de saúde e distrito. Identificação de desvios em relação às metas do plano amostral e ativação de protocolos de ajuste.</p>
+          <span class="wip">Descrição detalhada em construção</span>
+        </div>
+      </div>
+
+      <div class="doc-panel" id="panel-sub-3-3">
+        <div class="section-wrap">
+          <span class="sub-badge">Etapa 3 · Subetapa 3.3</span>
+          <h2 class="sub-title">Ajustes operacionais iterativos</h2>
+          <p class="body-text">Decisões tomadas durante o campo com base nos dados de monitoramento: acionamento da lista de reserva, reenvio de mensagens, extensão do prazo de campo, ajuste do horário de disparo. Todas as decisões são documentadas com justificativa.</p>
+          <span class="wip">Descrição detalhada em construção</span>
+        </div>
+      </div>
+
+      <!-- ══ ETAPA 4 ══ -->
+      <div class="doc-panel" id="panel-etapa4">
+        <div class="section-wrap">
+          <div class="etapa-badge"><span class="etapa-badge-num">4</span>Etapa 4</div>
+          <h1 class="section-title">Consolidação e análise dos dados</h1>
+          <p class="section-lead">Após o encerramento do campo, os dados brutos passam por processamento, validação, ponderação e análise para produção dos relatórios técnicos e analíticos finais.</p>
+          <div class="subetapa-list">
+            <div class="subetapa-row" onclick="activatePanel('sub-4-1')"><span class="subetapa-idx">4.1</span><span class="subetapa-name">Processamento, limpeza e validação da base de dados</span></div>
+            <div class="subetapa-row" onclick="activatePanel('sub-4-2')"><span class="subetapa-idx">4.2</span><span class="subetapa-name">Aplicação de ponderações e análises estatísticas de representatividade</span></div>
+            <div class="subetapa-row" onclick="activatePanel('sub-4-3')"><span class="subetapa-idx">4.3</span><span class="subetapa-name">Elaboração de relatórios técnicos e analíticos</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="doc-panel" id="panel-sub-4-1">
+        <div class="section-wrap">
+          <span class="sub-badge">Etapa 4 · Subetapa 4.1</span>
+          <h2 class="sub-title">Limpeza e validação da base de dados</h2>
+          <p class="body-text">Exportação dos dados brutos da plataforma de mensageria, padronização de variáveis, exclusão de respostas inválidas (tempo de resposta implausível, respostas inconsistentes), e verificação de completude por unidade amostral.</p>
+          <span class="wip">Descrição detalhada em construção</span>
+        </div>
+      </div>
+
+      <div class="doc-panel" id="panel-sub-4-2">
+        <div class="section-wrap">
+          <span class="sub-badge">Etapa 4 · Subetapa 4.2</span>
+          <h2 class="sub-title">Ponderação e análises de representatividade</h2>
+          <p class="body-text">Aplicação de pesos amostrais para correção de desequilíbrios entre a amostra obtida e a população-alvo, com base em variáveis do Censo 2022 e do cadastro de usuários do e-SUS. Análises de não-resposta e comparação com perfil populacional esperado.</p>
+          <span class="wip">Descrição detalhada em construção</span>
+        </div>
+      </div>
+
+      <div class="doc-panel" id="panel-sub-4-3">
+        <div class="section-wrap">
+          <span class="sub-badge">Etapa 4 · Subetapa 4.3</span>
+          <h2 class="sub-title">Elaboração de relatórios técnicos e analíticos</h2>
+          <p class="body-text">Produção de relatórios com os resultados do inquérito: relatório de campo (desempenho operacional), relatório técnico (metodologia e qualidade dos dados) e relatório analítico (resultados dos indicadores PCATool por unidade e comparação USF vs. USF+).</p>
+          <span class="wip">Descrição detalhada em construção</span>
+        </div>
+      </div>
+
+    </div><!-- /doc-main -->
+
+    <!-- Aside: links e aprendizados -->
+    <aside class="doc-aside" id="docAside">
+      <!-- intro aside: vazio -->
+      <div class="aside-wrap doc-panel active" id="aside-intro"></div>
+
+      <!-- etapa 1 aside -->
+      <div class="aside-wrap doc-panel" id="aside-etapa1">
+        <div class="aside-section">
+          <span class="aside-label">Links e recursos</span>
+          <span class="wip">A preencher</span>
+        </div>
+        <div class="aside-section">
+          <span class="aside-label">Aprendizados desta etapa</span>
+          <span class="wip">A preencher</span>
+        </div>
+      </div>
+
+      <!-- subetapas 1.x asides -->
+      <div class="aside-wrap doc-panel" id="aside-sub-1-1">
+        <div class="aside-section"><span class="aside-label">Links</span><span class="wip">A preencher</span></div>
+        <div class="aside-section"><span class="aside-label">Aprendizados</span><span class="wip">A preencher</span></div>
+      </div>
+      <div class="aside-wrap doc-panel" id="aside-sub-1-2">
+        <div class="aside-section"><span class="aside-label">Links</span><span class="wip">A preencher</span></div>
+        <div class="aside-section"><span class="aside-label">Aprendizados</span><span class="wip">A preencher</span></div>
+      </div>
+      <div class="aside-wrap doc-panel" id="aside-sub-1-3">
+        <div class="aside-section"><span class="aside-label">Links</span><span class="wip">A preencher</span></div>
+        <div class="aside-section"><span class="aside-label">Aprendizados</span><span class="wip">A preencher</span></div>
+      </div>
+      <div class="aside-wrap doc-panel" id="aside-sub-1-4">
+        <div class="aside-section">
+          <span class="aside-label">Links</span>
+          <div class="link-item">
+            <span class="link-type">Script R</span>
+            <a href="arquivos/scripts/planejamento_amostral_dados_aps.R" download>Planejamento amostral — dados APS</a>
+          </div>
+          <div class="link-item">
+            <span class="link-type">Script R</span>
+            <a href="arquivos/scripts/planejamento_amostral_dados_aps_USF.R" download>Planejamento amostral — por USF</a>
+          </div>
+          <div class="link-item">
+            <span class="link-type">Doc</span>
+            <a href="arquivos/Plano Amostral.docx" download>Plano amostral (Word)</a>
+          </div>
+        </div>
+        <div class="aside-section"><span class="aside-label">Aprendizados</span><span class="wip">A preencher</span></div>
+      </div>
+      <div class="aside-wrap doc-panel" id="aside-sub-1-5">
+        <div class="aside-section">
+          <span class="aside-label">Links</span>
+          <div class="link-item">
+            <span class="link-type">Doc</span>
+            <a href="arquivos/Especificacao_Questionarios_APS_Recife_v2 (2) (1).pdf" download>Especificação dos questionários v2 (PDF)</a>
+          </div>
+          <div class="link-item">
+            <span class="link-type">Doc</span>
+            <a href="arquivos/Especificacao_Questionarios_APS_Recife_v2.docx" download>Especificação dos questionários v2 (Word)</a>
+          </div>
+        </div>
+        <div class="aside-section"><span class="aside-label">Aprendizados</span><span class="wip">A preencher</span></div>
+      </div>
+      <div class="aside-wrap doc-panel" id="aside-sub-1-6">
+        <div class="aside-section"><span class="aside-label">Links</span><span class="wip">A preencher</span></div>
+        <div class="aside-section"><span class="aside-label">Aprendizados</span><span class="wip">A preencher</span></div>
+      </div>
+      <div class="aside-wrap doc-panel" id="aside-sub-1-7">
+        <div class="aside-section"><span class="aside-label">Links</span><span class="wip">A preencher</span></div>
+        <div class="aside-section"><span class="aside-label">Aprendizados</span><span class="wip">A preencher</span></div>
+      </div>
+      <div class="aside-wrap doc-panel" id="aside-sub-1-8">
+        <div class="aside-section"><span class="aside-label">Links</span><span class="wip">A preencher</span></div>
+        <div class="aside-section"><span class="aside-label">Aprendizados</span><span class="wip">A preencher</span></div>
+      </div>
+
+      <!-- etapa 2 -->
+      <div class="aside-wrap doc-panel" id="aside-etapa2">
+        <div class="aside-section"><span class="aside-label">Links e recursos</span><span class="wip">A preencher</span></div>
+        <div class="aside-section"><span class="aside-label">Aprendizados desta etapa</span><span class="wip">A preencher</span></div>
+      </div>
+      <div class="aside-wrap doc-panel" id="aside-sub-2-1">
+        <div class="aside-section">
+          <span class="aside-label">Links</span>
+          <div class="link-item">
+            <span class="link-type">PDF</span>
+            <a href="arquivos/Mensageria - Piloto - Relatório Completo.pdf" download>Relatório piloto completo</a>
+          </div>
+          <div class="link-item">
+            <span class="link-type">PDF</span>
+            <a href="arquivos/Mensageria - Piloto - Resultados.pdf" download>Resultados do piloto</a>
+          </div>
+          <div class="link-item">
+            <span class="link-type">Doc</span>
+            <a href="arquivos/Estudo Piloto - Relatório para disparo.docx" download>Relatório para disparo (Word)</a>
+          </div>
+        </div>
+        <div class="aside-section"><span class="aside-label">Aprendizados</span><span class="wip">A preencher</span></div>
+      </div>
+      <div class="aside-wrap doc-panel" id="aside-sub-2-2">
+        <div class="aside-section"><span class="aside-label">Links</span><span class="wip">A preencher</span></div>
+        <div class="aside-section"><span class="aside-label">Aprendizados</span><span class="wip">A preencher</span></div>
+      </div>
+      <div class="aside-wrap doc-panel" id="aside-sub-2-3">
+        <div class="aside-section"><span class="aside-label">Links</span><span class="wip">A preencher</span></div>
+        <div class="aside-section"><span class="aside-label">Aprendizados</span><span class="wip">A preencher</span></div>
+      </div>
+
+      <!-- etapa 3 -->
+      <div class="aside-wrap doc-panel" id="aside-etapa3">
+        <div class="aside-section"><span class="aside-label">Links e recursos</span><span class="wip">A preencher</span></div>
+        <div class="aside-section"><span class="aside-label">Aprendizados desta etapa</span><span class="wip">A preencher</span></div>
+      </div>
+      <div class="aside-wrap doc-panel" id="aside-sub-3-1">
+        <div class="aside-section"><span class="aside-label">Links</span><span class="wip">A preencher</span></div>
+        <div class="aside-section"><span class="aside-label">Aprendizados</span><span class="wip">A preencher</span></div>
+      </div>
+      <div class="aside-wrap doc-panel" id="aside-sub-3-2">
+        <div class="aside-section">
+          <span class="aside-label">Links</span>
+          <div class="link-item">
+            <span class="link-type">Script R</span>
+            <a href="arquivos/scripts/piloto_analile_pre_coleta.R" download>Análise pré-coleta (piloto)</a>
+          </div>
+        </div>
+        <div class="aside-section"><span class="aside-label">Aprendizados</span><span class="wip">A preencher</span></div>
+      </div>
+      <div class="aside-wrap doc-panel" id="aside-sub-3-3">
+        <div class="aside-section"><span class="aside-label">Links</span><span class="wip">A preencher</span></div>
+        <div class="aside-section"><span class="aside-label">Aprendizados</span><span class="wip">A preencher</span></div>
+      </div>
+
+      <!-- etapa 4 -->
+      <div class="aside-wrap doc-panel" id="aside-etapa4">
+        <div class="aside-section"><span class="aside-label">Links e recursos</span><span class="wip">A preencher</span></div>
+        <div class="aside-section"><span class="aside-label">Aprendizados desta etapa</span><span class="wip">A preencher</span></div>
+      </div>
+      <div class="aside-wrap doc-panel" id="aside-sub-4-1">
+        <div class="aside-section">
+          <span class="aside-label">Links</span>
+          <div class="link-item">
+            <span class="link-type">Script R</span>
+            <a href="arquivos/scripts/piloto_descritiva.R" download>Análise descritiva pós-coleta</a>
+          </div>
+        </div>
+        <div class="aside-section"><span class="aside-label">Aprendizados</span><span class="wip">A preencher</span></div>
+      </div>
+      <div class="aside-wrap doc-panel" id="aside-sub-4-2">
+        <div class="aside-section">
+          <span class="aside-label">Links</span>
+          <div class="link-item">
+            <span class="link-type">Script R</span>
+            <a href="arquivos/scripts/ponderacao_analise_mdms_recofe_EXemplo.R" download>Ponderação e análise MDMS (exemplo)</a>
+          </div>
+        </div>
+        <div class="aside-section"><span class="aside-label">Aprendizados</span><span class="wip">A preencher</span></div>
+      </div>
+      <div class="aside-wrap doc-panel" id="aside-sub-4-3">
+        <div class="aside-section">
+          <span class="aside-label">Links</span>
+          <div class="link-item">
+            <span class="link-type">PDF</span>
+            <a href="arquivos/Mensageria - Piloto - Resultados - Simplificado com cor.pdf" download>Resultados simplificados (PDF)</a>
+          </div>
+          <div class="link-item">
+            <span class="link-type">Doc</span>
+            <a href="arquivos/Metodologia resumo MDMS Recife.docx" download>Metodologia — resumo MDMS</a>
+          </div>
+        </div>
+        <div class="aside-section"><span class="aside-label">Aprendizados</span><span class="wip">A preencher</span></div>
+      </div>
+
+    </aside>
+  </div>
+</div>
+
+<script>
+var navBtns = document.querySelectorAll('[data-panel]');
+var mainPanels = document.querySelectorAll('.doc-main .doc-panel');
+var asidePanels = document.querySelectorAll('.doc-aside .doc-panel');
+
+function activatePanel(id) {
+  navBtns.forEach(function(b){
+    b.classList.toggle('active', b.dataset.panel === id);
+  });
+  mainPanels.forEach(function(p){
+    p.classList.toggle('active', p.id === 'panel-' + id);
+  });
+  asidePanels.forEach(function(p){
+    p.classList.toggle('active', p.id === 'aside-' + id);
+  });
+  // esconde terceira coluna só na intro
+  document.querySelector('.doc-content').classList.toggle('hide-aside', id === 'intro');
+  document.getElementById('docMain').scrollTo(0, 0);
+}
+
+navBtns.forEach(function(b){
+  b.addEventListener('click', function(){ activatePanel(b.dataset.panel); });
+});
+
+// estado inicial
+document.querySelector('.doc-content').classList.add('hide-aside');
+</script>
+</body>
+</html>
