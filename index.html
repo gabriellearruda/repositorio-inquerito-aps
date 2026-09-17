@@ -3,1088 +3,939 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta http-equiv="refresh" content="0; url=docs.html">
-<title>Inquérito APS Recife</title>
+<title>Etapas do Inquérito — APS Recife</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,300;8..60,400;8..60,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-/* ── tokens ── */
 :root {
-  --bg:      #FFFFFF;
-  --text:    #111111;
-  --text-2:  #444444;
-  --text-3:  #888888;
-  --accent:  #0A6B58;
-  --rule:    #E0E0E0;
-  --sidebar: 196px;
-  --header:  52px;
-  --col:     680px;
-}
-@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --bg:#111111;--text:#EBEBEB;--text-2:#AAAAAA;--text-3:#666666;
-  --accent:#2CC8A8;--rule:#2A2A2A;
-}}
-:root[data-theme="dark"]{
-  --bg:#111111;--text:#EBEBEB;--text-2:#AAAAAA;--text-3:#666666;
-  --accent:#2CC8A8;--rule:#2A2A2A;
+  --sidebar-bg:  #0A1356;
+  --sidebar-w:   272px;
+  --header-h:    48px;
+  --content-bg:  #FDFBF7;
+  --right-bg:    #F5F2EC;
+  --right-w:     320px;
+
+  --accent:      #101B7A;
+  --accent-2:    #FFCB37;
+  --coral:       #E36A57;
+  --rule:        rgba(22,36,92,0.12);
+  --rule-dark:   rgba(255,255,255,0.07);
+
+  --text:        #1A1A2E;
+  --text-2:      #4F5360;
+  --text-3:      #9194A1;
 }
 
-/* ── reset ── */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
-body{
-  font-family:Georgia,"Times New Roman",serif;
-  font-size:16px;line-height:1.8;
-  background:var(--bg);color:var(--text-2);
-  min-height:100vh;
-}
-h1,h2,h3,h4{color:var(--text);text-wrap:balance}
-h1{font-size:1.9rem;line-height:1.2;font-weight:700;margin-bottom:.5rem}
-h2{font-size:1.25rem;font-weight:700;line-height:1.3;margin-bottom:.75rem;margin-top:2.5rem}
-h3{font-size:1rem;font-weight:700;line-height:1.4;margin-bottom:.5rem;margin-top:1.75rem}
-h4{font-size:.9rem;font-weight:700;margin-bottom:.25rem;margin-top:1.25rem}
-p{margin-bottom:1rem}p:last-child{margin-bottom:0}
-strong{color:var(--text)}
-a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
-ul,ol{padding-left:1.5em;margin-bottom:1rem}li{margin-bottom:.35rem}
-code{font-family:Menlo,Consolas,monospace;font-size:.8em;color:var(--text)}
-hr{border:none;border-top:1px solid var(--rule);margin:2.5rem 0}
+html{height:100%}
+body{font-family:'Inter',-apple-system,sans-serif;font-size:14px;line-height:1.65;background:var(--content-bg);color:var(--text-2);height:100%;overflow:hidden}
 
-/* ── header ── */
-.site-header{
-  position:fixed;top:0;left:0;right:0;z-index:100;
-  height:var(--header);
-  background:var(--bg);border-bottom:1px solid var(--rule);
-  display:flex;align-items:center;padding:0 1.5rem;
-  gap:.75rem;
+/* ── HEADER ── */
+.doc-header{
+  position:fixed;top:0;left:0;right:0;z-index:300;height:var(--header-h);
+  background:var(--sidebar-bg);border-bottom:1px solid var(--rule-dark);
+  display:flex;align-items:center;
 }
-.hd-wordmark{
-  font-family:Georgia,serif;font-size:.85rem;font-weight:700;color:var(--text);
+.dh-brand{
+  width:var(--sidebar-w);flex-shrink:0;
+  display:flex;align-items:center;gap:.6rem;
+  padding:0 1.4rem;border-right:1px solid var(--rule-dark);
 }
-.hd-sep{color:var(--rule);font-weight:300;font-size:1.1rem}
-.hd-sub{font-size:.82rem;color:var(--text-3)}
-.menu-btn{display:none;background:none;border:none;cursor:pointer;color:var(--text);padding:.25rem;flex-shrink:0}
-.menu-btn svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.5;stroke-linecap:round}
+.dh-logo{
+  font-family:Georgia,'Times New Roman',serif;font-size:.9rem;font-weight:700;
+  color:#fff;text-decoration:none;line-height:1.2;
+}
+.dh-logo span{color:var(--accent-2);font-weight:400;font-size:.75rem;display:block;letter-spacing:.02em}
+.dh-center{flex:1;padding:0 1.5rem}
+.dh-title{font-size:.8rem;color:rgba(255,255,255,.45);font-weight:500}
+.dh-right{padding:0 1.25rem;display:flex;align-items:center;gap:1rem}
+.dh-back{font-size:.72rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,.35);text-decoration:none;transition:color .15s}
+.dh-back:hover{color:rgba(255,255,255,.8);text-decoration:none}
+.dh-tag{font-size:.68rem;font-weight:700;color:var(--accent-2);background:rgba(255,203,55,.12);padding:.15rem .55rem;letter-spacing:.04em}
 
-/* ── layout ── */
-.app{display:flex;padding-top:var(--header)}
+/* ── SHELL ── */
+.doc-shell{display:flex;height:100%}
 
-/* ── sidebar ── */
-.sidebar{
-  position:fixed;top:var(--header);left:0;
-  width:var(--sidebar);height:calc(100vh - var(--header));
-  overflow-y:auto;padding:2rem 0 3rem;
-  border-right:1px solid var(--rule);
-  background:var(--bg);
-  transition:transform .22s ease;z-index:150;
+/* ── SIDEBAR ── */
+.doc-nav{
+  width:var(--sidebar-w);flex-shrink:0;
+  background:var(--sidebar-bg);
+  height:100%;overflow-y:auto;
+  padding:1.5rem 0 4rem;
+  border-right:1px solid var(--rule-dark);
 }
-.sb-group{margin-bottom:1.5rem}
-.sb-group-label{
-  font-family:system-ui,sans-serif;
-  font-size:.65rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
-  color:var(--text-3);padding:.25rem 1.5rem .5rem;display:block;
+.doc-nav::-webkit-scrollbar{width:3px}
+.doc-nav::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:2px}
+
+.nav-group{margin-bottom:.5rem}
+.nav-group-label{
+  font-size:.6rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;
+  color:rgba(255,255,255,.22);padding:.75rem 1.4rem .35rem;display:block;
 }
-.nav-btn{
-  display:block;width:100%;text-align:left;
-  padding:.3rem 1.5rem;border:none;background:none;cursor:pointer;
-  font-family:Georgia,serif;font-size:.82rem;line-height:1.4;
-  color:var(--text-3);transition:color .12s;
+.nav-etapa{
+  display:flex;align-items:center;gap:.6rem;width:100%;text-align:left;
+  padding:.38rem 1.4rem;border:none;background:none;cursor:pointer;
+  font-size:.79rem;font-weight:600;color:rgba(255,255,255,.45);
+  font-family:inherit;transition:color .12s,background .12s;
 }
-.nav-btn:hover{color:var(--text)}
-.nav-btn.active{color:var(--accent);font-weight:700}
+.nav-etapa:hover{color:rgba(255,255,255,.85);background:rgba(255,255,255,.04)}
+.nav-etapa.active{color:#fff;background:rgba(255,255,255,.07)}
+.nav-etapa-num{
+  width:20px;height:20px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:.65rem;font-weight:700;flex-shrink:0;
+  border:1.5px solid rgba(255,255,255,.2);color:rgba(255,255,255,.35);
+}
+.nav-etapa.active .nav-etapa-num{border-color:var(--accent-2);color:var(--accent-2);background:rgba(255,203,55,.1)}
+
 .nav-sub{
-  padding-left:2.5rem;font-size:.76rem;
-  border-left:1px solid var(--rule);margin-left:1.5rem;padding-left:1rem;
-  width:calc(100% - 1.5rem);
+  display:block;width:100%;text-align:left;
+  padding:.3rem 1.4rem .3rem 3.2rem;border:none;background:none;cursor:pointer;
+  font-size:.75rem;color:rgba(255,255,255,.35);font-family:inherit;
+  transition:color .12s,background .12s;border-left:none;
 }
-.nav-sub.active{color:var(--accent);font-weight:600}
+.nav-sub:hover{color:rgba(255,255,255,.75);background:rgba(255,255,255,.03)}
+.nav-sub.active{color:var(--accent-2);font-weight:600;background:rgba(255,203,55,.05)}
 
-/* ── main ── */
-.main{margin-left:var(--sidebar);flex:1;min-width:0}
-.tab-content{display:none}.tab-content.active{display:block}
+/* ── CONTENT ── */
+.doc-content{flex:1;min-width:0;display:flex;height:100%;overflow:hidden}
 
-/* ── page wrapper ── */
-.page{max-width:var(--col);margin:0 auto;padding:3rem 2rem 6rem}
+.doc-main{flex:1;min-width:0;overflow-y:auto;background:var(--content-bg)}
+.doc-main::-webkit-scrollbar{width:5px}
+.doc-main::-webkit-scrollbar-thumb{background:var(--rule);border-radius:3px}
 
-/* ── cover (intro) ── */
-.cover-eyebrow{
-  font-family:system-ui,sans-serif;
-  font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
-  color:var(--accent);margin-bottom:1rem;
+/* ── RIGHT PANEL ── */
+.doc-aside{
+  width:var(--right-w);flex-shrink:0;
+  background:var(--right-bg);border-left:1px solid var(--rule);
+  overflow-y:auto;
+}
+.doc-aside::-webkit-scrollbar{width:3px}
+.doc-aside::-webkit-scrollbar-thumb{background:var(--rule);border-radius:2px}
+
+/* ── PANEL visibility ── */
+.doc-panel{display:none}.doc-panel.active{display:block}
+
+/* ── SECTION LAYOUT ── */
+.section-wrap{padding:2.5rem 2.25rem;border-bottom:1px solid var(--rule);max-width:640px}
+.aside-wrap{padding:2rem 1.5rem;border-bottom:1px solid var(--rule)}
+
+/* ── TYPOGRAPHY ── */
+.etapa-badge{
+  display:inline-flex;align-items:center;gap:.4rem;
+  font-size:.65rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--accent);margin-bottom:.6rem;
+}
+.etapa-badge-num{
+  width:18px;height:18px;border-radius:50%;background:var(--accent);
+  color:#fff;display:flex;align-items:center;justify-content:center;
+  font-size:.6rem;font-weight:700;flex-shrink:0;
+}
+.section-title{
+  font-family:Georgia,'Times New Roman',serif;font-size:1.4rem;font-weight:700;
+  color:var(--text);margin-bottom:.6rem;line-height:1.25;
+}
+.section-lead{font-size:.87rem;color:var(--text-2);line-height:1.75;margin-bottom:1.25rem}
+
+.sub-badge{
+  font-size:.6rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--accent);margin-bottom:.35rem;display:block;margin-top:1.75rem;
+}
+.sub-title{
+  font-family:Georgia,'Times New Roman',serif;font-size:1.05rem;font-weight:700;
+  color:var(--text);margin-bottom:.5rem;line-height:1.3;
+}
+.body-text{font-size:.84rem;color:var(--text-2);line-height:1.75;margin-bottom:.65rem}
+.body-text:last-child{margin-bottom:0}
+.body-subhead{
+  font-family:'Source Serif 4',Georgia,serif;font-size:.95rem;font-weight:600;
+  color:var(--accent);margin:1.4rem 0 .4rem;
+}
+.body-list{
+  font-size:.84rem;color:var(--text-2);line-height:1.7;
+  padding-left:1.25rem;margin-bottom:.65rem;display:flex;flex-direction:column;gap:.25rem;
+}
+.body-list li strong{color:var(--text);font-weight:600}
+
+/* ── WIP ── */
+.wip{
+  display:inline-flex;align-items:center;gap:.4rem;
+  font-size:.72rem;color:var(--text-3);
+  border:1px solid var(--rule);padding:.3rem .7rem;margin-top:.35rem;
+}
+.wip::before{content:'○';font-size:.6rem}
+
+/* ── ASIDE labels ── */
+.aside-label{
+  font-size:.62rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--text-3);margin-bottom:.6rem;display:block;
+}
+.aside-section{margin-bottom:1.5rem}
+.aside-section:last-child{margin-bottom:0}
+
+/* ── LINK ITEM ── */
+.link-item{
+  display:flex;align-items:flex-start;gap:.5rem;
+  padding:.45rem 0;border-bottom:1px solid var(--rule);font-size:.8rem;
+}
+.link-item:last-child{border-bottom:none}
+.link-item a{color:var(--accent);text-decoration:none;line-height:1.4}
+.link-item a:hover{text-decoration:underline}
+.link-type{
+  font-size:.6rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--text-3);border:1px solid var(--rule);padding:.1rem .4rem;flex-shrink:0;margin-top:.1rem;
 }
 
-/* ── abstract blocks ── */
-.abstract{margin:1.5rem 0}
-.abstract-label{
-  font-family:system-ui,sans-serif;font-size:.65rem;font-weight:700;
-  letter-spacing:.12em;text-transform:uppercase;color:var(--text-3);margin-bottom:.5rem;
+/* ── APRENDIZADO ITEM ── */
+.aprendizado-item{
+  padding:.55rem 0;border-bottom:1px solid var(--rule);
+  font-size:.81rem;color:var(--text-2);line-height:1.6;
+  display:flex;gap:.5rem;align-items:flex-start;
 }
-.abstract p{line-height:1.8;color:var(--text-2)}
+.aprendizado-item:last-child{border-bottom:none}
+.aprendizado-item::before{content:'→';color:var(--accent);font-weight:700;flex-shrink:0;margin-top:.05rem}
 
-/* ── key figures ── */
-.figures{
-  display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));
-  gap:0;border:1px solid var(--rule);margin:2rem 0;
+/* ── SUBETAPA LIST (overview) ── */
+.subetapa-list{margin:1.25rem 0;display:flex;flex-direction:column;gap:0}
+.subetapa-row{
+  display:flex;align-items:flex-start;gap:.75rem;
+  padding:.75rem 0;border-bottom:1px solid var(--rule);cursor:pointer;
+  transition:background .1s;
 }
-.fig{padding:.9rem 1rem;border-right:1px solid var(--rule);border-bottom:1px solid var(--rule)}
-.fig:nth-last-child(-n+3){border-bottom:none}
-.fig-val{font-size:1.5rem;font-weight:700;color:var(--text);line-height:1;font-variant-numeric:tabular-nums;margin-bottom:.2rem}
-.fig-lbl{font-family:system-ui,sans-serif;font-size:.66rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--text-3)}
-.fig-sub{font-size:.78rem;color:var(--text-2);margin-top:.15rem}
-
-/* ── partners ── */
-.partner-list{margin:1rem 0 1.5rem}
-.partner-row{display:grid;grid-template-columns:160px 1fr;gap:.5rem;padding:.45rem 0;border-bottom:1px solid var(--rule);font-size:.88rem}
-.partner-row:first-child{border-top:1px solid var(--rule)}
-.pr-name{color:var(--text);font-weight:700}
-.pr-role{color:var(--text-2)}
-
-/* ── section nav cards (intro) ── */
-.sec-nav{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:.75rem;margin:2rem 0}
-.sec-btn{
-  text-align:left;border:1px solid var(--rule);border-radius:0;
-  padding:.85rem 1rem;background:none;cursor:pointer;
-  transition:border-color .12s;
+.subetapa-row:first-child{border-top:1px solid var(--rule)}
+.subetapa-row:hover .subetapa-name{color:var(--accent)}
+.subetapa-idx{
+  font-family:Georgia,serif;font-size:.75rem;font-weight:700;color:var(--text-3);
+  flex-shrink:0;padding-top:.05rem;min-width:24px;
 }
-.sec-btn:hover{border-color:var(--accent)}
-.sec-btn-n{font-family:system-ui,sans-serif;font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-3);margin-bottom:.3rem}
-.sec-btn-t{font-size:.88rem;font-weight:700;color:var(--text);margin-bottom:.2rem}
-.sec-btn-d{font-size:.78rem;color:var(--text-3);line-height:1.4}
+.subetapa-name{font-size:.85rem;color:var(--text);font-weight:500;transition:color .12s;line-height:1.5}
 
-/* ── section label ── */
-.sec-label{
-  font-family:system-ui,sans-serif;font-size:.65rem;font-weight:700;
-  letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:.5rem;
+/* ── HERO (intro panel) ── */
+.intro-hero{
+  background:var(--accent);
+  padding:60px 2.25rem 60px 3rem;
+  position:relative;overflow:hidden;
+}
+.intro-hero::after{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at 80% 50%, rgba(255,255,255,.04) 0%, transparent 70%);
+  pointer-events:none;
+}
+.hero-eyebrow{
+  font-family:'Inter',sans-serif;font-size:.6rem;font-weight:700;
+  letter-spacing:.22em;text-transform:uppercase;
+  color:rgba(255,203,55,.85);margin-bottom:.6rem;display:block;
+}
+.hero-title{
+  font-family:'Source Serif 4',Georgia,serif;
+  font-size:3rem;font-weight:300;
+  line-height:1.1;letter-spacing:-.015em;
+  color:#fff;max-width:800px;margin-bottom:.6rem;
+}
+.hero-title em{font-style:italic;color:rgba(240,131,115,.9);font-weight:300}
+.hero-lead{
+  font-family:'Inter',sans-serif;font-size:.82rem;line-height:1.65;
+  color:rgba(255,255,255,.65);max-width:800px;
+}
+.hero-lead strong{color:#fff}
+
+/* ── STAT ROW ── */
+.stat-row{
+  display:flex;gap:2rem;padding:1.1rem 2.25rem 1.1rem 3rem;
+  border-bottom:1px solid var(--rule);flex-wrap:wrap;
+  align-items:center;
+}
+.stat-item{}
+.stat-num{
+  font-family:'Source Serif 4',Georgia,serif;
+  font-size:1.4rem;font-weight:600;color:var(--accent);
+  line-height:1;display:block;margin-bottom:.15rem;
+}
+.stat-label{
+  font-size:.62rem;font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--text-3);
 }
 
-/* ── research questions ── */
-.rq-list{margin:1rem 0}
-.rq{display:grid;grid-template-columns:1.8rem 1fr;gap:.5rem;margin-bottom:.75rem;font-size:.92rem}
-.rq-n{color:var(--accent);font-weight:700;font-size:.8rem;padding-top:.35rem}
-
-/* ── timeline ── */
-.tl{margin:1rem 0}
-.tl-item{display:grid;grid-template-columns:110px 1fr;gap:1rem;padding:.75rem 0;border-bottom:1px solid var(--rule);font-size:.88rem}
-.tl-item:first-child{border-top:1px solid var(--rule)}
-.tl-d{color:var(--text-3);font-size:.78rem;line-height:1.4;font-family:system-ui,sans-serif;font-weight:600;padding-top:.08rem}
-.tl-body{}
-.tl-title{font-weight:700;color:var(--text);margin-bottom:.2rem}
-.tl-desc{color:var(--text-2);line-height:1.6}
-
-/* ── flow ── */
-.flow{margin:1rem 0 1.5rem}
-.flow-step{display:grid;grid-template-columns:28px 1fr;gap:.75rem;margin-bottom:.5rem;font-size:.88rem;align-items:start}
-.flow-idx{color:var(--accent);font-weight:700;padding-top:.05rem;font-family:system-ui,sans-serif;font-size:.8rem}
-.flow-box{}
-.flow-box strong{color:var(--text);display:block;margin-bottom:.1rem}
-.flow-box span{color:var(--text-3);font-size:.82rem}
-
-/* ── tables ── */
-.tw{overflow-x:auto;margin:1rem 0 1.5rem}
-table{width:100%;border-collapse:collapse;font-size:.85rem;font-variant-numeric:tabular-nums}
-thead th{
-  text-align:left;padding:.5rem .75rem;
-  font-family:system-ui,sans-serif;font-size:.65rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;
-  color:var(--text-3);border-bottom:2px solid var(--rule);
+/* ── ETAPA CARDS ── */
+.etapa-cards{display:flex;flex-direction:column;gap:0;padding:0 2.25rem 1.5rem 3rem}
+.etapa-card{
+  display:flex;align-items:flex-start;gap:1rem;
+  padding:.85rem 0;border-bottom:1px solid var(--rule);
+  cursor:pointer;transition:background .1s;
 }
-tbody td{padding:.5rem .75rem;border-bottom:1px solid var(--rule);color:var(--text-2)}
-tbody tr:last-child td{border-bottom:none}
-.num{text-align:right;font-variant-numeric:tabular-nums}
-tr.total td{font-weight:700;color:var(--text);border-top:2px solid var(--rule)}
-
-/* ── stat row ── */
-.stat-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:0;border:1px solid var(--rule);margin:1rem 0 1.5rem}
-.st{padding:.8rem 1rem;border-right:1px solid var(--rule)}
-.st:last-child{border-right:none}
-.st-val{font-size:1.4rem;font-weight:700;color:var(--text);font-variant-numeric:tabular-nums;line-height:1;margin-bottom:.2rem}
-.st-lbl{font-family:system-ui,sans-serif;font-size:.63rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--text-3)}
-.st-sub{font-size:.76rem;color:var(--text-2);margin-top:.15rem}
-
-/* ── note ── */
-.note{font-size:.82rem;color:var(--text-3);font-style:italic;margin:-.5rem 0 1rem}
-
-/* ── AB ── */
-.ab{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1rem 0 1.5rem}
-.ab-col{}
-.ab-label{font-family:system-ui,sans-serif;font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-3);margin-bottom:.5rem}
-.ab-col ul{margin:0}
-
-/* ── learning ── */
-.learn-item{padding:.85rem 0;border-bottom:1px solid var(--rule)}
-.learn-item:first-child{border-top:1px solid var(--rule)}
-.learn-tag{font-family:system-ui,sans-serif;font-size:.63rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:.35rem}
-.learn-tag.good{color:var(--accent)}
-.learn-tag.bad{color:#A05000}
-.learn-tag.rec{color:#1A4FAF}
-:root[data-theme="dark"] .learn-tag.bad{color:#E09040}
-:root[data-theme="dark"] .learn-tag.rec{color:#6090F0}
-@media(prefers-color-scheme:dark){:root:not([data-theme="light"]) .learn-tag.bad{color:#E09040}:root:not([data-theme="light"]) .learn-tag.rec{color:#6090F0}}
-
-/* ── files ── */
-.file-list{margin:1rem 0 1.5rem}
-.file-item{display:grid;grid-template-columns:56px 1fr auto;gap:.75rem;padding:.6rem 0;border-bottom:1px solid var(--rule);font-size:.85rem;align-items:start}
-.file-item:first-child{border-top:1px solid var(--rule)}
-.file-ext{font-family:system-ui,sans-serif;font-size:.65rem;font-weight:700;letter-spacing:.05em;color:var(--text-3);padding-top:.12rem}
-.file-name{font-weight:700;color:var(--text)}
-.file-desc{font-size:.8rem;color:var(--text-3);margin-top:.12rem;line-height:1.5}
-.file-dl{
-  flex-shrink:0;align-self:center;
-  font-family:system-ui,sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
-  color:var(--accent);border:1px solid var(--accent);padding:.25rem .6rem;cursor:pointer;
-  background:none;white-space:nowrap;text-decoration:none;
-  transition:background .12s,color .12s;display:inline-block;
+.etapa-card:first-child{border-top:1px solid var(--rule);margin-top:1rem}
+.etapa-card:hover .etapa-card-title{color:var(--accent)}
+.etapa-card-num{
+  font-family:'Source Serif 4',Georgia,serif;
+  font-size:.85rem;font-weight:600;color:var(--accent);
+  flex-shrink:0;padding-top:.15rem;min-width:24px;
 }
-.file-dl:hover{background:var(--accent);color:var(--bg);text-decoration:none}
-
-/* ── placeholder ── */
-.placeholder{color:var(--text-3);font-style:italic;font-size:.85rem;padding:.5rem 0}
-
-/* ── questionnaire flow diagram ── */
-.qflow{margin:1.5rem 0 2rem;overflow-x:auto}
-.qf-row{display:flex;align-items:flex-start;gap:0;margin-bottom:0}
-.qf-col{display:flex;flex-direction:column;align-items:center;flex:1;min-width:0}
-.qf-node{
-  border:1px solid var(--rule);padding:.45rem .75rem;font-size:.78rem;
-  text-align:center;width:100%;background:var(--bg);
-  color:var(--text-2);line-height:1.4;
+.etapa-card-body{}
+.etapa-card-title{
+  font-family:'Source Serif 4',Georgia,serif;
+  font-size:1rem;font-weight:600;color:var(--text);
+  margin-bottom:.25rem;line-height:1.3;transition:color .12s;
 }
-.qf-node.start{background:var(--accent);color:#fff;border-color:var(--accent);font-weight:700}
-.qf-node.end-ok{background:var(--accent);color:#fff;border-color:var(--accent);font-size:.72rem}
-.qf-node.end-no{background:var(--rule);color:var(--text-3);border-color:var(--rule);font-size:.72rem}
-.qf-node.branch{border-style:dashed;font-size:.75rem;color:var(--text-3)}
-.qf-node strong{display:block;font-family:system-ui,sans-serif;font-size:.65rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--text-3);margin-bottom:.15rem}
-.qf-node.start strong{color:rgba(255,255,255,.75)}
-.qf-arrow{font-size:.75rem;color:var(--text-3);padding:.15rem 0;text-align:center;user-select:none}
-.qf-branch-row{display:flex;gap:.5rem;width:100%}
-.qf-branch-col{display:flex;flex-direction:column;align-items:center;flex:1;min-width:0}
-.qf-branch-label{font-family:system-ui,sans-serif;font-size:.62rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);padding:.1rem 0;text-align:center}
-.qf-branch-label.no{color:var(--text-3)}
+.etapa-card-desc{font-size:.82rem;color:var(--text-2);line-height:1.6}
+.etapa-card-sub{
+  font-size:.68rem;font-weight:600;letter-spacing:.06em;
+  color:var(--text-3);margin-top:.35rem;text-transform:uppercase;
+}
 
-/* ── em construção ── */
-.wip-block{
-  border:1px solid var(--rule);padding:2.5rem 2rem;margin:2rem 0;text-align:center;
+/* ── INTRO BODY ── */
+.intro-body{padding:2rem 2.25rem 2.5rem 3rem;display:flex;flex-direction:row;gap:3.5rem;align-items:flex-start}
+.intro-text{flex:1;display:flex;flex-direction:column;gap:1.75rem;min-width:0}
+.intro-section-title{
+  font-family:'Source Serif 4',Georgia,serif;
+  font-size:.82rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;
+  color:var(--accent);margin-bottom:.55rem;
 }
-.wip-icon{font-size:2rem;margin-bottom:.75rem;display:block}
-.wip-title{font-weight:700;color:var(--text);margin-bottom:.5rem}
-.wip-desc{font-size:.9rem;color:var(--text-3)}
+.intro-body p{font-size:.88rem;line-height:1.75;color:var(--text-2)}
+.intro-body strong{color:var(--text);font-weight:600}
 
-/* ── sub-tabs (Metodologia) ── */
-.sub-nav{
-  display:flex;gap:0;border-bottom:2px solid var(--rule);margin-bottom:2rem;
-  overflow-x:auto;
+/* ── PHONE MOCKUP ── */
+.phone-wrap{flex-shrink:0;width:240px;position:sticky;top:2rem}
+.phone-frame{
+  width:240px;background:#111;border-radius:36px;
+  padding:10px;box-shadow:0 24px 60px rgba(0,0,0,.28),0 0 0 1px rgba(255,255,255,.07);
 }
-.sub-btn{
-  background:none;border:none;cursor:pointer;
-  font-family:system-ui,sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
-  color:var(--text-3);padding:.55rem 1rem .45rem;
-  border-bottom:2px solid transparent;margin-bottom:-2px;
-  white-space:nowrap;transition:color .12s;
+.phone-screen{
+  background:#ECE5DD;border-radius:28px;overflow:hidden;
+  height:480px;display:flex;flex-direction:column;font-family:'Inter',sans-serif;
 }
-.sub-btn:hover{color:var(--text)}
-.sub-btn.active{color:var(--accent);border-bottom-color:var(--accent)}
-.sub-panel{display:none}.sub-panel.active{display:block}
+.wa-header{
+  background:#075E54;padding:.55rem .85rem;
+  display:flex;align-items:center;gap:.6rem;flex-shrink:0;
+}
+.wa-avatar{
+  width:32px;height:32px;border-radius:50%;background:#25D366;
+  display:flex;align-items:center;justify-content:center;
+  font-size:.75rem;font-weight:700;color:#fff;flex-shrink:0;
+}
+.wa-contact{color:#fff}
+.wa-contact-name{font-size:.72rem;font-weight:600;line-height:1.2}
+.wa-contact-status{font-size:.6rem;color:rgba(255,255,255,.65);line-height:1}
+.wa-chat{flex:1;overflow-y:auto;padding:.6rem .65rem;display:flex;flex-direction:column;gap:.45rem}
+.wa-chat::-webkit-scrollbar{width:0}
+.wa-bubble{
+  max-width:88%;padding:.45rem .6rem .3rem;border-radius:7.5px;
+  font-size:.65rem;line-height:1.45;position:relative;
+}
+.wa-bubble.bot{
+  background:#fff;border-top-left-radius:2px;align-self:flex-start;
+  box-shadow:0 1px 1px rgba(0,0,0,.1);
+}
+.wa-bubble.user{
+  background:#DCF8C6;border-top-right-radius:2px;align-self:flex-end;
+  box-shadow:0 1px 1px rgba(0,0,0,.1);
+}
+.wa-time{font-size:.55rem;color:rgba(0,0,0,.38);float:right;margin-left:.4rem;margin-top:.1rem}
+.wa-options{display:flex;flex-direction:column;gap:.3rem;margin-top:.35rem}
+.wa-option{
+  background:#f0f0f0;border:1px solid #e0e0e0;border-radius:5px;
+  padding:.3rem .5rem;font-size:.62rem;color:#075E54;font-weight:500;
+  cursor:default;
+}
+.wa-typing{
+  background:#fff;border-radius:7.5px;border-top-left-radius:2px;
+  padding:.4rem .6rem;align-self:flex-start;
+  box-shadow:0 1px 1px rgba(0,0,0,.1);display:flex;gap:3px;align-items:center;
+}
+.wa-dot{width:6px;height:6px;border-radius:50%;background:#aaa;animation:waDot 1.2s infinite}
+.wa-dot:nth-child(2){animation-delay:.2s}
+.wa-dot:nth-child(3){animation-delay:.4s}
+@keyframes waDot{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-4px)}}
+.wa-notif{
+  font-size:.58rem;color:#888;text-align:center;
+  background:rgba(0,0,0,.06);border-radius:6px;padding:.2rem .5rem;
+  margin:.1rem auto;max-width:80%;
+}
+@media(max-width:860px){.phone-wrap{display:none}}
 
-/* ── questionnaire block ── */
-.q-section{margin-bottom:2rem}
-.q-section-title{
-  font-family:system-ui,sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
-  color:var(--text-3);margin-bottom:.75rem;padding-bottom:.4rem;border-bottom:1px solid var(--rule);
-}
-.q-item{
-  display:grid;grid-template-columns:1.6rem 1fr;gap:.5rem;
-  margin-bottom:.6rem;font-size:.88rem;line-height:1.6;
-}
-.q-num{color:var(--accent);font-weight:700;font-family:system-ui,sans-serif;font-size:.75rem;padding-top:.22rem}
-.q-text{color:var(--text-2)}
-.q-scale{font-size:.76rem;color:var(--text-3);margin-top:.15rem;font-style:italic}
+/* ── sem aside (intro) ── */
+.hide-aside .doc-aside{display:none}
+.hide-aside .doc-main{flex:1}
 
-/* ── overlay / responsive ── */
-.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:140}
-@media(max-width:720px){
-  .sidebar{transform:translateX(-100%)}.sidebar.open{transform:translateX(0)}
-  .main{margin-left:0}
-  .menu-btn{display:flex;align-items:center;justify-content:center}
-  .hd-wordmark,.hd-sep,.hd-sub{flex:1}
-  .overlay.show{display:block}
-  .page{padding:2rem 1.1rem 5rem}
-  .ab{grid-template-columns:1fr}
-  .fig:nth-last-child(-n+3){border-bottom:1px solid var(--rule)}
-  .fig:last-child{border-bottom:none}
-  .tl-item{grid-template-columns:1fr;gap:.25rem}
-  .partner-row{grid-template-columns:1fr}
-  .file-item{grid-template-columns:56px 1fr;gap:.5rem}
-  .file-dl{display:none}
-  .sub-nav{gap:0}
+/* ── MENU TOGGLE (mobile) ── */
+.menu-toggle{
+  display:none;
+  position:fixed;top:12px;left:12px;z-index:400;
+  width:36px;height:36px;border-radius:6px;
+  background:var(--sidebar-bg);border:none;cursor:pointer;
+  align-items:center;justify-content:center;flex-direction:column;gap:5px;
+  box-shadow:0 2px 8px rgba(0,0,0,.35);
+}
+.menu-toggle span{
+  display:block;width:18px;height:2px;
+  background:#fff;border-radius:2px;transition:all .2s;
+}
+.nav-overlay{
+  display:none;position:fixed;inset:0;z-index:150;
+  background:rgba(0,0,0,.45);
+}
+.nav-overlay.visible{display:block}
+
+/* ── RESPONSIVE ── */
+@media(max-width:960px){
+  :root{--right-w:0px}
+  .doc-aside{display:none}
+}
+@media(max-width:680px){
+  :root{--sidebar-w:240px}
+  .doc-nav{position:fixed;left:-240px;top:0;height:100vh;z-index:200;transition:left .22s;width:240px}
+  .doc-nav.open{left:0}
+  .doc-content{margin-left:0}
+  .dh-brand{width:auto}
+  .section-wrap{padding:1.75rem 1.25rem}
+  .menu-toggle{display:flex}
 }
 </style>
 </head>
 <body>
 
-<header class="site-header">
-  <span class="hd-wordmark">Mais Dados Mais Saúde</span>
-  <span class="hd-sep">·</span>
-  <span class="hd-sub">Inquérito APS Recife</span>
-  <button class="menu-btn" id="menuBtn" aria-label="Menu" style="margin-left:auto">
-    <svg viewBox="0 0 24 24"><line x1="3" y1="7" x2="21" y2="7"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="17" x2="21" y2="17"/></svg>
-  </button>
-</header>
+<button class="menu-toggle" id="menuToggle" aria-label="Abrir menu">
+  <span></span><span></span><span></span>
+</button>
+<div class="nav-overlay" id="navOverlay"></div>
 
-<div class="overlay" id="overlay"></div>
+<div class="doc-shell" style="padding-top:0">
 
-<div class="app">
+  <!-- Sidebar -->
+  <nav class="doc-nav" id="docNav">
+    <div class="nav-group">
+      <span class="nav-group-label">Visão geral</span>
+      <button class="nav-etapa active" data-panel="intro">
+        <span class="nav-etapa-num">→</span>
+        Introdução
+      </button>
+    </div>
 
-  <nav class="sidebar" id="sidebar">
-    <div class="sb-group">
-      <span class="sb-group-label">Documentação</span>
-      <button class="nav-btn active" data-tab="intro">Introdução</button>
-      <button class="nav-btn" data-tab="recife">Experiência em Recife</button>
-      <button class="nav-btn" data-tab="metodologia">Metodologia</button>
-      <button class="nav-btn nav-sub" data-tab="metodologia" data-sub="desenho">Desenho do Estudo</button>
-      <button class="nav-btn nav-sub" data-tab="metodologia" data-sub="perguntas">Instrumento e Perguntas</button>
-      <button class="nav-btn nav-sub" data-tab="metodologia" data-sub="amostral">Plano Amostral</button>
-      <button class="nav-btn nav-sub" data-tab="metodologia" data-sub="operacao">Operação e Campo</button>
-      <button class="nav-btn nav-sub" data-tab="metodologia" data-sub="metricas">Métricas</button>
-      <button class="nav-btn" data-tab="tecnico">Aspectos Técnicos</button>
-      <button class="nav-btn" data-tab="governanca">Governança e Ética</button>
-      <button class="nav-btn" data-tab="arquivos">Arquivos de Referência</button>
-      <button class="nav-btn" data-tab="aprendizados">Desafios e Aprendizados</button>
-      <a class="nav-btn" href="docs.html" style="color:var(--text-3);display:block;width:100%;text-align:left;padding:.3rem 1.5rem;font-family:Georgia,serif;font-size:.82rem;text-decoration:none;transition:color .12s">Guia de replicação →</a>
+    <div class="nav-group">
+      <span class="nav-group-label">Etapas</span>
+
+      <button class="nav-etapa" data-panel="etapa1">
+        <span class="nav-etapa-num">1</span>
+        Planejamento temático e metodológico
+      </button>
+      <button class="nav-sub" data-panel="sub-1-1">Definição do objetivo</button>
+      <button class="nav-sub" data-panel="sub-1-2">Elaboração do projeto</button>
+      <button class="nav-sub" data-panel="sub-1-3">Submissão ao CEP</button>
+      <button class="nav-sub" data-panel="sub-1-4">Definição da amostra</button>
+      <button class="nav-sub" data-panel="sub-1-5">Elaboração do questionário</button>
+      <button class="nav-sub" data-panel="sub-1-6">Aprovação do questionário</button>
+      <button class="nav-sub" data-panel="sub-1-7">Estratégia de coleta</button>
+      <button class="nav-sub" data-panel="sub-1-8">Estratégia de monitoramento</button>
+
+      <button class="nav-etapa" data-panel="etapa2">
+        <span class="nav-etapa-num">2</span>
+        Preparação e testes
+      </button>
+      <button class="nav-sub" data-panel="sub-2-1">Pilotos de coleta</button>
+      <button class="nav-sub" data-panel="sub-2-2">Ajustes pós-piloto</button>
+      <button class="nav-sub" data-panel="sub-2-3">Sistemas tecnológicos</button>
+
+      <button class="nav-etapa" data-panel="etapa3">
+        <span class="nav-etapa-num">3</span>
+        Implementação da coleta
+      </button>
+      <button class="nav-sub" data-panel="sub-3-1">Execução da coleta</button>
+      <button class="nav-sub" data-panel="sub-3-2">Monitoramento contínuo</button>
+      <button class="nav-sub" data-panel="sub-3-3">Ajustes operacionais</button>
+
+      <button class="nav-etapa" data-panel="etapa4">
+        <span class="nav-etapa-num">4</span>
+        Consolidação e análise dos dados
+      </button>
+      <button class="nav-sub" data-panel="sub-4-1">Limpeza e validação</button>
+      <button class="nav-sub" data-panel="sub-4-2">Ponderação e análise</button>
+      <button class="nav-sub" data-panel="sub-4-3">Relatórios técnicos</button>
     </div>
   </nav>
 
-  <main class="main">
+  <div class="doc-content">
+    <!-- Main -->
+    <div class="doc-main" id="docMain">
 
-    <!-- ══ INTRODUÇÃO ══ -->
-    <div id="tab-intro" class="tab-content active">
-    <div class="page">
-
-      <div class="cover-eyebrow">Documento de Metodologia</div>
-      <h1>Avaliação de Acesso e Qualidade da Atenção Primária à Saúde em Recife</h1>
-
-      <div class="abstract">
-        <div class="abstract-label">Por que este estudo importa</div>
-        <p>Avaliar a qualidade da Atenção Primária à Saúde a partir da perspectiva do usuário é essencial para orientar decisões de gestão — mas pesquisas desse tipo historicamente enfrentam dois obstáculos: custo operacional elevado e longos ciclos de coleta. Inquéritos telefônicos tradicionais exigem estrutura de call center; pesquisas presenciais demandam equipe de campo extensiva. O resultado é que dados sobre a experiência do usuário chegam ao gestor com meses de defasagem, limitando sua utilidade para o planejamento.</p>
-        <p>Este inquérito demonstra que é possível superar esses obstáculos. Ao utilizar o WhatsApp como canal de entrega — plataforma presente no cotidiano de mais de 90% dos brasileiros — o estudo reduz drasticamente o custo e o tempo do ciclo de coleta, ao mesmo tempo em que amplia o alcance para populações dificilmente atingidas por outros meios. A base cadastral do e-SUS APS elimina a necessidade de listagem de domicílios, permitindo sorteio probabilístico direto a partir dos próprios registros do sistema público de saúde.</p>
-      </div>
-
-      <div class="abstract">
-        <div class="abstract-label">Sobre o programa e o objeto de pesquisa</div>
-        <p>O <strong>Mais Dados Mais Saúde (MDMS)</strong> é conduzido por Umane e Vital Strategies, com parceria técnica da UFPel e apoio do Instituto Devive e da Resolve to Save Lives. Em Recife, o programa avalia se as Unidades de Saúde da Família+ (USF+) — oriundas de um programa municipal de expansão e qualificação dos serviços — produzem diferenças perceptíveis no acesso e na qualidade do cuidado em relação às USF convencionais, gerando evidência direta dos usuários para decisões de gestão e alocação de recursos na APS municipal.</p>
-      </div>
-
-      <div class="abstract">
-        <div class="abstract-label">Inovação metodológica</div>
-        <p>O inquérito aplica desenho probabilístico estratificado em dois estágios com instrumento baseado no PCATool-Brasil, entregue via WhatsApp. Um estudo-piloto nos Distritos Sanitários 1, 2 e 3 precedeu a coleta principal, calibrando parâmetros críticos: taxa de resposta efetiva, efeito do tamanho do questionário sobre a conclusão (teste A/B entre versão completa e reduzida) e influência do tempo desde o último atendimento sobre a propensão a responder.</p>
-      </div>
-
-      <hr>
-
-      <p class="sec-label">Seções deste documento</p>
-      <div class="sec-nav">
-        <button class="sec-btn" data-goto="recife"><div class="sec-btn-n">—</div><div class="sec-btn-t">Experiência em Recife</div><div class="sec-btn-d">Números do projeto e consórcio envolvido</div></button>
-        <button class="sec-btn" data-goto="metodologia"><div class="sec-btn-n">—</div><div class="sec-btn-t">Metodologia</div><div class="sec-btn-d">Desenho, instrumento, plano amostral e operação de campo</div></button>
-        <button class="sec-btn" data-goto="tecnico"><div class="sec-btn-n">01</div><div class="sec-btn-t">Aspectos Técnicos</div><div class="sec-btn-d">Arquitetura, pipeline R e análise estatística</div></button>
-        <button class="sec-btn" data-goto="governanca"><div class="sec-btn-n">02</div><div class="sec-btn-t">Governança e Ética</div><div class="sec-btn-d">CEP, LGPD, TCLE e protocolo para casos sensíveis</div></button>
-        <button class="sec-btn" data-goto="arquivos"><div class="sec-btn-n">03</div><div class="sec-btn-t">Arquivos de Referência</div><div class="sec-btn-d">Documentos, scripts R e dados do projeto</div></button>
-        <button class="sec-btn" data-goto="aprendizados"><div class="sec-btn-n">04</div><div class="sec-btn-t">Desafios e Aprendizados</div><div class="sec-btn-d">O que funcionou, desafios e recomendações</div></button>
-      </div>
-
-    </div>
-    </div>
-
-    <!-- ══ EXPERIÊNCIA EM RECIFE ══ -->
-    <div id="tab-recife" class="tab-content">
-    <div class="page">
-      <div class="cover-eyebrow">Estudo de caso</div>
-      <h1>Experiência em Recife</h1>
-      <p>A aplicação do inquérito em Recife constitui a primeira experiência do MDMS com coleta via WhatsApp em larga escala no contexto da APS municipal. Os números abaixo descrevem o escopo da operação no piloto e as metas da coleta principal.</p>
-
-      <h2>Números do projeto</h2>
-      <div class="figures">
-        <div class="fig"><div class="fig-val">8</div><div class="fig-lbl">Distritos Sanitários</div><div class="fig-sub">Cobertura municipal completa na coleta principal</div></div>
-        <div class="fig"><div class="fig-val">16</div><div class="fig-lbl">Estratos amostrais</div><div class="fig-sub">DS × tipo de unidade (USF ou USF+)</div></div>
-        <div class="fig"><div class="fig-val">2.400</div><div class="fig-lbl">Convites no piloto</div><div class="fig-sub">Distribuídos nos DS 1, 2 e 3</div></div>
-        <div class="fig"><div class="fig-val">7–10%</div><div class="fig-lbl">Taxa de resposta esperada</div><div class="fig-sub">Estimativa para WhatsApp no município</div></div>
-        <div class="fig"><div class="fig-val">576–768</div><div class="fig-lbl">Respostas necessárias</div><div class="fig-sub">Por grupo (USF ou USF+) na coleta principal</div></div>
-        <div class="fig"><div class="fig-val">A/B</div><div class="fig-lbl">Teste de versões</div><div class="fig-sub">Questionário completo vs reduzido</div></div>
-      </div>
-
-      <h2>Consórcio do projeto</h2>
-      <p>O inquérito é conduzido por um consórcio de organizações com papéis complementares, reunindo capacidade técnica em metodologia de pesquisa, análise de dados e gestão em saúde pública.</p>
-      <div class="partner-list">
-        <div class="partner-row"><span class="pr-name">Umane</span><span class="pr-role">Coordenação executiva e entrega de relatórios</span></div>
-        <div class="partner-row"><span class="pr-name">Vital Strategies</span><span class="pr-role">Parceria técnica principal, metodologia e análise de dados</span></div>
-        <div class="partner-row"><span class="pr-name">UFPel</span><span class="pr-role">Suporte ao plano amostral e análise estatística</span></div>
-        <div class="partner-row"><span class="pr-name">Instituto Devive</span><span class="pr-role">Apoio institucional</span></div>
-        <div class="partner-row"><span class="pr-name">Resolve to Save Lives</span><span class="pr-role">Apoio institucional</span></div>
-        <div class="partner-row"><span class="pr-name">SMS Recife</span><span class="pr-role">Fornecimento da base e-SUS APS e parceria local</span></div>
-      </div>
-    </div>
-    </div>
-
-    <!-- ══ METODOLOGIA ══ -->
-    <div id="tab-metodologia" class="tab-content">
-    <div class="page">
-      <div class="cover-eyebrow">Metodologia</div>
-      <h1>Metodologia do Inquérito</h1>
-
-      <!-- Sub: Desenho -->
-      <div class="sub-panel active" id="sub-desenho">
-        <h2 style="margin-top:0">Desenho do estudo</h2>
-        <p>Estudo transversal com amostragem probabilística estratificada em dois estágios, conduzido por meio de questionário conversacional entregue via WhatsApp. A população-alvo são usuários adultos (≥18 anos) cadastrados no e-SUS APS e vinculados a USF ou USF+ nos oito Distritos Sanitários de Recife.</p>
-
-        <h3>Comparação USF vs USF+</h3>
-        <p>A pergunta central é se as Unidades de Saúde da Família+ — resultantes do programa municipal de qualificação — produzem diferenças perceptíveis nos atributos de acesso e qualidade do cuidado em relação às USF convencionais. O desfecho é mensurado pela perspectiva do próprio usuário, utilizando instrumento padronizado e validado.</p>
-
-        <h3>Etapas do projeto</h3>
-        <div class="tl">
-          <div class="tl-item"><div class="tl-d">Fase 1<br>Preparação</div><div class="tl-body"><div class="tl-title">Desenho metodológico e plano amostral</div><div class="tl-desc">Definição dos estratos, cálculo amostral, elaboração do instrumento baseado no PCATool-Brasil e construção da base de convites a partir do e-SUS APS.</div></div></div>
-          <div class="tl-item"><div class="tl-d">Fase 2<br>Piloto</div><div class="tl-body"><div class="tl-title">Estudo-piloto nos DS 1, 2 e 3</div><div class="tl-desc">2.400 convites em 6 estratos, teste A/B entre questionário completo (10–15 min) e reduzido (5–8 min). Janela de coleta de 14 dias, lembrete no dia 8.</div></div></div>
-          <div class="tl-item"><div class="tl-d">Fase 3<br>Calibração</div><div class="tl-body"><div class="tl-title">Análise do piloto e recalibração</div><div class="tl-desc">Análise das taxas de resposta por estrato e versão, escolha do instrumento definitivo e recalibração do número de convites para a coleta principal.</div></div></div>
-          <div class="tl-item"><div class="tl-d">Fase 4<br>Coleta</div><div class="tl-body"><div class="tl-title">Disparo em 5 ondas nos 8 DS de Recife</div><div class="tl-desc">Amostra probabilística estratificada em todos os Distritos Sanitários, com pós-estratificação por sexo, faixa etária e raça/cor.</div></div></div>
-          <div class="tl-item"><div class="tl-d">Fase 5<br>Disseminação</div><div class="tl-body"><div class="tl-title">Análise e publicação</div><div class="tl-desc">Análise com ponderação amostral, relatórios para SMS Recife e parceiros, publicação científica.</div></div></div>
+      <!-- ══ INTRO ══ -->
+      <div class="doc-panel active" id="panel-intro">
+        <!-- Hero -->
+        <div class="intro-hero">
+          <span class="hero-eyebrow">GUIA DE REPLICAÇÃO · INQUÉRITO NA APS POR WHATSAPP</span>
+          <h1 class="hero-title">Usando a <em>tecnologia</em> para avaliar a APS em alto alcance</h1>
+          <p class="hero-lead">Uma metodologia de baixo custo e alto alcance para avaliar a qualidade da Atenção Primária à Saúde pela perspectiva do usuário, com <strong>WhatsApp</strong> como canal de coleta e o <strong>e-SUS APS</strong> como base amostral.</p>
         </div>
 
-        <h3>Perguntas de pesquisa</h3>
-        <div class="rq-list">
-          <div class="rq"><span class="rq-n">1.</span><span>O programa USF+ produz diferenças perceptíveis no <strong>acesso</strong> aos serviços de APS em relação às USF convencionais?</span></div>
-          <div class="rq"><span class="rq-n">2.</span><span>Há diferenças na <strong>qualidade percebida</strong> do cuidado — longitudinalidade, integralidade, coordenação — entre os dois modelos?</span></div>
-          <div class="rq"><span class="rq-n">3.</span><span>Como <strong>perfil sociodemográfico</strong> (sexo, faixa etária, raça/cor) e <strong>território</strong> (Distrito Sanitário) modulam essas diferenças?</span></div>
-          <div class="rq"><span class="rq-n">4.</span><span>Qual a viabilidade operacional de um <strong>inquérito via WhatsApp em larga escala</strong> no contexto da APS municipal?</span></div>
-        </div>
-      </div>
-
-      <!-- Sub: Perguntas -->
-      <div class="sub-panel" id="sub-perguntas">
-        <h2 style="margin-top:0">Instrumento: Questionários de Acesso e Qualidade da APS</h2>
-        <p>O instrumento foi desenvolvido com base nos atributos do <strong>PCATool-Brasil</strong> e adaptado para o formato conversacional do WhatsApp. São duas versões testadas em paralelo (A/B) para comparar taxas de conclusão e qualidade das respostas. Todas as perguntas usam escolha única com botões de resposta.</p>
-
-        <div class="ab">
-          <div class="ab-col">
-            <div class="ab-label">Versão Expandida (A) — ~8 min</div>
-            <ul>
-              <li>17 a 19 perguntas</li>
-              <li>7 atributos do PCATool-Brasil</li>
-              <li>Maior profundidade analítica</li>
-              <li>Maior risco de abandono</li>
-            </ul>
-          </div>
-          <div class="ab-col">
-            <div class="ab-label">Versão Curta (B) — ~3 min</div>
-            <ul>
-              <li>9 a 11 perguntas</li>
-              <li>5 atributos prioritários</li>
-              <li>Esperada maior taxa de conclusão</li>
-              <li>Menor profundidade analítica</li>
-            </ul>
-          </div>
-        </div>
-        <p class="note">Critério de adoção da versão curta na coleta principal: taxa de conclusão ≥50% superior à da versão expandida, sem perda relevante de qualidade.</p>
-
-        <hr>
-
-        <!-- Mapa de cobertura -->
-        <h3>Cobertura por atributo</h3>
-        <div class="tw">
-          <table>
-            <thead><tr><th>Bloco / Atributo</th><th>Perguntas — Expandida (A)</th><th>Perguntas — Curta (B)</th></tr></thead>
-            <tbody>
-              <tr><td><strong>Consentimento</strong></td><td>P1</td><td>P1</td></tr>
-              <tr><td><strong>Triagem</strong></td><td>P2, P2.1</td><td>P2, P2.1</td></tr>
-              <tr><td><strong>Acesso / Primeiro Contato</strong></td><td>P3, P3.1, P4</td><td>P3, P3.1</td></tr>
-              <tr><td><strong>Acessibilidade Organizacional</strong></td><td>P5, P6, P7</td><td>P4, P5</td></tr>
-              <tr><td><strong>Longitudinalidade (Vínculo)</strong></td><td>P8, P9</td><td>P6</td></tr>
-              <tr><td><strong>Coordenação do Cuidado</strong></td><td>P10, P11</td><td>—</td></tr>
-              <tr><td><strong>Integralidade</strong></td><td>P12</td><td>P7</td></tr>
-              <tr><td><strong>Orientação Familiar</strong></td><td>P13</td><td>—</td></tr>
-              <tr><td><strong>Orientação Comunitária</strong></td><td>P14</td><td>—</td></tr>
-              <tr><td><strong>Acesso Digital</strong></td><td>P15, P16</td><td>P8</td></tr>
-              <tr><td><strong>Satisfação Geral (NPS)</strong></td><td>P17</td><td>P9</td></tr>
-            </tbody>
-          </table>
-        </div>
-
-        <hr>
-
-        <!-- Diagrama de fluxo -->
-        <h3>Diagrama de fluxo — roteamento</h3>
-        <p>O fluxo abaixo representa o roteamento compartilhado pelas duas versões. As ramificações condicionais estão em destaque; a partir de P4 (versão expandida) ou P4 (versão curta), o fluxo é linear até o NPS.</p>
-
-        <div class="qflow">
-          <!-- P1 -->
-          <div style="display:flex;flex-direction:column;align-items:center;margin-bottom:.25rem">
-            <div class="qf-node start" style="max-width:340px;width:100%"><strong>P1 — Consentimento</strong>Você aceita participar dessa pesquisa?</div>
-          </div>
-          <!-- Branch P1 -->
-          <div style="display:flex;gap:.5rem;max-width:340px;width:100%;margin:0 auto .1rem">
-            <div style="flex:1;text-align:center"><div class="qf-arrow">↙</div><div class="qf-branch-label">Sim</div></div>
-            <div style="flex:1;text-align:center"><div class="qf-arrow">↘</div><div class="qf-branch-label no">Não</div></div>
-          </div>
-          <div style="display:flex;gap:.5rem;max-width:340px;width:100%;margin:0 auto .5rem">
-            <div style="flex:1;text-align:center"><div class="qf-arrow">↓</div></div>
-            <div style="flex:1;text-align:center"><div class="qf-node end-no">✗ Encerrar</div></div>
+        <!-- Contexto e relevância -->
+        <div class="intro-body">
+          <div class="intro-text">
+            <div class="intro-section">
+              <p>Avaliar a qualidade da Atenção Primária à Saúde a partir da perspectiva do usuário é essencial para orientar decisões de gestão, mas pesquisas desse tipo historicamente enfrentam dois obstáculos: <strong>custo operacional elevado</strong> e <strong>longos ciclos de coleta</strong>. Inquéritos telefônicos tradicionais exigem estrutura de call center; pesquisas presenciais demandam equipe de campo extensiva. O resultado é que dados sobre a experiência do usuário chegam ao gestor com meses de defasagem, limitando sua utilidade para o planejamento.</p>
+            </div>
+            <div class="intro-section">
+              <h2 class="intro-section-title">O que este inquérito demonstra</h2>
+              <p>Ao utilizar o WhatsApp como canal de entrega (plataforma presente no cotidiano de mais de 90% dos brasileiros), o estudo <strong>reduz drasticamente o custo e o tempo do ciclo de coleta</strong>, ao mesmo tempo em que amplia o alcance para populações dificilmente atingidas por outros meios. A base cadastral do e-SUS APS elimina a necessidade de listagem de domicílios, permitindo sorteio probabilístico direto a partir dos próprios registros do sistema público de saúde.</p>
+            </div>
+            <div class="intro-section">
+              <h2 class="intro-section-title">Inovação metodológica</h2>
+              <p>O <strong>PCATool-Brasil</strong>, instrumento validado para mensurar os atributos da atenção primária segundo o modelo de Barbara Starfield, foi adaptado para linguagem conversacional no WhatsApp, viabilizando a coleta em escala sem perda de rigor científico. O delineamento quase-experimental, comparando unidades USF e USF+, gera evidência causal direta para decisões de política de APS.</p>
+            </div>
           </div>
 
-          <!-- P2 -->
-          <div style="display:flex;flex-direction:column;align-items:center;margin-bottom:.25rem">
-            <div class="qf-node" style="max-width:340px;width:100%"><strong>P2 — Triagem</strong>Você frequenta a <em>[unidade]</em>?</div>
-          </div>
-          <!-- Branch P2 -->
-          <div style="display:flex;gap:.5rem;max-width:340px;width:100%;margin:0 auto .1rem">
-            <div style="flex:1;text-align:center"><div class="qf-arrow">↙</div><div class="qf-branch-label">Sim</div></div>
-            <div style="flex:1;text-align:center"><div class="qf-arrow">↘</div><div class="qf-branch-label no">Não</div></div>
-          </div>
-          <div style="display:flex;gap:.5rem;max-width:340px;width:100%;margin:0 auto .5rem;align-items:flex-end">
-            <div style="flex:1;text-align:center"><div class="qf-arrow">↓</div></div>
-            <div style="flex:1">
-              <div class="qf-node branch" style="margin-bottom:.25rem"><strong>P2.1</strong>Qual unidade frequenta?</div>
-              <div style="display:flex;gap:.25rem">
-                <div style="flex:1;text-align:center"><div class="qf-branch-label" style="font-size:.58rem">Outra UBS→ P3</div></div>
-                <div style="flex:1;text-align:center"><div class="qf-node end-no" style="font-size:.68rem">✗ Encerrar<br><span style="font-size:.62rem;font-weight:normal">Privado/convênio</span></div></div>
+          <!-- Phone mockup -->
+          <div class="phone-wrap">
+            <div class="phone-frame">
+              <div class="phone-screen">
+                <div class="wa-header">
+                  <div class="wa-avatar">APS</div>
+                  <div class="wa-contact">
+                    <div class="wa-contact-name">Pesquisa APS</div>
+                    <div class="wa-contact-status">online</div>
+                  </div>
+                </div>
+                <div class="wa-chat">
+                  <div class="wa-notif">🔒 As mensagens são criptografadas</div>
+                  <div class="wa-bubble bot">Olá! Você foi selecionado(a) para participar de uma pesquisa sobre os serviços de saúde em Recife. Leva cerca de 5 minutos. Deseja participar?<div class="wa-options"><div class="wa-option">✅ Sim, quero participar</div><div class="wa-option">❌ Não, obrigado(a)</div></div><span class="wa-time">09:14</span></div>
+                  <div class="wa-bubble user">Sim, quero participar<span class="wa-time">09:14 ✓✓</span></div>
+                  <div class="wa-bubble bot">Ótimo! Qual é a sua unidade de saúde?<div class="wa-options"><div class="wa-option">USF Jardim São Paulo</div><div class="wa-option">USF Alto Santa Terezinha</div><div class="wa-option">Outra unidade</div></div><span class="wa-time">09:14</span></div>
+                  <div class="wa-bubble user">USF Jardim São Paulo<span class="wa-time">09:15 ✓✓</span></div>
+                  <div class="wa-bubble bot">Quando você precisa de atendimento com urgência, consegue ser atendido no mesmo dia na sua unidade?<div class="wa-options"><div class="wa-option">Sim, sempre</div><div class="wa-option">Na maioria das vezes</div><div class="wa-option">Às vezes</div><div class="wa-option">Não</div></div><span class="wa-time">09:15</span></div>
+                  <div class="wa-bubble user">Na maioria das vezes<span class="wa-time">09:15 ✓✓</span></div>
+                  <div class="wa-typing"><div class="wa-dot"></div><div class="wa-dot"></div><div class="wa-dot"></div></div>
+                </div>
               </div>
             </div>
           </div>
+        </div>
+      </div>
 
-          <!-- P3 -->
-          <div style="display:flex;flex-direction:column;align-items:center;margin-bottom:.25rem">
-            <div class="qf-node" style="max-width:340px;width:100%"><strong>P3 — Primeiro Contato</strong>Sua unidade é o primeiro lugar que procura?</div>
-          </div>
-          <!-- Branch P3 -->
-          <div style="display:flex;gap:.5rem;max-width:340px;width:100%;margin:0 auto .1rem">
-            <div style="flex:1;text-align:center"><div class="qf-arrow">↙</div><div class="qf-branch-label">Sim</div></div>
-            <div style="flex:1;text-align:center"><div class="qf-arrow">↘</div><div class="qf-branch-label no">Às vezes / Não</div></div>
-          </div>
-          <div style="display:flex;gap:.5rem;max-width:340px;width:100%;margin:0 auto .5rem;align-items:flex-end">
-            <div style="flex:1;text-align:center"><div class="qf-arrow">↓</div></div>
-            <div style="flex:1">
-              <div class="qf-node branch"><strong>P3.1</strong>Que local procura? → P4</div>
-            </div>
-          </div>
-
-          <!-- Linear -->
-          <div style="display:flex;flex-direction:column;align-items:center;gap:.25rem">
-            <div class="qf-node" style="max-width:340px;width:100%"><strong>P4 – P(n-1)</strong>Perguntas lineares — sem ramificação<br><span style="font-size:.72rem;color:var(--text-3)">Expandida: P4 a P16 &nbsp;·&nbsp; Curta: P4 a P8</span></div>
-            <div class="qf-arrow">↓</div>
-            <div class="qf-node" style="max-width:340px;width:100%"><strong>P17 / P9 — NPS</strong>De 0 a 10, quanto recomendaria?</div>
-            <div class="qf-arrow">↓</div>
-            <div class="qf-node end-ok" style="max-width:340px;width:100%">✓ Agradecimento e encerramento</div>
+      <!-- ══ ETAPA 1 ══ -->
+      <div class="doc-panel" id="panel-etapa1">
+        <div class="section-wrap">
+          <div class="etapa-badge"><span class="etapa-badge-num">1</span>Etapa 1</div>
+          <h1 class="section-title">Planejamento temático e metodológico</h1>
+          <p class="section-lead">Etapa fundacional do inquérito. Compreende todas as decisões de desenho — o que medir, em quem, com qual instrumento e como — antes de qualquer contato com os participantes.</p>
+          <div class="subetapa-list">
+            <div class="subetapa-row" onclick="activatePanel('sub-1-1')"><span class="subetapa-idx">1.1</span><span class="subetapa-name">Definição do objetivo da pesquisa</span></div>
+            <div class="subetapa-row" onclick="activatePanel('sub-1-2')"><span class="subetapa-idx">1.2</span><span class="subetapa-name">Elaboração do projeto de pesquisa</span></div>
+            <div class="subetapa-row" onclick="activatePanel('sub-1-3')"><span class="subetapa-idx">1.3</span><span class="subetapa-name">Submissão do projeto a um Comitê de Ética em Pesquisa</span></div>
+            <div class="subetapa-row" onclick="activatePanel('sub-1-4')"><span class="subetapa-idx">1.4</span><span class="subetapa-name">Definição da amostra</span></div>
+            <div class="subetapa-row" onclick="activatePanel('sub-1-5')"><span class="subetapa-idx">1.5</span><span class="subetapa-name">Elaboração do questionário</span></div>
+            <div class="subetapa-row" onclick="activatePanel('sub-1-6')"><span class="subetapa-idx">1.6</span><span class="subetapa-name">Aprovação do questionário</span></div>
+            <div class="subetapa-row" onclick="activatePanel('sub-1-7')"><span class="subetapa-idx">1.7</span><span class="subetapa-name">Definição da estratégia de coleta de dados</span></div>
+            <div class="subetapa-row" onclick="activatePanel('sub-1-8')"><span class="subetapa-idx">1.8</span><span class="subetapa-name">Definição da estratégia de monitoramento da coleta</span></div>
           </div>
         </div>
+      </div>
 
-        <hr>
-
-        <!-- Versão Expandida -->
-        <h3>Versão Expandida (A) — Fluxo completo de perguntas</h3>
-
-        <div class="q-section">
-          <div class="q-section-title">Consentimento</div>
-          <div class="q-item"><span class="q-num">P1</span><div><span class="q-text">Você aceita participar dessa pesquisa?</span><div class="q-scale">Sim → P2 &nbsp;·&nbsp; Não → encerramento</div></div></div>
-        </div>
-
-        <div class="q-section">
-          <div class="q-section-title">Triagem Inicial</div>
-          <div class="q-item"><span class="q-num">P2</span><div><span class="q-text">Você frequenta a <em>[nome da unidade de saúde]</em>?</span><div class="q-scale">Sim → P3 &nbsp;·&nbsp; Não → P2.1</div></div></div>
-          <div class="q-item"><span class="q-num">P2.1</span><div><span class="q-text">Qual unidade de saúde você frequenta? <em>(exibida apenas se P2 = Não)</em></span><div class="q-scale">Outra UBS → P3 &nbsp;·&nbsp; Serviço privado/convênio → encerramento</div></div></div>
-        </div>
-
-        <div class="q-section">
-          <div class="q-section-title">Acesso / Primeiro Contato</div>
-          <div class="q-item"><span class="q-num">P3</span><div><span class="q-text">Quando você precisa de atendimento para questões de saúde como gripe, pressão alta, diabetes, etc., a sua unidade/posto de saúde é o primeiro lugar que você procura?</span><div class="q-scale">Sim → P4 &nbsp;·&nbsp; Às vezes ou Não → P3.1</div></div></div>
-          <div class="q-item"><span class="q-num">P3.1</span><div><span class="q-text">Que local você procura quando precisa de atendimento para questões de saúde como gripe, pressão alta, diabetes, etc.? <em>(exibida se P3 ≠ Sim)</em></span><div class="q-scale">UPA · Hospital público · Policlínica · Médico particular · Clínica particular · Outro → P4</div></div></div>
-          <div class="q-item"><span class="q-num">P4</span><div><span class="q-text">Quando precisa de consulta (médico, dentista ou enfermeiro) na sua unidade/posto de saúde, geralmente consegue no mesmo dia ou em poucos dias (até 15 dias)?</span><div class="q-scale">Sim · Às vezes · Não → P5</div></div></div>
-        </div>
-
-        <div class="q-section">
-          <div class="q-section-title">Acessibilidade Organizacional</div>
-          <div class="q-item"><span class="q-num">P5</span><div><span class="q-text">Quando você procura atendimento na sua unidade/posto de saúde, passa pelo acolhimento?</span><div class="q-scale">Sim · Às vezes · Não → P6 &nbsp;·&nbsp; <em>Acolhimento: escuta e triagem por profissional de saúde na chegada à unidade</em></div></div></div>
-          <div class="q-item"><span class="q-num">P6</span><div><span class="q-text">O horário de funcionamento da sua unidade/posto de saúde permite que você consiga atendimento quando precisa?</span><div class="q-scale">Sim · Às vezes · Não → P7</div></div></div>
-          <div class="q-item"><span class="q-num">P7</span><div><span class="q-text">É fácil marcar consulta ou atendimento na sua unidade/posto de saúde?</span><div class="q-scale">Sim · Às vezes · Não → P8</div></div></div>
-        </div>
-
-        <div class="q-section">
-          <div class="q-section-title">Longitudinalidade (Vínculo)</div>
-          <div class="q-item"><span class="q-num">P8</span><div><span class="q-text">Existe um profissional ou equipe da sua unidade/posto de saúde que conhece você e acompanha sua saúde ao longo do tempo?</span><div class="q-scale">Sim, conhece e me acompanha · Sim, conhece, mas não me acompanha · Não → P9</div></div></div>
-          <div class="q-item"><span class="q-num">P9</span><div><span class="q-text">Quando você é atendido na sua unidade/posto de saúde, os profissionais da equipe de saúde conhecem seu histórico de saúde e problemas anteriores?</span><div class="q-scale">Sim · Às vezes · Não → P10</div></div></div>
-        </div>
-
-        <div class="q-section">
-          <div class="q-section-title">Coordenação do Cuidado</div>
-          <div class="q-item"><span class="q-num">P10</span><div><span class="q-text">Quando você precisa de consulta com especialista ou realizar exames, a equipe da sua unidade/posto de saúde orienta você sobre como realizar esses agendamentos?</span><div class="q-scale">Sim · Às vezes · Não → P11</div></div></div>
-          <div class="q-item"><span class="q-num">P11</span><div><span class="q-text">Depois que você passa por outro serviço de saúde (ex.: consulta com especialista; exames; internação; etc.), a equipe da sua unidade/posto de saúde pergunta ou conversa com você sobre os resultados ou sobre a continuidade do tratamento?</span><div class="q-scale">Sim · Às vezes · Não → P12</div></div></div>
-        </div>
-
-        <div class="q-section">
-          <div class="q-section-title">Integralidade</div>
-          <div class="q-item"><span class="q-num">P12</span><div><span class="q-text">Na sua unidade/posto de saúde você recebe orientações sobre prevenção de doenças e hábitos saudáveis (vacinas, alimentação saudável, atividade física, consumo de álcool, tabagismo, etc.)?</span><div class="q-scale">Sim · Às vezes · Não → P13</div></div></div>
-        </div>
-
-        <div class="q-section">
-          <div class="q-section-title">Orientação Familiar</div>
-          <div class="q-item"><span class="q-num">P13</span><div><span class="q-text">Os profissionais da sua unidade/posto de saúde costumam perguntar sobre a saúde de outras pessoas da sua família ou sobre condições familiares que podem influenciar sua saúde?</span><div class="q-scale">Sim · Às vezes · Não → P14</div></div></div>
-        </div>
-
-        <div class="q-section">
-          <div class="q-section-title">Orientação Comunitária</div>
-          <div class="q-item"><span class="q-num">P14</span><div><span class="q-text">A equipe de saúde parece conhecer os principais problemas que afetam a saúde da comunidade onde você mora e desenvolve ações para melhorar esses problemas? (ex.: sobre descarte inadequado de lixo, a unidade trabalha orientações sobre a importância do descarte adequado)</span><div class="q-scale">Sim · Às vezes · Não → P15</div></div></div>
-        </div>
-
-        <div class="q-section">
-          <div class="q-section-title">Acesso Digital e Contato à Distância</div>
-          <div class="q-item"><span class="q-num">P15</span><div><span class="q-text">Você consegue entrar em contato com a sua unidade/posto de saúde por telefone, aplicativo ou internet quando precisa? (ex.: para tirar dúvidas; obter informações; marcar consultas; etc.)</span><div class="q-scale">Sim · Às vezes · Não → P16</div></div></div>
-          <div class="q-item"><span class="q-num">P16</span><div><span class="q-text">A sua unidade/posto de saúde envia informações ou orientações por WhatsApp, mensagem ou outro meio digital?</span><div class="q-scale">Sim · Às vezes · Não → P17</div></div></div>
-        </div>
-
-        <div class="q-section">
-          <div class="q-section-title">Satisfação Geral (NPS)</div>
-          <div class="q-item"><span class="q-num">P17</span><div><span class="q-text">De 0 a 10, quanto você recomendaria sua unidade de saúde a um amigo ou familiar?</span><div class="q-scale">Escala numérica de 0 a 10 → agradecimento</div></div></div>
-        </div>
-
-        <hr>
-
-        <!-- Versão Curta -->
-        <h3>Versão Curta (B) — Fluxo completo de perguntas</h3>
-        <p>As perguntas de consentimento (P1), triagem (P2, P2.1) e primeiro contato (P3, P3.1) são idênticas às da versão expandida. As demais perguntas são as seguintes:</p>
-
-        <div class="q-section">
-          <div class="q-section-title">Acessibilidade Organizacional</div>
-          <div class="q-item"><span class="q-num">P4</span><div><span class="q-text">O horário de funcionamento da sua unidade/posto de saúde permite que você consiga atendimento quando precisa?</span><div class="q-scale">Sim · Às vezes · Não → P5</div></div></div>
-          <div class="q-item"><span class="q-num">P5</span><div><span class="q-text">É fácil marcar consulta ou atendimento na sua unidade/posto de saúde?</span><div class="q-scale">Sim · Às vezes · Não → P6</div></div></div>
-        </div>
-
-        <div class="q-section">
-          <div class="q-section-title">Longitudinalidade (Vínculo)</div>
-          <div class="q-item"><span class="q-num">P6</span><div><span class="q-text">Quando você é atendido na sua unidade/posto de saúde, os profissionais da equipe de saúde conhecem seu histórico de saúde e problemas anteriores?</span><div class="q-scale">Sim · Às vezes · Não → P7</div></div></div>
-        </div>
-
-        <div class="q-section">
-          <div class="q-section-title">Integralidade</div>
-          <div class="q-item"><span class="q-num">P7</span><div><span class="q-text">Na sua unidade/posto de saúde você recebe orientações sobre prevenção de doenças e hábitos saudáveis (vacinas, alimentação saudável, atividade física, consumo de álcool, tabagismo, etc.)?</span><div class="q-scale">Sim · Às vezes · Não → P8</div></div></div>
-        </div>
-
-        <div class="q-section">
-          <div class="q-section-title">Acesso Digital</div>
-          <div class="q-item"><span class="q-num">P8</span><div><span class="q-text">Você consegue entrar em contato com a sua unidade/posto de saúde por telefone, aplicativo ou internet quando precisa? (ex.: para tirar dúvidas; obter informações; marcar consultas; etc.)</span><div class="q-scale">Sim · Às vezes · Não → P9</div></div></div>
-        </div>
-
-        <div class="q-section">
-          <div class="q-section-title">Satisfação Geral (NPS)</div>
-          <div class="q-item"><span class="q-num">P9</span><div><span class="q-text">De 0 a 10, quanto você recomendaria sua unidade de saúde a um amigo ou familiar?</span><div class="q-scale">Escala numérica de 0 a 10 → agradecimento</div></div></div>
-        </div>
-
-        <hr>
-
-        <h3>Mensagem de abertura</h3>
-        <div class="abstract">
-          <div class="abstract-label">Versão curta — template de convite</div>
-          <p>Olá, <em>[nome da pessoa]</em>!<br>A Prefeitura de Recife está realizando uma pesquisa para avaliar a qualidade do atendimento nos postos de saúde da nossa cidade.<br>São até 11 perguntas para responder pelo WhatsApp, e você contribui com os serviços dos postos de saúde. O preenchimento do questionário leva, em média, 3 minutos. As respostas são anônimas.</p>
-        </div>
-        <div class="abstract">
-          <div class="abstract-label">Versão expandida — template de convite</div>
-          <p>Olá, <em>[nome da pessoa]</em>!<br>A Prefeitura de Recife está realizando uma pesquisa para avaliar a qualidade do atendimento nos postos de saúde da nossa cidade.<br>São até 19 perguntas para responder pelo WhatsApp, e você contribui com os serviços dos postos de saúde. O preenchimento do questionário leva, em média, 8 minutos. As respostas são anônimas.</p>
+      <!-- Subetapas 1.x -->
+      <div class="doc-panel" id="panel-sub-1-1">
+        <div class="section-wrap">
+          <span class="sub-badge">Etapa 1 · Subetapa 1.1</span>
+          <h2 class="sub-title">Definição do objetivo da pesquisa</h2>
+          <p class="body-text">Nesta subetapa define-se com precisão o que se deseja medir, o contexto institucional da pesquisa e quais perguntas orientadoras guiarão todas as decisões metodológicas subsequentes.</p>
+          <p class="body-text">No inquérito APS Recife, o objetivo central foi comparar a qualidade da atenção primária percebida pelos usuários de unidades USF e USF+ a partir de atributos do PCATool-Brasil.</p>
+          <span class="wip">Descrição detalhada em construção</span>
         </div>
       </div>
 
-      <!-- Sub: Plano Amostral -->
-      <div class="sub-panel" id="sub-amostral">
-        <h2 style="margin-top:0">Plano amostral</h2>
-        <p>Trata-se de um estudo transversal com amostragem probabilística estratificada em dois estágios. Os estratos são definidos pelo cruzamento de Distrito Sanitário (8 DS) e tipo de unidade (USF ou USF+), resultando em até 16 estratos.</p>
-        <p>No <strong>primeiro estágio</strong>, as unidades de saúde são selecionadas dentro de cada estrato com probabilidade proporcional ao tamanho (PPT), usando o número de usuários adultos com WhatsApp cadastrado como medida de tamanho. No <strong>segundo estágio</strong>, realiza-se sorteio aleatório simples dos usuários elegíveis dentro de cada unidade selecionada.</p>
-
-        <div class="stat-row">
-          <div class="st"><div class="st-val">384</div><div class="st-lbl">Amostra base / grupo</div><div class="st-sub">p=0,50 · e=5% · IC 95%</div></div>
-          <div class="st"><div class="st-val">1,5–2,0</div><div class="st-lbl">Design effect</div><div class="st-sub">Ajuste por conglomerados</div></div>
-          <div class="st"><div class="st-val">576–768</div><div class="st-lbl">Respostas / grupo</div><div class="st-sub">Após correção pelo deff</div></div>
-          <div class="st"><div class="st-val">7–10%</div><div class="st-lbl">Taxa de resposta</div><div class="st-sub">Estimada (WhatsApp)</div></div>
-        </div>
-        <p class="note">O número de convites por grupo varia entre 2.000 e 5.000, dependendo da taxa de resposta calibrada pelo piloto.</p>
-
-        <h3>Distribuição do piloto</h3>
-        <div class="tw">
-          <table>
-            <thead><tr><th>DS</th><th>Tipo</th><th class="num">Cadastrados</th><th class="num">Convites</th><th class="num">% pop.</th><th class="num">Resp. esperadas</th></tr></thead>
-            <tbody>
-              <tr><td>DS 1</td><td>USF</td><td class="num">3.378</td><td class="num">400</td><td class="num">11,8%</td><td class="num">30</td></tr>
-              <tr><td>DS 1</td><td>USF+</td><td class="num">31.473</td><td class="num">400</td><td class="num">1,3%</td><td class="num">30</td></tr>
-              <tr><td>DS 2</td><td>USF</td><td class="num">35.279</td><td class="num">400</td><td class="num">1,1%</td><td class="num">30</td></tr>
-              <tr><td>DS 2</td><td>USF+</td><td class="num">87.218</td><td class="num">400</td><td class="num">0,5%</td><td class="num">30</td></tr>
-              <tr><td>DS 3</td><td>USF</td><td class="num">4.808</td><td class="num">400</td><td class="num">8,3%</td><td class="num">30</td></tr>
-              <tr><td>DS 3</td><td>USF+</td><td class="num">36.968</td><td class="num">400</td><td class="num">1,1%</td><td class="num">30</td></tr>
-              <tr class="total"><td>Total</td><td></td><td class="num">199.124</td><td class="num">2.400</td><td class="num">1,2%</td><td class="num">~180</td></tr>
-            </tbody>
-          </table>
-        </div>
-        <p class="note">Precisão por estrato: ±2,6 p.p. assumindo taxa de 7,5% (IC 95%). Variável adicional: tempo desde último atendimento — ≤90 dias, 91d–1 ano, &gt;1 ano, sem informação.</p>
-
-        <h3>Análise estatística</h3>
-        <p>A análise utiliza ponderação amostral com pós-estratificação por sexo, faixa etária e raça/cor, calibrando a distribuição da amostra de respondentes à distribuição dos cadastros no e-SUS APS. Os erros padrão são corrigidos pelo design effect estimado no próprio piloto.</p>
-        <p>Pacotes R: <code>tidyverse</code>, <code>survey</code>, <code>srvyr</code>, <code>gtsummary</code>, <code>sidrar</code>, <code>readxl</code>, <code>janitor</code>.</p>
-      </div>
-
-      <!-- Sub: Métricas -->
-      <div class="sub-panel" id="sub-metricas">
-        <h2 style="margin-top:0">Métricas de acompanhamento</h2>
-        <p>As métricas abaixo são extraídas por campanha de disparo e aplicáveis às duas versões do questionário. As métricas marcadas como <em>calculado</em> são derivadas pela equipe analítica a partir dos dados brutos da plataforma.</p>
-
-        <h3>Como acessar os dados</h3>
-        <p>As métricas de entrega e leitura estão disponíveis diretamente no <strong>Gerenciador do WhatsApp → Modelos de mensagem</strong>. Selecione o modelo da campanha desejada para visualizar os indicadores operacionais.</p>
-
-        <div class="tw">
-          <table>
-            <thead>
-              <tr>
-                <th>Métrica</th>
-                <th>Fonte</th>
-                <th>Como calcular / o que observar</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr><td><strong>Volume de entrega</strong></td><td>Plataforma / BSP</td><td>Total de mensagens entregues na campanha</td></tr>
-              <tr><td><strong>Nome do modelo de mensagem</strong></td><td>Manualmente</td><td>Registrar o nome do template usado no disparo</td></tr>
-              <tr><td><strong>Taxa de entrega</strong></td><td>Plataforma / BSP</td><td>Entregues ÷ enviadas × 100</td></tr>
-              <tr><td><strong>Taxa de leitura</strong></td><td>Plataforma / BSP</td><td>Lidas ÷ entregues × 100</td></tr>
-              <tr><td><strong>Taxa de respostas</strong></td><td>Calculado</td><td>Respostas ÷ entregues × 100</td></tr>
-              <tr><td><strong>Taxa de abandono</strong></td><td>Calculado</td><td>(Mensagens enviadas − Mensagens respondidas) ÷ Mensagens lidas</td></tr>
-              <tr><td><strong>Clique em botão</strong></td><td>Plataforma / BSP</td><td>Quantidade de cliques por botão / opção de resposta</td></tr>
-              <tr><td><strong>Taxa de conclusão</strong></td><td>Calculado</td><td>Concluíram ÷ iniciaram × 100</td></tr>
-              <tr><td><strong>Falhas de entrega</strong></td><td>Plataforma / BSP</td><td>Quantidade de mensagens não entregues por campanha</td></tr>
-            </tbody>
-          </table>
-        </div>
-
-        <h3>Dados coletados pelo backend — Versão Curta (B)</h3>
-        <p>Para cada envio (completo ou interrompido) da versão curta, o sistema deve registrar:</p>
-        <div class="tw">
-          <table>
-            <thead><tr><th>Campo</th><th>Descrição</th></tr></thead>
-            <tbody>
-              <tr><td>ID do respondente</td><td>Identificador anônimo do paciente — sem nome ou CPF</td></tr>
-              <tr><td>Unidade de saúde (cadastral)</td><td>Unidade vinculada ao respondente na base da SMS-Recife</td></tr>
-              <tr><td>Unidade de saúde (relatada em P2.1)</td><td>Preenchido apenas quando P2 = Não e P2.1 = Outra UBS</td></tr>
-              <tr><td>Data e hora do envio</td><td>Timestamp do início do preenchimento</td></tr>
-              <tr><td>Data e hora da conclusão</td><td>Timestamp do último envio (P9 ou ponto de saída)</td></tr>
-              <tr><td>Status de conclusão</td><td>Completo · Interrompido · Recusado</td></tr>
-              <tr><td>Resposta P1</td><td>Sim · Não</td></tr>
-              <tr><td>Resposta P2</td><td>Sim · Não</td></tr>
-              <tr><td>Resposta P2.1</td><td>Opção selecionada (quando exibida)</td></tr>
-              <tr><td>Resposta P3</td><td>Sim · Às vezes · Não</td></tr>
-              <tr><td>Resposta P3.1</td><td>Opção selecionada (quando exibida)</td></tr>
-              <tr><td>Respostas P4 a P8</td><td>Sim · Às vezes · Não (uma por pergunta)</td></tr>
-              <tr><td>Resposta P9</td><td>Valor numérico de 0 a 10</td></tr>
-            </tbody>
-          </table>
-        </div>
-
-        <h3>Dados coletados pelo backend — Versão Expandida (A)</h3>
-        <p>Mesmos campos da versão curta, com as seguintes diferenças:</p>
-        <div class="tw">
-          <table>
-            <thead><tr><th>Campo</th><th>Descrição</th></tr></thead>
-            <tbody>
-              <tr><td>Data e hora da conclusão</td><td>Timestamp do último envio (P17 ou ponto de saída)</td></tr>
-              <tr><td>Respostas P4 a P16</td><td>Sim · Às vezes · Não (uma por pergunta)</td></tr>
-              <tr><td>Resposta P17</td><td>Valor numérico de 0 a 10</td></tr>
-            </tbody>
-          </table>
-        </div>
-
-        <h3>Regras globais do fluxo</h3>
-        <div class="tw">
-          <table>
-            <thead><tr><th>Gatilho</th><th>Comportamento do sistema</th></tr></thead>
-            <tbody>
-              <tr><td>Ausência de resposta por 3 minutos</td><td>Reenvia a pergunta atual automaticamente, uma única vez</td></tr>
-              <tr><td>Resposta livre (texto fora de botão)</td><td>Envia mensagem de redirecionamento e reenvia a pergunta atual</td></tr>
-            </tbody>
-          </table>
-        </div>
-        <p class="note">Mensagem de redirecionamento: <em>"Olá! Este é um número oficial da Prefeitura do Recife. Por aqui, não conseguimos fazer atendimentos individualizados. Mas você pode nos ajudar avaliando os postos de saúde da cidade — clique no botão abaixo para participar!"</em></p>
-      </div>
-
-      <!-- Sub: Operação e Campo -->
-      <div class="sub-panel" id="sub-operacao">
-        <h2 style="margin-top:0">Operação e campo</h2>
-
-        <h3>Estratégia de disparo</h3>
-        <p>Os convites são enviados entre terça e quinta-feira, das 9h às 11h — horário e dias definidos com a equipe local da SMS Recife como o de maior probabilidade de engajamento. A janela de coleta do piloto é de 14 dias, com um único lembrete enviado no dia 8 aos não respondentes.</p>
-
-        <h3>Estrutura de ondas — Coleta principal</h3>
-        <p>A coleta principal é planejada em <strong>cinco ondas de 20%</strong> da lista de convites, permitindo ajustes operacionais com base nos resultados acumulados entre ondas.</p>
-        <div class="tl">
-          <div class="tl-item"><div class="tl-d">Ondas 1–2</div><div class="tl-body"><div class="tl-title">Usuários com atendimento recente (≤90 dias)</div><div class="tl-desc">Maior propensão a responder — vínculo recente aumenta o reconhecimento da unidade e a relevância percebida do convite. Estratégia condicionada à confirmação pelo piloto.</div></div></div>
-          <div class="tl-item"><div class="tl-d">Ondas 3–4</div><div class="tl-body"><div class="tl-title">Usuários com atendimento intermediário (91 dias – 1 ano)</div><div class="tl-desc">Distribuição proporcional por estrato. Número de lembretes ajustado conforme taxa das ondas anteriores.</div></div></div>
-          <div class="tl-item"><div class="tl-d">Onda 5</div><div class="tl-body"><div class="tl-title">Usuários com atendimento antigo (&gt;1 ano) + lista de reserva</div><div class="tl-desc">A lista de reserva (~50% da lista principal) é acionada se necessário para atingir metas por estrato. Os IDs do piloto são excluídos de ambas as listas.</div></div></div>
-        </div>
-
-        <h3>Monitoramento</h3>
-        <p>O acompanhamento em tempo real cobre dois grupos de indicadores:</p>
-        <p><strong>Entrega:</strong> taxa de entrega por estrato (alerta se proporção de números inválidos &gt;20%); curva de respostas diárias (esperado 60–70% nas primeiras 48h).</p>
-        <p><strong>Qualidade:</strong> taxa de abandono por versão (A vs B); tempo mediano de preenchimento; proporção de respostas "não sei" por bloco; padrões de resposta repetitiva.</p>
-
-        <h3>Decisões condicionadas aos resultados do piloto</h3>
-        <div class="tw">
-          <table>
-            <thead><tr><th>Resultado observado</th><th>Ação correspondente</th></tr></thead>
-            <tbody>
-              <tr><td>Taxa de resposta &lt;5%</td><td>Revisar estratégia de mensagem; aumentar sobredimensionamento</td></tr>
-              <tr><td>Taxa de resposta &gt;10%</td><td>Reduzir volume de convites; economia operacional</td></tr>
-              <tr><td>Versão B ≥50% superior em conclusões</td><td>Adotar questionário reduzido na coleta principal</td></tr>
-              <tr><td>Recentes respondem significativamente mais</td><td>Priorizar usuários ≤90 dias nas ondas 1 e 2</td></tr>
-              <tr><td>Taxa difere entre USF e USF+</td><td>Sobredimensionamento calculado separadamente por tipo</td></tr>
-            </tbody>
-          </table>
-        </div>
-
-        <h3>Suporte ao participante</h3>
-        <p>Um canal de contato (número ou e-mail) deve ser visível no convite e no início do questionário. Ao final do preenchimento, o participante recebe mensagem de agradecimento. A equipe produz relatório semanal de andamento com taxa de resposta por estrato, com alerta imediato em caso de anomalia na taxa de entrega.</p>
-        <p class="placeholder">Número/e-mail de suporte · cadência de reuniões · canal de comunicação — a preencher</p>
-      </div>
-
-    </div>
-    </div>
-
-    <!-- ══ 1. TÉCNICO ══ -->
-    <div id="tab-tecnico" class="tab-content">
-    <div class="page">
-      <p class="sec-label">Seção 1</p>
-      <h1>Aspectos Técnicos</h1>
-
-      <div class="wip-block">
-        <span class="wip-icon">⚙️</span>
-        <p class="wip-title">Seção em construção</p>
-        <p class="wip-desc">Esta seção será preenchida com detalhes técnicos da arquitetura da solução, pipeline de dados, scripts R e pontos de atenção para replicação.</p>
-      </div>
-
-      <h2>O que esta seção cobrirá</h2>
-      <ul>
-        <li><strong>Arquitetura da solução</strong> — Fluxo completo da base e-SUS APS até a análise final</li>
-        <li><strong>Pipeline R</strong> — Scripts de planejamento amostral, análise descritiva e ponderação</li>
-        <li><strong>Plataforma de disparo</strong> — Configuração do WhatsApp Business e gerenciador de mensagens</li>
-        <li><strong>Métricas de acompanhamento</strong> — Indicadores operacionais e de qualidade por campanha</li>
-        <li><strong>Pontos de atenção</strong> — Completude do cadastro, balanceamento A/B, pós-estratificação</li>
-      </ul>
-    </div>
-    </div>
-
-    <!-- ══ 2. GOVERNANÇA ══ -->
-    <div id="tab-governanca" class="tab-content">
-    <div class="page">
-      <p class="sec-label">Seção 2</p>
-      <h1>Governança e Ética</h1>
-
-      <div class="wip-block">
-        <span class="wip-icon">📋</span>
-        <p class="wip-title">Seção em construção</p>
-        <p class="wip-desc">Esta seção será preenchida após a aprovação pelo Comitê de Ética em Pesquisa (CEP). Incluirá número do parecer, CAAE, texto do TCLE, protocolo de proteção de dados (LGPD) e protocolo para situações sensíveis.</p>
-      </div>
-
-      <h2>O que esta seção cobrirá</h2>
-      <ul>
-        <li><strong>Aprovação ética</strong> — Parecer do CEP conforme Resoluções CNS nº 466/2012 e 510/2016</li>
-        <li><strong>Proteção de dados (LGPD)</strong> — Base legal, responsabilidades do controlador (SMS Recife) e medidas de anonimização</li>
-        <li><strong>Termo de Consentimento Livre e Esclarecido (TCLE)</strong> — Texto completo apresentado na abertura do questionário</li>
-        <li><strong>Papéis e responsabilidades</strong> — Matriz de responsabilidades por organização parceira</li>
-        <li><strong>Protocolo para situações especiais</strong> — Fluxo para relatos sensíveis e canal de suporte</li>
-      </ul>
-    </div>
-    </div>
-
-    <!-- ══ 3. ARQUIVOS ══ -->
-    <div id="tab-arquivos" class="tab-content">
-    <div class="page">
-      <p class="sec-label">Seção 3</p>
-      <h1>Arquivos de Referência</h1>
-      <p>Documentos, scripts e dados que fundamentam a metodologia do inquérito. Para acesso aos arquivos, entre em contato com a equipe do projeto.</p>
-
-      <h2>Documentos</h2>
-      <div class="file-list">
-        <div class="file-item">
-          <div class="file-ext">PDF</div>
-          <div><div class="file-name">Especificacao_Questionarios_APS_Recife_v2.pdf</div><div class="file-desc">Especificação completa das versões A e B do questionário — instrumento baseado no PCATool-Brasil</div></div>
-          <a class="file-dl" href="arquivos/Especificacao_Questionarios_APS_Recife_v2 (2) (1).pdf" download>Baixar</a>
-        </div>
-        <div class="file-item">
-          <div class="file-ext">DOCX</div>
-          <div><div class="file-name">Especificacao_Questionarios_APS_Recife_v2.docx</div><div class="file-desc">Especificação do questionário em formato Word — versões A (expandida) e B (curta)</div></div>
-          <a class="file-dl" href="arquivos/Especificacao_Questionarios_APS_Recife_v2.docx" download>Baixar</a>
-        </div>
-        <div class="file-item">
-          <div class="file-ext">DOCX</div>
-          <div><div class="file-name">Plano Amostral.docx</div><div class="file-desc">Plano amostral completo — estratificação, cálculo amostral, alocação por estrato e critérios de seleção</div></div>
-          <a class="file-dl" href="arquivos/Plano Amostral.docx" download>Baixar</a>
-        </div>
-        <div class="file-item">
-          <div class="file-ext">DOCX</div>
-          <div><div class="file-name">Metodologia resumo MDMS Recife.docx</div><div class="file-desc">Resumo metodológico — desenho, população, plano amostral, variáveis e análise</div></div>
-          <a class="file-dl" href="arquivos/Metodologia resumo MDMS Recife.docx" download>Baixar</a>
-        </div>
-        <div class="file-item">
-          <div class="file-ext">DOCX</div>
-          <div><div class="file-name">Estudo Piloto — Relatório para disparo.docx</div><div class="file-desc">Planejamento detalhado do piloto — dimensionamento, estratos, hipóteses, janelas de coleta e próximos passos</div></div>
-          <a class="file-dl" href="arquivos/Estudo Piloto - Relatório para disparo.docx" download>Baixar</a>
-        </div>
-        <div class="file-item">
-          <div class="file-ext">PDF</div>
-          <div><div class="file-name">Mensageria - Piloto - Relatório Completo.pdf</div><div class="file-desc">Relatório completo dos resultados do estudo-piloto de mensageria via WhatsApp</div></div>
-          <a class="file-dl" href="arquivos/Mensageria - Piloto - Relatório Completo.pdf" download>Baixar</a>
-        </div>
-        <div class="file-item">
-          <div class="file-ext">PDF</div>
-          <div><div class="file-name">Mensageria - Piloto - Resultados.pdf</div><div class="file-desc">Resultados do piloto — visão simplificada com dados de entrega, leitura e resposta</div></div>
-          <a class="file-dl" href="arquivos/Mensageria - Piloto - Resultados.pdf" download>Baixar</a>
-        </div>
-        <div class="file-item">
-          <div class="file-ext">PDF</div>
-          <div><div class="file-name">Mensageria - Piloto - Resultados (com cor).pdf</div><div class="file-desc">Versão visual simplificada dos resultados do piloto, com destaque por cores</div></div>
-          <a class="file-dl" href="arquivos/Mensageria - Piloto - Resultados - Simplificado com cor.pdf" download>Baixar</a>
+      <div class="doc-panel" id="panel-sub-1-2">
+        <div class="section-wrap">
+          <span class="sub-badge">Etapa 1 · Subetapa 1.2</span>
+          <h2 class="sub-title">Elaboração do projeto de pesquisa</h2>
+          <p class="body-text">Formalização do protocolo de pesquisa — justificativa, objetivos, metodologia, plano amostral, instrumentos e cronograma. Documento necessário para submissão ao CEP.</p>
+          <span class="wip">Descrição detalhada em construção</span>
         </div>
       </div>
 
-      <h2>Scripts R</h2>
-      <div class="file-list">
-        <div class="file-item">
-          <div class="file-ext">R</div>
-          <div><div class="file-name">planejamento_amostral_dados_aps.R</div><div class="file-desc">Script principal — leitura da base e-SUS APS, perfil da população, estimativas iniciais</div></div>
-          <a class="file-dl" href="arquivos/scripts/planejamento_amostral_dados_aps.R" download>Baixar</a>
-        </div>
-        <div class="file-item">
-          <div class="file-ext">R</div>
-          <div><div class="file-name">planejamento_amostral_dados_aps_TIPO_UNIDADE_E_DISTRITO.R</div><div class="file-desc">Planejamento estratificado por tipo de unidade (USF/USF+) e Distrito Sanitário</div></div>
-          <a class="file-dl" href="arquivos/scripts/planejamento_amostral_dados_aps_TIPO_UNIDADE_E_DISTRITO.R" download>Baixar</a>
-        </div>
-        <div class="file-item">
-          <div class="file-ext">R</div>
-          <div><div class="file-name">planejamento_amostral_dados_aps_USF.R</div><div class="file-desc">Planejamento focado nas USF — alocação proporcional e sorteio PPT</div></div>
-          <a class="file-dl" href="arquivos/scripts/planejamento_amostral_dados_aps_USF.R" download>Baixar</a>
-        </div>
-        <div class="file-item">
-          <div class="file-ext">R</div>
-          <div><div class="file-name">piloto_analile_pre_coleta.R</div><div class="file-desc">Verificação da lista de disparo antes do envio do piloto</div></div>
-          <a class="file-dl" href="arquivos/scripts/piloto_analile_pre_coleta.R" download>Baixar</a>
-        </div>
-        <div class="file-item">
-          <div class="file-ext">R</div>
-          <div><div class="file-name">piloto_descritiva.R</div><div class="file-desc">Análise descritiva da lista do piloto — perfil por estrato, versão A/B e variáveis demográficas</div></div>
-          <a class="file-dl" href="arquivos/scripts/piloto_descritiva.R" download>Baixar</a>
-        </div>
-        <div class="file-item">
-          <div class="file-ext">R</div>
-          <div><div class="file-name">piloto_grafico_lista.R</div><div class="file-desc">Gráficos e visualizações da composição da lista do piloto</div></div>
-          <a class="file-dl" href="arquivos/scripts/piloto_grafico_lista.R" download>Baixar</a>
-        </div>
-        <div class="file-item">
-          <div class="file-ext">R</div>
-          <div><div class="file-name">ponderacao_analise_mdms_recofe_EXemplo.R</div><div class="file-desc">Exemplo comentado de ponderação amostral e análise com pacote <code>survey</code></div></div>
-          <a class="file-dl" href="arquivos/scripts/ponderacao_analise_mdms_recofe_EXemplo.R" download>Baixar</a>
-        </div>
-        <div class="file-item">
-          <div class="file-ext">R</div>
-          <div><div class="file-name">dados_censo_2022_RECIFE.R</div><div class="file-desc">Extração do Censo 2022 via SIDRA/IBGE para Recife — referência para pós-estratificação</div></div>
-          <a class="file-dl" href="arquivos/scripts/dados_censo_2022_RECIFE.R" download>Baixar</a>
+      <div class="doc-panel" id="panel-sub-1-3">
+        <div class="section-wrap">
+          <span class="sub-badge">Etapa 1 · Subetapa 1.3</span>
+          <h2 class="sub-title">Submissão do projeto ao Comitê de Ética em Pesquisa</h2>
+          <p class="body-text">Pesquisas com seres humanos no Brasil requerem aprovação prévia de um CEP cadastrado na Plataforma Brasil. A submissão deve ocorrer antes de qualquer contato com participantes ou coleta de dados.</p>
+          <p class="body-text">O processo inclui a submissão do protocolo de pesquisa, TCLE (Termo de Consentimento Livre e Esclarecido) e toda documentação complementar exigida pelo sistema.</p>
+          <span class="wip">Descrição detalhada em construção</span>
         </div>
       </div>
 
-      <h2>Dados e apresentações</h2>
-      <div class="file-list">
-        <div class="file-item">
-          <div class="file-ext">PPTX</div>
-          <div><div class="file-name">Plano_Amostral_APS_Recife.pptx</div><div class="file-desc">Apresentação do plano amostral — slides de referência para parceiros</div></div>
-          <a class="file-dl" href="arquivos/Plano_Amostral_APS_Recife.pptx" download>Baixar</a>
-        </div>
-        <div class="file-item">
-          <div class="file-ext">XLSX</div>
-          <div><div class="file-name">dicionario_de_dados_agregados_por_setores_censitarios_20250417.xlsx</div><div class="file-desc">Dicionário do Censo 2022 por setor censitário — referência geográfica e socioeconômica</div></div>
-          <a class="file-dl" href="arquivos/scripts/dicionario_de_dados_agregados_por_setores_censitarios_20250417.xlsx" download>Baixar</a>
-        </div>
-        <div class="file-item">
-          <div class="file-ext">CSV</div>
-          <div><div class="file-name">07_lista_reserva.csv</div><div class="file-desc">Lista de reserva de participantes (~50% da lista principal) — contém dados pessoais, disponível mediante solicitação</div></div>
-          <button class="file-dl" onclick="alert('Este arquivo contém dados pessoais e é disponibilizado mediante solicitação formal à equipe do projeto.')">Solicitar</button>
+      <div class="doc-panel" id="panel-sub-1-4">
+        <div class="section-wrap">
+          <span class="sub-badge">Etapa 1 · Subetapa 1.4</span>
+          <h2 class="sub-title">Definição da amostra</h2>
+          <p class="body-text">Determinação do tamanho amostral, critérios de inclusão e exclusão, estratificação por unidade de saúde ou território, e método de seleção dos participantes.</p>
+          <p class="body-text">No inquérito Recife, a amostra foi estratificada por tipo de unidade (USF vs. USF+) e por distrito sanitário, com base em dados de cadastro do e-SUS e dados do Censo 2022.</p>
+          <span class="wip">Descrição detalhada em construção</span>
         </div>
       </div>
-    </div>
-    </div>
 
-    <!-- ══ 4. APRENDIZADOS ══ -->
-    <div id="tab-aprendizados" class="tab-content">
-    <div class="page">
-      <p class="sec-label">Seção 4</p>
-      <h1>Desafios e Aprendizados</h1>
-
-      <div class="wip-block">
-        <span class="wip-icon">🔬</span>
-        <p class="wip-title">Seção em construção</p>
-        <p class="wip-desc">Esta seção será preenchida ao final da coleta principal, com base nos dados observados. Incluirá análise do que funcionou, dos principais desafios operacionais e recomendações para pesquisas futuras do mesmo tipo.</p>
+      <div class="doc-panel" id="panel-sub-1-5">
+        <div class="section-wrap">
+          <span class="sub-badge">Etapa 1 · Subetapa 1.5</span>
+          <h2 class="sub-title">Elaboração do questionário</h2>
+          <p class="body-text">Adaptação do instrumento PCATool-Brasil para o formato conversacional do WhatsApp. O questionário foi desenvolvido em duas versões: Versão A (expandida, ~8 min) e Versão B (curta, ~3 min), testadas em desenho A/B para avaliar taxa de resposta.</p>
+          <p class="body-text">O instrumento inclui perguntas de triagem, perguntas sobre afiliação com a unidade e blocos temáticos do PCATool adaptados para linguagem conversacional simples.</p>
+          <span class="wip">Descrição detalhada em construção</span>
+        </div>
       </div>
 
-      <h2>O que esta seção cobrirá</h2>
-      <ul>
-        <li><strong>O que funcionou</strong> — Estratégias e decisões metodológicas bem-sucedidas validadas na prática</li>
-        <li><strong>Desafios</strong> — Problemas encontrados na operação, coleta e análise</li>
-        <li><strong>Recomendações</strong> — Orientações para outras organizações que queiram replicar o método</li>
-      </ul>
-    </div>
-    </div>
+      <div class="doc-panel" id="panel-sub-1-6">
+        <div class="section-wrap">
+          <span class="sub-badge">Etapa 1 · Subetapa 1.6</span>
+          <h2 class="sub-title">Aprovação do questionário</h2>
+          <p class="body-text">Após a elaboração do instrumento, o questionário passa por um processo de validação que combina revisão técnica com especialistas em APS e teste de compreensão com usuários reais dos serviços. No caso deste inquérito, a validação incluiu duas versões do instrumento — curta e longa — avaliadas em paralelo.</p>
 
-  </main>
+          <h3 class="body-subhead">Grupo focal de teste</h3>
+          <p class="body-text">O grupo focal foi o método escolhido para testar a compreensão das perguntas e a usabilidade do canal WhatsApp antes do campo definitivo. Participaram até 12 pessoas usuárias das unidades de saúde, divididas em dois grupos com ordens de preenchimento invertidas (curto→longo / longo→curto) para controlar o efeito de ordem.</p>
+          <p class="body-text">Os três objetivos do grupo focal foram:</p>
+          <ul class="body-list">
+            <li><strong>Compreensão</strong> — verificar se as perguntas são interpretadas conforme o esperado</li>
+            <li><strong>Usabilidade</strong> — avaliar a experiência de responder pelo WhatsApp (botões, fluxo, navegação)</li>
+            <li><strong>Formato</strong> — coletar percepções comparativas sobre as versões curta e longa e disposição real para responder cada uma</li>
+          </ul>
+          <p class="body-text">A sessão durou aproximadamente 2 horas, com uma facilitadora conduzindo a discussão por blocos temáticos (triagem, acesso, vínculo, coordenação, prevenção, canal digital) e uma observadora registrando hesitações, releituras e comentários espontâneos durante o preenchimento.</p>
+
+          <h3 class="body-subhead">O que observar durante o preenchimento</h3>
+          <ul class="body-list">
+            <li>Hesitações antes de tocar num botão — em qual pergunta?</li>
+            <li>Releituras: a pessoa volta para ler a pergunta de novo antes de responder</li>
+            <li>Demora fora do padrão em alguma pergunta específica</li>
+            <li>Reação ao campo aberto (único momento que exige digitação)</li>
+            <li>Reação à escala de três opções (SIM / ÀS VEZES / NÃO)</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="doc-panel" id="panel-sub-1-7">
+        <div class="section-wrap">
+          <span class="sub-badge">Etapa 1 · Subetapa 1.7</span>
+          <h2 class="sub-title">Definição da estratégia de coleta de dados</h2>
+          <p class="body-text">Decisões sobre o canal de coleta (WhatsApp), plataforma de disparo de mensagens, fluxo de consentimento, janela temporal de resposta, número de tentativas de contato e critérios de encerramento de interação.</p>
+          <span class="wip">Descrição detalhada em construção</span>
+        </div>
+      </div>
+
+      <div class="doc-panel" id="panel-sub-1-8">
+        <div class="section-wrap">
+          <span class="sub-badge">Etapa 1 · Subetapa 1.8</span>
+          <h2 class="sub-title">Definição da estratégia de monitoramento da coleta</h2>
+          <p class="body-text">Definição de indicadores de desempenho da coleta (taxa de entrega, taxa de abertura, taxa de resposta, taxa de conclusão), frequência de acompanhamento e critérios de ajuste operacional durante o campo.</p>
+          <span class="wip">Descrição detalhada em construção</span>
+        </div>
+      </div>
+
+      <!-- ══ ETAPA 2 ══ -->
+      <div class="doc-panel" id="panel-etapa2">
+        <div class="section-wrap">
+          <div class="etapa-badge"><span class="etapa-badge-num">2</span>Etapa 2</div>
+          <h1 class="section-title">Preparação e testes</h1>
+          <p class="section-lead">Antes da coleta em escala, realizam-se pilotos para validar o instrumento, os sistemas tecnológicos e os fluxos operacionais. Os resultados dos pilotos informam ajustes finais antes do campo definitivo.</p>
+          <div class="subetapa-list">
+            <div class="subetapa-row" onclick="activatePanel('sub-2-1')"><span class="subetapa-idx">2.1</span><span class="subetapa-name">Realização de pilotos de coleta (grupo focal, testes de coleta)</span></div>
+            <div class="subetapa-row" onclick="activatePanel('sub-2-2')"><span class="subetapa-idx">2.2</span><span class="subetapa-name">Ajustes de questionário, amostra e instrumentos a partir dos pilotos</span></div>
+            <div class="subetapa-row" onclick="activatePanel('sub-2-3')"><span class="subetapa-idx">2.3</span><span class="subetapa-name">Preparação e ajustes dos sistemas tecnológicos de coleta e monitoramento</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="doc-panel" id="panel-sub-2-1">
+        <div class="section-wrap">
+          <span class="sub-badge">Etapa 2 · Subetapa 2.1</span>
+          <h2 class="sub-title">Realização de pilotos de coleta</h2>
+          <p class="body-text">Condução de um ou mais pilotos com subamostras da população-alvo para avaliar compreensão do instrumento, taxa de resposta e funcionamento técnico do fluxo de mensagens.</p>
+          <p class="body-text">No inquérito Recife, o piloto incluiu um grupo focal presencial para avaliação da linguagem e um piloto de disparo via WhatsApp com amostra reduzida de ~500 contatos por unidade de saúde piloto.</p>
+          <span class="wip">Descrição detalhada em construção</span>
+        </div>
+      </div>
+
+      <div class="doc-panel" id="panel-sub-2-2">
+        <div class="section-wrap">
+          <span class="sub-badge">Etapa 2 · Subetapa 2.2</span>
+          <h2 class="sub-title">Ajustes pós-piloto</h2>
+          <p class="body-text">Com base nos resultados do piloto, realizam-se ajustes no questionário (linguagem, ordem das perguntas, opções de resposta), no plano amostral (tamanho da lista de reserva, critérios de exclusão) e nos instrumentos de monitoramento.</p>
+          <span class="wip">Descrição detalhada em construção</span>
+        </div>
+      </div>
+
+      <div class="doc-panel" id="panel-sub-2-3">
+        <div class="section-wrap">
+          <span class="sub-badge">Etapa 2 · Subetapa 2.3</span>
+          <h2 class="sub-title">Sistemas tecnológicos de coleta e monitoramento</h2>
+          <p class="body-text">Configuração e teste da plataforma de mensageria, do sistema de gestão do questionário conversacional e dos painéis de monitoramento em tempo real. Inclui testes de integração, carga e segurança.</p>
+          <span class="wip">Descrição detalhada em construção</span>
+        </div>
+      </div>
+
+      <!-- ══ ETAPA 3 ══ -->
+      <div class="doc-panel" id="panel-etapa3">
+        <div class="section-wrap">
+          <div class="etapa-badge"><span class="etapa-badge-num">3</span>Etapa 3</div>
+          <h1 class="section-title">Implementação da coleta</h1>
+          <p class="section-lead">Execução do inquérito em escala, com monitoramento contínuo e capacidade de ajuste iterativo para garantir qualidade e representatividade da amostra ao longo do campo.</p>
+          <div class="subetapa-list">
+            <div class="subetapa-row" onclick="activatePanel('sub-3-1')"><span class="subetapa-idx">3.1</span><span class="subetapa-name">Execução da coleta segundo o desenho metodológico validado</span></div>
+            <div class="subetapa-row" onclick="activatePanel('sub-3-2')"><span class="subetapa-idx">3.2</span><span class="subetapa-name">Monitoramento contínuo de indicadores de desempenho</span></div>
+            <div class="subetapa-row" onclick="activatePanel('sub-3-3')"><span class="subetapa-idx">3.3</span><span class="subetapa-name">Ajustes operacionais iterativos</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="doc-panel" id="panel-sub-3-1">
+        <div class="section-wrap">
+          <span class="sub-badge">Etapa 3 · Subetapa 3.1</span>
+          <h2 class="sub-title">Execução da coleta</h2>
+          <p class="body-text">Disparos das mensagens de convite via WhatsApp para a lista amostral, seguindo o protocolo de tentativas (número de dias, horários de disparo, mensagens de lembrete). Gestão da lista de reserva para reposição de perdas.</p>
+          <span class="wip">Descrição detalhada em construção</span>
+        </div>
+      </div>
+
+      <div class="doc-panel" id="panel-sub-3-2">
+        <div class="section-wrap">
+          <span class="sub-badge">Etapa 3 · Subetapa 3.2</span>
+          <h2 class="sub-title">Monitoramento contínuo</h2>
+          <p class="body-text">Acompanhamento diário (ou mais frequente) das taxas de entrega, abertura, resposta e conclusão por unidade de saúde e distrito. Identificação de desvios em relação às metas do plano amostral e ativação de protocolos de ajuste.</p>
+          <span class="wip">Descrição detalhada em construção</span>
+        </div>
+      </div>
+
+      <div class="doc-panel" id="panel-sub-3-3">
+        <div class="section-wrap">
+          <span class="sub-badge">Etapa 3 · Subetapa 3.3</span>
+          <h2 class="sub-title">Ajustes operacionais iterativos</h2>
+          <p class="body-text">Decisões tomadas durante o campo com base nos dados de monitoramento: acionamento da lista de reserva, reenvio de mensagens, extensão do prazo de campo, ajuste do horário de disparo. Todas as decisões são documentadas com justificativa.</p>
+          <span class="wip">Descrição detalhada em construção</span>
+        </div>
+      </div>
+
+      <!-- ══ ETAPA 4 ══ -->
+      <div class="doc-panel" id="panel-etapa4">
+        <div class="section-wrap">
+          <div class="etapa-badge"><span class="etapa-badge-num">4</span>Etapa 4</div>
+          <h1 class="section-title">Consolidação e análise dos dados</h1>
+          <p class="section-lead">Após o encerramento do campo, os dados brutos passam por processamento, validação, ponderação e análise para produção dos relatórios técnicos e analíticos finais.</p>
+          <div class="subetapa-list">
+            <div class="subetapa-row" onclick="activatePanel('sub-4-1')"><span class="subetapa-idx">4.1</span><span class="subetapa-name">Processamento, limpeza e validação da base de dados</span></div>
+            <div class="subetapa-row" onclick="activatePanel('sub-4-2')"><span class="subetapa-idx">4.2</span><span class="subetapa-name">Aplicação de ponderações e análises estatísticas de representatividade</span></div>
+            <div class="subetapa-row" onclick="activatePanel('sub-4-3')"><span class="subetapa-idx">4.3</span><span class="subetapa-name">Elaboração de relatórios técnicos e analíticos</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="doc-panel" id="panel-sub-4-1">
+        <div class="section-wrap">
+          <span class="sub-badge">Etapa 4 · Subetapa 4.1</span>
+          <h2 class="sub-title">Limpeza e validação da base de dados</h2>
+          <p class="body-text">Exportação dos dados brutos da plataforma de mensageria, padronização de variáveis, exclusão de respostas inválidas (tempo de resposta implausível, respostas inconsistentes), e verificação de completude por unidade amostral.</p>
+          <span class="wip">Descrição detalhada em construção</span>
+        </div>
+      </div>
+
+      <div class="doc-panel" id="panel-sub-4-2">
+        <div class="section-wrap">
+          <span class="sub-badge">Etapa 4 · Subetapa 4.2</span>
+          <h2 class="sub-title">Ponderação e análises de representatividade</h2>
+          <p class="body-text">Aplicação de pesos amostrais para correção de desequilíbrios entre a amostra obtida e a população-alvo, com base em variáveis do Censo 2022 e do cadastro de usuários do e-SUS. Análises de não-resposta e comparação com perfil populacional esperado.</p>
+          <span class="wip">Descrição detalhada em construção</span>
+        </div>
+      </div>
+
+      <div class="doc-panel" id="panel-sub-4-3">
+        <div class="section-wrap">
+          <span class="sub-badge">Etapa 4 · Subetapa 4.3</span>
+          <h2 class="sub-title">Elaboração de relatórios técnicos e analíticos</h2>
+          <p class="body-text">Produção de relatórios com os resultados do inquérito: relatório de campo (desempenho operacional), relatório técnico (metodologia e qualidade dos dados) e relatório analítico (resultados dos indicadores PCATool por unidade e comparação USF vs. USF+).</p>
+          <span class="wip">Descrição detalhada em construção</span>
+        </div>
+      </div>
+
+    </div><!-- /doc-main -->
+
+    <!-- Aside: links e aprendizados -->
+    <aside class="doc-aside" id="docAside">
+      <!-- intro aside: vazio -->
+      <div class="aside-wrap doc-panel active" id="aside-intro"></div>
+
+      <!-- etapa 1 aside -->
+      <div class="aside-wrap doc-panel" id="aside-etapa1">
+        <div class="aside-section">
+          <span class="aside-label">Links e recursos</span>
+          <span class="wip">A preencher</span>
+        </div>
+        <div class="aside-section">
+          <span class="aside-label">Aprendizados desta etapa</span>
+          <span class="wip">A preencher</span>
+        </div>
+      </div>
+
+      <!-- subetapas 1.x asides -->
+      <div class="aside-wrap doc-panel" id="aside-sub-1-1">
+        <div class="aside-section"><span class="aside-label">Links</span><span class="wip">A preencher</span></div>
+        <div class="aside-section"><span class="aside-label">Aprendizados</span><span class="wip">A preencher</span></div>
+      </div>
+      <div class="aside-wrap doc-panel" id="aside-sub-1-2">
+        <div class="aside-section"><span class="aside-label">Links</span><span class="wip">A preencher</span></div>
+        <div class="aside-section"><span class="aside-label">Aprendizados</span><span class="wip">A preencher</span></div>
+      </div>
+      <div class="aside-wrap doc-panel" id="aside-sub-1-3">
+        <div class="aside-section"><span class="aside-label">Links</span><span class="wip">A preencher</span></div>
+        <div class="aside-section"><span class="aside-label">Aprendizados</span><span class="wip">A preencher</span></div>
+      </div>
+      <div class="aside-wrap doc-panel" id="aside-sub-1-4">
+        <div class="aside-section">
+          <span class="aside-label">Links</span>
+          <div class="link-item">
+            <span class="link-type">Script R</span>
+            <a href="arquivos/scripts/planejamento_amostral_dados_aps.R" download>Planejamento amostral — dados APS</a>
+          </div>
+          <div class="link-item">
+            <span class="link-type">Script R</span>
+            <a href="arquivos/scripts/planejamento_amostral_dados_aps_USF.R" download>Planejamento amostral — por USF</a>
+          </div>
+          <div class="link-item">
+            <span class="link-type">Doc</span>
+            <a href="arquivos/Plano Amostral.docx" download>Plano amostral (Word)</a>
+          </div>
+        </div>
+        <div class="aside-section"><span class="aside-label">Aprendizados</span><span class="wip">A preencher</span></div>
+      </div>
+      <div class="aside-wrap doc-panel" id="aside-sub-1-5">
+        <div class="aside-section">
+          <span class="aside-label">Links</span>
+          <div class="link-item">
+            <span class="link-type">Doc</span>
+            <a href="arquivos/Especificacao_Questionarios_APS_Recife_v2 (2) (1).pdf" download>Especificação dos questionários v2 (PDF)</a>
+          </div>
+          <div class="link-item">
+            <span class="link-type">Doc</span>
+            <a href="arquivos/Especificacao_Questionarios_APS_Recife_v2.docx" download>Especificação dos questionários v2 (Word)</a>
+          </div>
+        </div>
+        <div class="aside-section"><span class="aside-label">Aprendizados</span><span class="wip">A preencher</span></div>
+      </div>
+      <div class="aside-wrap doc-panel" id="aside-sub-1-6">
+        <div class="aside-section">
+          <span class="aside-label">Links</span>
+          <a class="aside-link" href="docs/Roteiro_grupo_focal_MDMS_WPP.pdf" target="_blank">
+            <span class="aside-link-icon">📄</span>
+            <span class="aside-link-text">Roteiro do grupo focal<span class="aside-link-meta">PDF · Inquérito Web Recife</span></span>
+          </a>
+        </div>
+        <div class="aside-section"><span class="aside-label">Aprendizados</span><span class="wip">A preencher</span></div>
+      </div>
+      <div class="aside-wrap doc-panel" id="aside-sub-1-7">
+        <div class="aside-section"><span class="aside-label">Links</span><span class="wip">A preencher</span></div>
+        <div class="aside-section"><span class="aside-label">Aprendizados</span><span class="wip">A preencher</span></div>
+      </div>
+      <div class="aside-wrap doc-panel" id="aside-sub-1-8">
+        <div class="aside-section"><span class="aside-label">Links</span><span class="wip">A preencher</span></div>
+        <div class="aside-section"><span class="aside-label">Aprendizados</span><span class="wip">A preencher</span></div>
+      </div>
+
+      <!-- etapa 2 -->
+      <div class="aside-wrap doc-panel" id="aside-etapa2">
+        <div class="aside-section"><span class="aside-label">Links e recursos</span><span class="wip">A preencher</span></div>
+        <div class="aside-section"><span class="aside-label">Aprendizados desta etapa</span><span class="wip">A preencher</span></div>
+      </div>
+      <div class="aside-wrap doc-panel" id="aside-sub-2-1">
+        <div class="aside-section"><span class="aside-label">Links</span><span class="wip">A preencher</span></div>
+        <div class="aside-section"><span class="aside-label">Aprendizados</span><span class="wip">A preencher</span></div>
+      </div>
+      <div class="aside-wrap doc-panel" id="aside-sub-2-2">
+        <div class="aside-section"><span class="aside-label">Links</span><span class="wip">A preencher</span></div>
+        <div class="aside-section"><span class="aside-label">Aprendizados</span><span class="wip">A preencher</span></div>
+      </div>
+      <div class="aside-wrap doc-panel" id="aside-sub-2-3">
+        <div class="aside-section"><span class="aside-label">Links</span><span class="wip">A preencher</span></div>
+        <div class="aside-section"><span class="aside-label">Aprendizados</span><span class="wip">A preencher</span></div>
+      </div>
+
+      <!-- etapa 3 -->
+      <div class="aside-wrap doc-panel" id="aside-etapa3">
+        <div class="aside-section"><span class="aside-label">Links e recursos</span><span class="wip">A preencher</span></div>
+        <div class="aside-section"><span class="aside-label">Aprendizados desta etapa</span><span class="wip">A preencher</span></div>
+      </div>
+      <div class="aside-wrap doc-panel" id="aside-sub-3-1">
+        <div class="aside-section"><span class="aside-label">Links</span><span class="wip">A preencher</span></div>
+        <div class="aside-section"><span class="aside-label">Aprendizados</span><span class="wip">A preencher</span></div>
+      </div>
+      <div class="aside-wrap doc-panel" id="aside-sub-3-2">
+        <div class="aside-section"><span class="aside-label">Links</span><span class="wip">A preencher</span></div>
+        <div class="aside-section"><span class="aside-label">Aprendizados</span><span class="wip">A preencher</span></div>
+      </div>
+      <div class="aside-wrap doc-panel" id="aside-sub-3-3">
+        <div class="aside-section"><span class="aside-label">Links</span><span class="wip">A preencher</span></div>
+        <div class="aside-section"><span class="aside-label">Aprendizados</span><span class="wip">A preencher</span></div>
+      </div>
+
+      <!-- etapa 4 -->
+      <div class="aside-wrap doc-panel" id="aside-etapa4">
+        <div class="aside-section"><span class="aside-label">Links e recursos</span><span class="wip">A preencher</span></div>
+        <div class="aside-section"><span class="aside-label">Aprendizados desta etapa</span><span class="wip">A preencher</span></div>
+      </div>
+      <div class="aside-wrap doc-panel" id="aside-sub-4-1">
+        <div class="aside-section"><span class="aside-label">Links</span><span class="wip">A preencher</span></div>
+        <div class="aside-section"><span class="aside-label">Aprendizados</span><span class="wip">A preencher</span></div>
+      </div>
+      <div class="aside-wrap doc-panel" id="aside-sub-4-2">
+        <div class="aside-section"><span class="aside-label">Links</span><span class="wip">A preencher</span></div>
+        <div class="aside-section"><span class="aside-label">Aprendizados</span><span class="wip">A preencher</span></div>
+      </div>
+      <div class="aside-wrap doc-panel" id="aside-sub-4-3">
+        <div class="aside-section"><span class="aside-label">Links</span><span class="wip">A preencher</span></div>
+        <div class="aside-section"><span class="aside-label">Aprendizados</span><span class="wip">A preencher</span></div>
+      </div>
+
+    </aside>
+  </div>
 </div>
 
 <script>
-(function(){
-  var btns=document.querySelectorAll('.nav-btn');
-  var panels=document.querySelectorAll('.tab-content');
-  var subPanels=document.querySelectorAll('.sub-panel');
-  var sidebar=document.getElementById('sidebar');
-  var overlay=document.getElementById('overlay');
-  var menuBtn=document.getElementById('menuBtn');
+var navBtns = document.querySelectorAll('[data-panel]');
+var mainPanels = document.querySelectorAll('.doc-main .doc-panel');
+var asidePanels = document.querySelectorAll('.doc-aside .doc-panel');
 
-  function activateSub(sid){
-    btns.forEach(function(b){
-      if(b.classList.contains('nav-sub')){
-        b.classList.toggle('active',b.dataset.sub===sid);
-      }
-    });
-    subPanels.forEach(function(p){p.classList.toggle('active',p.id==='sub-'+sid)});
-  }
-
-  function activate(id, sub){
-    // main tab
-    btns.forEach(function(b){
-      if(!b.classList.contains('nav-sub')){
-        b.classList.toggle('active',b.dataset.tab===id);
-      }
-    });
-    panels.forEach(function(p){p.classList.toggle('active',p.id==='tab-'+id)});
-    // if metodologia, also activate sub
-    if(id==='metodologia'){
-      var target=sub||'desenho';
-      activateSub(target);
-    }
-    if(window.innerWidth<=720){sidebar.classList.remove('open');overlay.classList.remove('show')}
-  }
-
-  btns.forEach(function(b){
-    b.addEventListener('click',function(){
-      if(b.classList.contains('nav-sub')){
-        activate('metodologia', b.dataset.sub);
-      } else {
-        activate(b.dataset.tab);
-      }
-    });
+function activatePanel(id) {
+  navBtns.forEach(function(b){
+    b.classList.toggle('active', b.dataset.panel === id);
   });
-
-  document.querySelectorAll('.sec-btn[data-goto]').forEach(function(c){
-    c.addEventListener('click',function(){activate(c.dataset.goto)});
+  mainPanels.forEach(function(p){
+    p.classList.toggle('active', p.id === 'panel-' + id);
   });
-
-  menuBtn.addEventListener('click',function(){
-    var o=sidebar.classList.toggle('open');
-    overlay.classList.toggle('show',o);
+  asidePanels.forEach(function(p){
+    p.classList.toggle('active', p.id === 'aside-' + id);
   });
-  overlay.addEventListener('click',function(){
-    sidebar.classList.remove('open');overlay.classList.remove('show');
-  });
+  // esconde terceira coluna só na intro
+  document.querySelector('.doc-content').classList.toggle('hide-aside', id === 'intro');
+  document.getElementById('docMain').scrollTo(0, 0);
+}
 
-  var h=location.hash.replace('#','');
-  if(h&&document.getElementById('tab-'+h))activate(h);
-})();
+navBtns.forEach(function(b){
+  b.addEventListener('click', function(){ activatePanel(b.dataset.panel); });
+});
+
+// estado inicial
+document.querySelector('.doc-content').classList.add('hide-aside');
+
+// menu toggle (mobile)
+var menuToggle = document.getElementById('menuToggle');
+var docNav = document.getElementById('docNav');
+var navOverlay = document.getElementById('navOverlay');
+
+function openNav() {
+  docNav.classList.add('open');
+  navOverlay.classList.add('visible');
+}
+function closeNav() {
+  docNav.classList.remove('open');
+  navOverlay.classList.remove('visible');
+}
+
+menuToggle.addEventListener('click', function() {
+  docNav.classList.contains('open') ? closeNav() : openNav();
+});
+navOverlay.addEventListener('click', closeNav);
+navBtns.forEach(function(b){
+  b.addEventListener('click', closeNav);
+});
 </script>
 </body>
 </html>
