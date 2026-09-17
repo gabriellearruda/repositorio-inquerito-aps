@@ -288,6 +288,25 @@ body{font-family:'Inter',-apple-system,sans-serif;font-size:14px;line-height:1.6
 .hide-aside .doc-aside{display:none}
 .hide-aside .doc-main{flex:1}
 
+/* ── MENU TOGGLE (mobile) ── */
+.menu-toggle{
+  display:none;
+  position:fixed;top:12px;left:12px;z-index:400;
+  width:36px;height:36px;border-radius:6px;
+  background:var(--sidebar-bg);border:none;cursor:pointer;
+  align-items:center;justify-content:center;flex-direction:column;gap:5px;
+  box-shadow:0 2px 8px rgba(0,0,0,.35);
+}
+.menu-toggle span{
+  display:block;width:18px;height:2px;
+  background:#fff;border-radius:2px;transition:all .2s;
+}
+.nav-overlay{
+  display:none;position:fixed;inset:0;z-index:150;
+  background:rgba(0,0,0,.45);
+}
+.nav-overlay.visible{display:block}
+
 /* ── RESPONSIVE ── */
 @media(max-width:960px){
   :root{--right-w:0px}
@@ -300,10 +319,16 @@ body{font-family:'Inter',-apple-system,sans-serif;font-size:14px;line-height:1.6
   .doc-content{margin-left:0}
   .dh-brand{width:auto}
   .section-wrap{padding:1.75rem 1.25rem}
+  .menu-toggle{display:flex}
 }
 </style>
 </head>
 <body>
+
+<button class="menu-toggle" id="menuToggle" aria-label="Abrir menu">
+  <span></span><span></span><span></span>
+</button>
+<div class="nav-overlay" id="navOverlay"></div>
 
 <div class="doc-shell" style="padding-top:0">
 
@@ -811,6 +836,28 @@ navBtns.forEach(function(b){
 
 // estado inicial
 document.querySelector('.doc-content').classList.add('hide-aside');
+
+// menu toggle (mobile)
+var menuToggle = document.getElementById('menuToggle');
+var docNav = document.getElementById('docNav');
+var navOverlay = document.getElementById('navOverlay');
+
+function openNav() {
+  docNav.classList.add('open');
+  navOverlay.classList.add('visible');
+}
+function closeNav() {
+  docNav.classList.remove('open');
+  navOverlay.classList.remove('visible');
+}
+
+menuToggle.addEventListener('click', function() {
+  docNav.classList.contains('open') ? closeNav() : openNav();
+});
+navOverlay.addEventListener('click', closeNav);
+navBtns.forEach(function(b){
+  b.addEventListener('click', closeNav);
+});
 </script>
 </body>
 </html>
