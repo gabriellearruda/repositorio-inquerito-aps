@@ -275,7 +275,8 @@ body{font-family:'Inter',-apple-system,sans-serif;font-size:14px;line-height:1.6
 }
 
 /* ── INTRO BODY ── */
-.intro-body{padding:2rem 2.25rem 2.5rem 3rem;display:flex;flex-direction:column;gap:1.75rem;max-width:720px}
+.intro-body{padding:2rem 2.25rem 2.5rem 3rem;display:flex;flex-direction:row;gap:3.5rem;align-items:flex-start}
+.intro-text{flex:1;display:flex;flex-direction:column;gap:1.75rem;min-width:0}
 .intro-section-title{
   font-family:'Source Serif 4',Georgia,serif;
   font-size:.82rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;
@@ -283,6 +284,65 @@ body{font-family:'Inter',-apple-system,sans-serif;font-size:14px;line-height:1.6
 }
 .intro-body p{font-size:.88rem;line-height:1.75;color:var(--text-2)}
 .intro-body strong{color:var(--text);font-weight:600}
+
+/* ── PHONE MOCKUP ── */
+.phone-wrap{flex-shrink:0;width:240px;position:sticky;top:2rem}
+.phone-frame{
+  width:240px;background:#111;border-radius:36px;
+  padding:10px;box-shadow:0 24px 60px rgba(0,0,0,.28),0 0 0 1px rgba(255,255,255,.07);
+}
+.phone-screen{
+  background:#ECE5DD;border-radius:28px;overflow:hidden;
+  height:480px;display:flex;flex-direction:column;font-family:'Inter',sans-serif;
+}
+.wa-header{
+  background:#075E54;padding:.55rem .85rem;
+  display:flex;align-items:center;gap:.6rem;flex-shrink:0;
+}
+.wa-avatar{
+  width:32px;height:32px;border-radius:50%;background:#25D366;
+  display:flex;align-items:center;justify-content:center;
+  font-size:.75rem;font-weight:700;color:#fff;flex-shrink:0;
+}
+.wa-contact{color:#fff}
+.wa-contact-name{font-size:.72rem;font-weight:600;line-height:1.2}
+.wa-contact-status{font-size:.6rem;color:rgba(255,255,255,.65);line-height:1}
+.wa-chat{flex:1;overflow-y:auto;padding:.6rem .65rem;display:flex;flex-direction:column;gap:.45rem}
+.wa-chat::-webkit-scrollbar{width:0}
+.wa-bubble{
+  max-width:88%;padding:.45rem .6rem .3rem;border-radius:7.5px;
+  font-size:.65rem;line-height:1.45;position:relative;
+}
+.wa-bubble.bot{
+  background:#fff;border-top-left-radius:2px;align-self:flex-start;
+  box-shadow:0 1px 1px rgba(0,0,0,.1);
+}
+.wa-bubble.user{
+  background:#DCF8C6;border-top-right-radius:2px;align-self:flex-end;
+  box-shadow:0 1px 1px rgba(0,0,0,.1);
+}
+.wa-time{font-size:.55rem;color:rgba(0,0,0,.38);float:right;margin-left:.4rem;margin-top:.1rem}
+.wa-options{display:flex;flex-direction:column;gap:.3rem;margin-top:.35rem}
+.wa-option{
+  background:#f0f0f0;border:1px solid #e0e0e0;border-radius:5px;
+  padding:.3rem .5rem;font-size:.62rem;color:#075E54;font-weight:500;
+  cursor:default;
+}
+.wa-typing{
+  background:#fff;border-radius:7.5px;border-top-left-radius:2px;
+  padding:.4rem .6rem;align-self:flex-start;
+  box-shadow:0 1px 1px rgba(0,0,0,.1);display:flex;gap:3px;align-items:center;
+}
+.wa-dot{width:6px;height:6px;border-radius:50%;background:#aaa;animation:waDot 1.2s infinite}
+.wa-dot:nth-child(2){animation-delay:.2s}
+.wa-dot:nth-child(3){animation-delay:.4s}
+@keyframes waDot{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-4px)}}
+.wa-notif{
+  font-size:.58rem;color:#888;text-align:center;
+  background:rgba(0,0,0,.06);border-radius:6px;padding:.2rem .5rem;
+  margin:.1rem auto;max-width:80%;
+}
+@media(max-width:860px){.phone-wrap{display:none}}
 
 /* ── sem aside (intro) ── */
 .hide-aside .doc-aside{display:none}
@@ -399,16 +459,43 @@ body{font-family:'Inter',-apple-system,sans-serif;font-size:14px;line-height:1.6
 
         <!-- Contexto e relevância -->
         <div class="intro-body">
-          <div class="intro-section">
-            <p>Avaliar a qualidade da Atenção Primária à Saúde a partir da perspectiva do usuário é essencial para orientar decisões de gestão — mas pesquisas desse tipo historicamente enfrentam dois obstáculos: <strong>custo operacional elevado</strong> e <strong>longos ciclos de coleta</strong>. Inquéritos telefônicos tradicionais exigem estrutura de call center; pesquisas presenciais demandam equipe de campo extensiva. O resultado é que dados sobre a experiência do usuário chegam ao gestor com meses de defasagem, limitando sua utilidade para o planejamento.</p>
+          <div class="intro-text">
+            <div class="intro-section">
+              <p>Avaliar a qualidade da Atenção Primária à Saúde a partir da perspectiva do usuário é essencial para orientar decisões de gestão, mas pesquisas desse tipo historicamente enfrentam dois obstáculos: <strong>custo operacional elevado</strong> e <strong>longos ciclos de coleta</strong>. Inquéritos telefônicos tradicionais exigem estrutura de call center; pesquisas presenciais demandam equipe de campo extensiva. O resultado é que dados sobre a experiência do usuário chegam ao gestor com meses de defasagem, limitando sua utilidade para o planejamento.</p>
+            </div>
+            <div class="intro-section">
+              <h2 class="intro-section-title">O que este inquérito demonstra</h2>
+              <p>Ao utilizar o WhatsApp como canal de entrega (plataforma presente no cotidiano de mais de 90% dos brasileiros), o estudo <strong>reduz drasticamente o custo e o tempo do ciclo de coleta</strong>, ao mesmo tempo em que amplia o alcance para populações dificilmente atingidas por outros meios. A base cadastral do e-SUS APS elimina a necessidade de listagem de domicílios, permitindo sorteio probabilístico direto a partir dos próprios registros do sistema público de saúde.</p>
+            </div>
+            <div class="intro-section">
+              <h2 class="intro-section-title">Inovação metodológica</h2>
+              <p>O <strong>PCATool-Brasil</strong>, instrumento validado para mensurar os atributos da atenção primária segundo o modelo de Barbara Starfield, foi adaptado para linguagem conversacional no WhatsApp, viabilizando a coleta em escala sem perda de rigor científico. O delineamento quase-experimental, comparando unidades USF e USF+, gera evidência causal direta para decisões de política de APS.</p>
+            </div>
           </div>
-          <div class="intro-section">
-            <h2 class="intro-section-title">O que este inquérito demonstra</h2>
-            <p>Ao utilizar o WhatsApp como canal de entrega (plataforma presente no cotidiano de mais de 90% dos brasileiros), o estudo <strong>reduz drasticamente o custo e o tempo do ciclo de coleta</strong>, ao mesmo tempo em que amplia o alcance para populações dificilmente atingidas por outros meios. A base cadastral do e-SUS APS elimina a necessidade de listagem de domicílios, permitindo sorteio probabilístico direto a partir dos próprios registros do sistema público de saúde.</p>
-          </div>
-          <div class="intro-section">
-            <h2 class="intro-section-title">Inovação metodológica</h2>
-            <p>O <strong>PCATool-Brasil</strong>, instrumento validado para mensurar os atributos da atenção primária segundo o modelo de Barbara Starfield, foi adaptado para linguagem conversacional no WhatsApp, viabilizando a coleta em escala sem perda de rigor científico. O delineamento quase-experimental, comparando unidades USF e USF+, gera evidência causal direta para decisões de política de APS.</p>
+
+          <!-- Phone mockup -->
+          <div class="phone-wrap">
+            <div class="phone-frame">
+              <div class="phone-screen">
+                <div class="wa-header">
+                  <div class="wa-avatar">APS</div>
+                  <div class="wa-contact">
+                    <div class="wa-contact-name">Pesquisa APS Recife</div>
+                    <div class="wa-contact-status">online</div>
+                  </div>
+                </div>
+                <div class="wa-chat">
+                  <div class="wa-notif">🔒 As mensagens são criptografadas</div>
+                  <div class="wa-bubble bot">Olá! Você foi selecionado(a) para participar de uma pesquisa sobre os serviços de saúde em Recife. Leva cerca de 5 minutos. Deseja participar?<div class="wa-options"><div class="wa-option">✅ Sim, quero participar</div><div class="wa-option">❌ Não, obrigado(a)</div></div><span class="wa-time">09:14</span></div>
+                  <div class="wa-bubble user">Sim, quero participar<span class="wa-time">09:14 ✓✓</span></div>
+                  <div class="wa-bubble bot">Ótimo! Qual é a sua unidade de saúde?<div class="wa-options"><div class="wa-option">USF Jardim São Paulo</div><div class="wa-option">USF Alto Santa Terezinha</div><div class="wa-option">Outra unidade</div></div><span class="wa-time">09:14</span></div>
+                  <div class="wa-bubble user">USF Jardim São Paulo<span class="wa-time">09:15 ✓✓</span></div>
+                  <div class="wa-bubble bot">Quando você precisa de atendimento com urgência, consegue ser atendido no mesmo dia na sua unidade?<div class="wa-options"><div class="wa-option">Sim, sempre</div><div class="wa-option">Na maioria das vezes</div><div class="wa-option">Às vezes</div><div class="wa-option">Não</div></div><span class="wa-time">09:15</span></div>
+                  <div class="wa-bubble user">Na maioria das vezes<span class="wa-time">09:15 ✓✓</span></div>
+                  <div class="wa-typing"><div class="wa-dot"></div><div class="wa-dot"></div><div class="wa-dot"></div></div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
