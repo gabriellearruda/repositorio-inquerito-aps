@@ -148,6 +148,15 @@ body{font-family:'Inter',-apple-system,sans-serif;font-size:14px;line-height:1.6
 }
 .body-text{font-size:.84rem;color:var(--text-2);line-height:1.75;margin-bottom:.65rem}
 .body-text:last-child{margin-bottom:0}
+.body-subhead{
+  font-family:'Source Serif 4',Georgia,serif;font-size:.95rem;font-weight:600;
+  color:var(--accent);margin:1.4rem 0 .4rem;
+}
+.body-list{
+  font-size:.84rem;color:var(--text-2);line-height:1.7;
+  padding-left:1.25rem;margin-bottom:.65rem;display:flex;flex-direction:column;gap:.25rem;
+}
+.body-list li strong{color:var(--text);font-weight:600}
 
 /* ── WIP ── */
 .wip{
@@ -573,8 +582,26 @@ body{font-family:'Inter',-apple-system,sans-serif;font-size:14px;line-height:1.6
         <div class="section-wrap">
           <span class="sub-badge">Etapa 1 · Subetapa 1.6</span>
           <h2 class="sub-title">Aprovação do questionário</h2>
-          <p class="body-text">Revisão e validação do instrumento com especialistas em APS, gestores da Secretaria Municipal de Saúde de Recife e membros do comitê científico do programa MDMS. Inclui rodadas de feedback e ajuste de linguagem.</p>
-          <span class="wip">Descrição detalhada em construção</span>
+          <p class="body-text">Após a elaboração do instrumento, o questionário passa por um processo de validação que combina revisão técnica com especialistas em APS e teste de compreensão com usuários reais dos serviços. No caso deste inquérito, a validação incluiu duas versões do instrumento — curta e longa — avaliadas em paralelo.</p>
+
+          <h3 class="body-subhead">Grupo focal de teste</h3>
+          <p class="body-text">O grupo focal foi o método escolhido para testar a compreensão das perguntas e a usabilidade do canal WhatsApp antes do campo definitivo. Participaram até 12 pessoas usuárias das unidades de saúde, divididas em dois grupos com ordens de preenchimento invertidas (curto→longo / longo→curto) para controlar o efeito de ordem.</p>
+          <p class="body-text">Os três objetivos do grupo focal foram:</p>
+          <ul class="body-list">
+            <li><strong>Compreensão</strong> — verificar se as perguntas são interpretadas conforme o esperado</li>
+            <li><strong>Usabilidade</strong> — avaliar a experiência de responder pelo WhatsApp (botões, fluxo, navegação)</li>
+            <li><strong>Formato</strong> — coletar percepções comparativas sobre as versões curta e longa e disposição real para responder cada uma</li>
+          </ul>
+          <p class="body-text">A sessão durou aproximadamente 2 horas, com uma facilitadora conduzindo a discussão por blocos temáticos (triagem, acesso, vínculo, coordenação, prevenção, canal digital) e uma observadora registrando hesitações, releituras e comentários espontâneos durante o preenchimento.</p>
+
+          <h3 class="body-subhead">O que observar durante o preenchimento</h3>
+          <ul class="body-list">
+            <li>Hesitações antes de tocar num botão — em qual pergunta?</li>
+            <li>Releituras: a pessoa volta para ler a pergunta de novo antes de responder</li>
+            <li>Demora fora do padrão em alguma pergunta específica</li>
+            <li>Reação ao campo aberto (único momento que exige digitação)</li>
+            <li>Reação à escala de três opções (SIM / ÀS VEZES / NÃO)</li>
+          </ul>
         </div>
       </div>
 
@@ -785,7 +812,13 @@ body{font-family:'Inter',-apple-system,sans-serif;font-size:14px;line-height:1.6
         <div class="aside-section"><span class="aside-label">Aprendizados</span><span class="wip">A preencher</span></div>
       </div>
       <div class="aside-wrap doc-panel" id="aside-sub-1-6">
-        <div class="aside-section"><span class="aside-label">Links</span><span class="wip">A preencher</span></div>
+        <div class="aside-section">
+          <span class="aside-label">Links</span>
+          <a class="aside-link" href="docs/Roteiro_grupo_focal_MDMS_WPP.pdf" target="_blank">
+            <span class="aside-link-icon">📄</span>
+            <span class="aside-link-text">Roteiro do grupo focal<span class="aside-link-meta">PDF · Inquérito Web Recife</span></span>
+          </a>
+        </div>
         <div class="aside-section"><span class="aside-label">Aprendizados</span><span class="wip">A preencher</span></div>
       </div>
       <div class="aside-wrap doc-panel" id="aside-sub-1-7">
