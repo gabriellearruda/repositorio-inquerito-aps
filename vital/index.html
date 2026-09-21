@@ -422,6 +422,9 @@ code{font-family:monospace;font-size:.82em;background:#f0ede8;padding:.1em .35em
 .cm-select:focus{border-color:var(--accent)}
 .cm-aside-group{margin-top:1.5rem;padding-top:1.25rem;border-top:1px solid var(--rule)}
 .cm-aside-group-label{font-size:.65rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--text-3);display:block;margin-bottom:.75rem}
+.cm-toolbar{display:flex;gap:.3rem;padding:.5rem 0 .65rem;margin-bottom:.75rem;border-bottom:1px solid var(--rule);position:sticky;top:0;background:var(--content-bg);z-index:10;flex-wrap:wrap}
+.cm-tb-btn{padding:.22rem .55rem;font-size:.72rem;font-weight:600;border:1px solid #ddd;background:#fff;cursor:pointer;color:var(--text-2);border-radius:2px;transition:background .1s;font-family:inherit;line-height:1.4}
+.cm-tb-btn:hover{background:#f0ede8;border-color:#bbb}
 
 /* ── PASSWORD GATE ── */
 #pw-gate{
@@ -631,6 +634,14 @@ if (isAuthValid()) {
                 <option value="sub-4-3">4.3 — Relatórios</option>
               </optgroup>
             </select>
+          </div>
+          <div class="cm-toolbar">
+            <button class="cm-tb-btn" onclick="cmFmt('bold')" title="Negrito"><strong>N</strong></button>
+            <button class="cm-tb-btn" onclick="cmFmt('italic')" title="Itálico"><em>I</em></button>
+            <button class="cm-tb-btn" onclick="cmFmt('li')" title="Item de lista">• Item</button>
+            <button class="cm-tb-btn" onclick="cmFmt('ul')" title="Lista com bullet">☰ Lista</button>
+            <button class="cm-tb-btn" onclick="cmFmt('link')" title="Link">&#8599; Link</button>
+            <button class="cm-tb-btn" onclick="cmFmt('code')" title="Código">&lt;/&gt;</button>
           </div>
           <div id="cm-fields"></div>
           <div class="cm-save-row">
@@ -1152,6 +1163,34 @@ navOverlay.addEventListener('click', closeNav);
 navBtns.forEach(function(b){
   b.addEventListener('click', closeNav);
 });
+
+// ── TOOLBAR DE FORMATAÇÃO ──
+var cmActiveTA = null;
+document.addEventListener('focusin', function(e) {
+  if (e.target.classList.contains('cm-ta')) cmActiveTA = e.target;
+});
+function cmFmt(type) {
+  var ta = cmActiveTA;
+  if (!ta) return;
+  var s = ta.selectionStart, e = ta.selectionEnd;
+  var sel = ta.value.slice(s, e);
+  var pre = ta.value.slice(0, s), post = ta.value.slice(e);
+  var ins = '';
+  if (type === 'bold')   ins = '<strong>' + (sel || 'texto') + '</strong>';
+  else if (type === 'italic') ins = '<em>' + (sel || 'texto') + '</em>';
+  else if (type === 'li')     ins = '<li>' + (sel || 'Item') + '</li>';
+  else if (type === 'ul')     ins = '\n<ul class="body-list">\n  <li>' + (sel || 'Item 1') + '</li>\n  <li>Item 2</li>\n</ul>';
+  else if (type === 'code')   ins = '<code>' + (sel || 'código') + '</code>';
+  else if (type === 'link') {
+    var url = prompt('URL:', 'https://');
+    if (!url) return;
+    ins = '<a href="' + url + '" target="_blank">' + (sel || url) + '</a>';
+  }
+  ta.value = pre + ins + post;
+  var p = pre.length + ins.length;
+  ta.focus();
+  ta.setSelectionRange(p, p);
+}
 
 // ── CONTENT MANAGER ──
 var CM_REPO = 'gabriellearruda/vital-inquerito-whatsapp-documentacao';
