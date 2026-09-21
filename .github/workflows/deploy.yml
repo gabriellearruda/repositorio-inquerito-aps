@@ -32,9 +32,10 @@ jobs:
             const fs = require('fs');
             const path = 'vital/index.html';
             let content = fs.readFileSync(path, 'utf8');
-            const before = (content.match(/__SENHADOPAINEL__/g) || []).length;
-            content = content.replaceAll('__SENHADOPAINEL__', process.env.SENHADOPAINEL);
-            const after = (content.match(/__SENHADOPAINEL__/g) || []).length;
+            const before = (content.match(/'__SENHADOPAINEL__'/g) || []).length;
+            const escaped = JSON.stringify(process.env.SENHADOPAINEL);
+            content = content.replace(\"'__SENHADOPAINEL__'\", escaped);
+            const after = (content.match(/'__SENHADOPAINEL__'/g) || []).length;
             fs.writeFileSync(path, content, 'utf8');
             console.log('Placeholders antes:', before, '| depois:', after);
           "
