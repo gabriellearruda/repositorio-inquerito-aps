@@ -657,15 +657,6 @@ if (isAuthValid()) {
           <h3 class="body-subhead">Sobre os campos de texto</h3>
           <p class="body-text">Cada campo exibe o conteúdo HTML do elemento correspondente. É possível usar tags básicas como <code>&lt;strong&gt;</code>, <code>&lt;em&gt;</code> e <code>&lt;a href="..."&gt;</code> dentro dos campos.</p>
 
-          <h3 class="body-subhead">Variáveis de ambiente no Vercel</h3>
-          <p class="body-text">As seguintes variáveis devem estar configuradas em <strong>Settings → Environment Variables</strong> no painel do Vercel:</p>
-          <ul class="body-list">
-            <li><code>SENHADOPAINEL</code> — senha de acesso ao guia e ao gerenciador de conteúdo</li>
-            <li><code>GITHUB_TOKEN</code> — token do GitHub com permissão <em>contents:write</em></li>
-          </ul>
-
-          <h3 class="body-subhead">Segurança</h3>
-          <p class="body-text">A senha e o token do GitHub nunca chegam ao navegador — ficam protegidos no servidor Vercel. O gerenciador usa uma função serverless com rate limiting de 5 tentativas por 15 minutos. Essa arquitetura é idêntica à usada em outros projetos do MDMS.</p>
         </div>
       </div>
 
