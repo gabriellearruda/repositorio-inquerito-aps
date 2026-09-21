@@ -25,8 +25,17 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Inject password into vital/index.html
+        env:
+          SENHADOPAINEL: ${{ secrets.SENHADOPAINEL }}
         run: |
-          sed -i "s/__SENHADOPAINEL__/${{ secrets.SENHADOPAINEL }}/g" vital/index.html
+          python3 -c "
+          import os
+          with open('vital/index.html', 'r', encoding='utf-8') as f:
+              content = f.read()
+          content = content.replace('__SENHADOPAINEL__', os.environ['SENHADOPAINEL'])
+          with open('vital/index.html', 'w', encoding='utf-8') as f:
+              f.write(content)
+          "
 
       - name: Setup Pages
         uses: actions/configure-pages@v4

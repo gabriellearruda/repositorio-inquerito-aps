@@ -446,7 +446,7 @@ body{font-family:'Inter',-apple-system,sans-serif;font-size:14px;line-height:1.6
 var SENHA = '__SENHADOPAINEL__';
 function checkPassword(e) {
   e.preventDefault();
-  if (document.getElementById('pw-input').value === SENHA) {
+  if (document.getElementById('pw-input').value.trim() === SENHA.trim()) {
     document.getElementById('pw-gate').classList.add('hidden');
     sessionStorage.setItem('vital_auth', '1');
   } else {
