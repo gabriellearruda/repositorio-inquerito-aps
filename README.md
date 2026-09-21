@@ -33,8 +33,7 @@ Configure em **Settings → Environment Variables**:
 
 | Variável | Descrição |
 |---|---|
-| `SENHADOPAINEL` | Senha de acesso ao guia em `/vital` |
-| `ADMIN_PASSWORD` | Senha de acesso ao gerenciador de conteúdo |
+| `SENHADOPAINEL` | Senha de acesso ao guia em `/vital` e ao gerenciador de conteúdo |
 | `GITHUB_TOKEN` | Token do GitHub com permissão `contents:write` |
 
 ## Gerenciador de conteúdo
@@ -43,8 +42,8 @@ O guia em `/vital` inclui um gerenciador de conteúdo embutido no menu lateral. 
 
 1. Acesse `/vital` e faça login com `SENHADOPAINEL`
 2. Clique em **Gerenciar conteúdo** no menu lateral
-3. Insira a senha `ADMIN_PASSWORD`
-4. Edite os campos de texto e clique em **Salvar no GitHub**
+3. Selecione a seção que deseja editar no dropdown
+4. Edite os campos de texto e clique em **Salvar**
 5. O Vercel detecta o commit e faz redeploy em ~30 segundos
 
 O gerenciador usa uma função serverless (`/api/save`): o token do GitHub nunca vai ao browser, a autenticação é feita no servidor com rate limiting de 5 tentativas por 15 minutos.

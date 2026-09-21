@@ -425,6 +425,14 @@ code{font-family:monospace;font-size:.82em;background:#f0ede8;padding:.1em .35em
 .cm-toolbar{display:flex;gap:.3rem;padding:.5rem 0 .65rem;margin-bottom:.75rem;border-bottom:1px solid var(--rule);position:sticky;top:0;background:var(--content-bg);z-index:10;flex-wrap:wrap}
 .cm-tb-btn{padding:.22rem .55rem;font-size:.72rem;font-weight:600;border:1px solid #ddd;background:#fff;cursor:pointer;color:var(--text-2);border-radius:2px;transition:background .1s;font-family:inherit;line-height:1.4}
 .cm-tb-btn:hover{background:#f0ede8;border-color:#bbb}
+.cm-link-row{display:grid;grid-template-columns:80px 1fr 1fr auto;gap:.4rem;align-items:end;margin-bottom:.5rem;padding:.5rem;background:#fafaf9;border:1px solid var(--rule);border-radius:2px}
+.cm-link-sub-label{font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-3);display:block;margin-bottom:.2rem}
+.cm-link-input{width:100%;padding:.3rem .45rem;font-size:.78rem;font-family:'Inter',sans-serif;border:1px solid #ddd;background:#fff;color:var(--text);outline:none;box-sizing:border-box}
+.cm-link-input:focus{border-color:var(--accent)}
+.cm-link-rm{padding:.25rem .5rem;font-size:.9rem;border:1px solid #ddd;background:#fff;cursor:pointer;color:var(--text-3);align-self:end;line-height:1}
+.cm-link-rm:hover{background:#fee;border-color:#fcc;color:#c00}
+.cm-add-link{margin-top:.3rem;padding:.3rem .7rem;font-size:.75rem;border:1px dashed #bbb;background:transparent;cursor:pointer;color:var(--accent);font-family:inherit}
+.cm-add-link:hover{background:#f5f3ef}
 
 /* ── PASSWORD GATE ── */
 #pw-gate{
@@ -599,7 +607,7 @@ if (isAuthValid()) {
       <div class="doc-panel" id="panel-gerenciar">
         <div class="section-wrap" style="max-width:680px">
           <h1 class="section-title">Gerenciador de Conteúdo</h1>
-          <p class="section-lead">Selecione a seção, edite os campos e clique em <strong>Salvar no GitHub</strong>. O Vercel fará o redeploy em ~30 segundos.</p>
+          <p class="section-lead">Selecione a seção, edite os campos e clique em <strong>Salvar</strong>. O Vercel fará o redeploy em ~30 segundos.</p>
           <div class="cm-selector-wrap">
             <label class="cm-field-label">Seção</label>
             <select id="cm-section-sel" class="cm-select" onchange="buildCMFields(this.value)">
@@ -645,7 +653,7 @@ if (isAuthValid()) {
           </div>
           <div id="cm-fields"></div>
           <div class="cm-save-row">
-            <button class="cm-save" id="cm-save-btn" onclick="cmSave()">Salvar no GitHub</button>
+            <button class="cm-save" id="cm-save-btn" onclick="cmSave()">Salvar</button>
             <span id="cm-status"></span>
           </div>
         </div>
@@ -1293,23 +1301,53 @@ function buildCMFields(panelId) {
         asideSecs.forEach(function(sec, i) {
           var labelEl = sec.querySelector('.aside-label');
           var labelText = labelEl ? labelEl.textContent.trim() : ('Seção ' + (i + 1));
-          // conteúdo = innerHTML sem o aside-label
-          var contentHTML = Array.from(sec.childNodes)
-            .filter(function(n) { return n !== labelEl; })
-            .map(function(n) { return n.outerHTML || n.textContent; })
-            .join('').trim();
+          var linkItems = Array.from(sec.querySelectorAll('.link-item'));
           var wrap = document.createElement('div');
           var lbl = document.createElement('label');
           lbl.className = 'cm-field-label';
           lbl.textContent = labelText;
-          var ta = document.createElement('textarea');
-          ta.className = 'cm-ta';
-          ta.dataset.aside = def.id;
-          ta.dataset.asideIndex = String(i);
-          ta.value = contentHTML;
-          ta.rows = Math.min(Math.max(Math.ceil(contentHTML.replace(/<[^>]+>/g,'').length / 90), 2), 8);
           wrap.appendChild(lbl);
-          wrap.appendChild(ta);
+          var isLinksSection = linkItems.length > 0 || /link/i.test(labelText);
+          if (isLinksSection) {
+            var linksContainer = document.createElement('div');
+            linksContainer.className = 'cm-links-container';
+            linksContainer.dataset.aside = def.id;
+            linksContainer.dataset.asideIndex = String(i);
+            linkItems.forEach(function(item, j) {
+              var typeEl = item.querySelector('.link-type');
+              var aEl = item.querySelector('a');
+              linksContainer.appendChild(buildLinkRow(
+                def.id, i, j,
+                typeEl ? typeEl.textContent.trim() : '',
+                aEl ? aEl.textContent.trim() : '',
+                aEl ? (aEl.getAttribute('href') || '') : ''
+              ));
+            });
+            var addBtn = document.createElement('button');
+            addBtn.className = 'cm-add-link';
+            addBtn.textContent = '+ Adicionar link';
+            addBtn.type = 'button';
+            (function(lc) {
+              addBtn.addEventListener('click', function() {
+                var cnt = lc.querySelectorAll('.cm-link-row').length;
+                lc.appendChild(buildLinkRow(lc.dataset.aside, parseInt(lc.dataset.asideIndex), cnt, '', '', ''));
+              });
+            })(linksContainer);
+            wrap.appendChild(linksContainer);
+            wrap.appendChild(addBtn);
+          } else {
+            var contentHTML = Array.from(sec.childNodes)
+              .filter(function(n) { return n !== labelEl; })
+              .map(function(n) { return n.outerHTML || n.textContent; })
+              .join('').trim();
+            var ta = document.createElement('textarea');
+            ta.className = 'cm-ta';
+            ta.dataset.aside = def.id;
+            ta.dataset.asideIndex = String(i);
+            ta.value = contentHTML;
+            ta.rows = Math.min(Math.max(Math.ceil(contentHTML.replace(/<[^>]+>/g,'').length / 90), 2), 8);
+            wrap.appendChild(ta);
+          }
           asideBody.appendChild(wrap);
         });
         asideWrap.appendChild(asideBody);
@@ -1317,6 +1355,36 @@ function buildCMFields(panelId) {
       }
     }
   }
+}
+
+function buildLinkRow(asideId, secIdx, linkIdx, type, name, url) {
+  var row = document.createElement('div');
+  row.className = 'cm-link-row';
+  function mkField(fieldName, placeholder, value, extraClass) {
+    var wrap = document.createElement('div');
+    var lbl = document.createElement('span');
+    lbl.className = 'cm-link-sub-label';
+    lbl.textContent = fieldName === 'type' ? 'Tipo' : fieldName === 'name' ? 'Nome' : 'URL / Caminho';
+    var inp = document.createElement('input');
+    inp.type = 'text';
+    inp.className = 'cm-link-input' + (extraClass ? ' ' + extraClass : '');
+    inp.placeholder = placeholder;
+    inp.value = value;
+    inp.dataset.linkField = fieldName;
+    wrap.appendChild(lbl);
+    wrap.appendChild(inp);
+    return wrap;
+  }
+  row.appendChild(mkField('type', 'ex: Doc', type));
+  row.appendChild(mkField('name', 'Nome do link', name));
+  row.appendChild(mkField('url', 'https:// ou arquivos/...', url));
+  var rmBtn = document.createElement('button');
+  rmBtn.type = 'button';
+  rmBtn.className = 'cm-link-rm';
+  rmBtn.textContent = '×';
+  rmBtn.addEventListener('click', function() { row.remove(); });
+  row.appendChild(rmBtn);
+  return row;
 }
 
 function setCMStatus(msg, cls) {
@@ -1361,7 +1429,7 @@ async function cmSave() {
       var idx = parseInt(ta.dataset.index);
       if (els[idx]) els[idx].innerHTML = ta.value;
     });
-    // aside: links e aprendizados
+    // aside: texto livre (Aprendizados)
     document.querySelectorAll('.cm-ta[data-aside]').forEach(function(ta) {
       var asideId = ta.dataset.aside;
       var idx = parseInt(ta.dataset.asideIndex);
@@ -1372,6 +1440,35 @@ async function cmSave() {
       var labelEl = secs[idx].querySelector('.aside-label');
       var labelHTML = labelEl ? labelEl.outerHTML : '';
       secs[idx].innerHTML = labelHTML + ta.value;
+    });
+    // aside: links estruturados
+    document.querySelectorAll('.cm-links-container').forEach(function(container) {
+      var asideId = container.dataset.aside;
+      var secIdx = parseInt(container.dataset.asideIndex);
+      var aside = srcDoc.getElementById('aside-' + asideId);
+      if (!aside) return;
+      var secs = Array.from(aside.querySelectorAll('.aside-section'));
+      if (!secs[secIdx]) return;
+      var rows = Array.from(container.querySelectorAll('.cm-link-row'));
+      var linksHTML = '';
+      rows.forEach(function(row) {
+        var typeInp = row.querySelector('[data-link-field="type"]');
+        var nameInp = row.querySelector('[data-link-field="name"]');
+        var urlInp  = row.querySelector('[data-link-field="url"]');
+        if (!nameInp || !urlInp) return;
+        var type = typeInp ? typeInp.value.trim() : '';
+        var name = nameInp.value.trim();
+        var url  = urlInp.value.trim();
+        if (!name && !url) return;
+        linksHTML += '<div class="link-item">';
+        if (type) linksHTML += '<span class="link-type">' + type + '</span>';
+        var isExternal = /^https?:\/\//.test(url);
+        linksHTML += '<a href="' + url + '"' + (isExternal ? ' target="_blank"' : ' download') + '>' + name + '</a>';
+        linksHTML += '</div>';
+      });
+      var labelEl = secs[secIdx].querySelector('.aside-label');
+      var labelHTML = labelEl ? labelEl.outerHTML : '';
+      secs[secIdx].innerHTML = labelHTML + linksHTML;
     });
     var updated = '<!DOCTYPE html>\n' + srcDoc.documentElement.outerHTML;
     setCMStatus('Publicando...', '');
