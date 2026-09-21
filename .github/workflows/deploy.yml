@@ -30,7 +30,7 @@ jobs:
             const fs = require('fs');
             const path = 'vital/index.html';
             let content = fs.readFileSync(path, 'utf8');
-            const senha = '${{ secrets.SENHADOPAINEL || vars.SENHA }}';
+            const senha = '${{ vars.SENHA }}';
             const before = (content.match(/__SENHADOPAINEL__/g) || []).length;
             content = content.replaceAll('__SENHADOPAINEL__', senha);
             const after = (content.match(/__SENHADOPAINEL__/g) || []).length;
