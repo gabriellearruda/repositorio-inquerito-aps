@@ -47,11 +47,3 @@ O guia em `/vital` inclui um gerenciador de conteúdo embutido no menu lateral. 
 5. O Vercel detecta o commit e faz redeploy em ~30 segundos
 
 O gerenciador usa uma função serverless (`/api/save`): o token do GitHub nunca vai ao browser, a autenticação é feita no servidor com rate limiting de 5 tentativas por 15 minutos.
-
-## LGPD — Aviso de segurança
-
-> **`07_lista_reserva.csv` e quaisquer arquivos com dados pessoais (telefones, CPFs, endereços) NUNCA devem ser commitados neste repositório público.** Manter esses arquivos localmente ou em ambiente controlado com acesso restrito.
-
----
-
-*Mais Dados Mais Saúde · Recife · 2025*
