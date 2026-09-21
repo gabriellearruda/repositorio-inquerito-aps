@@ -433,6 +433,14 @@ code{font-family:monospace;font-size:.82em;background:#f0ede8;padding:.1em .35em
 .cm-link-rm:hover{background:#fee;border-color:#fcc;color:#c00}
 .cm-add-link{margin-top:.3rem;padding:.3rem .7rem;font-size:.75rem;border:1px dashed #bbb;background:transparent;cursor:pointer;color:var(--accent);font-family:inherit}
 .cm-add-link:hover{background:#f5f3ef}
+.cm-learn-row{display:grid;grid-template-columns:1fr auto;gap:.4rem;align-items:center;margin-bottom:.35rem}
+.cm-learn-input{width:100%;padding:.3rem .45rem;font-size:.82rem;font-family:'Inter',sans-serif;border:1px solid #ddd;background:#fff;color:var(--text);outline:none;box-sizing:border-box}
+.cm-learn-input:focus{border-color:var(--accent)}
+.cm-add-learn{margin-top:.3rem;padding:.3rem .7rem;font-size:.75rem;border:1px dashed #bbb;background:transparent;cursor:pointer;color:var(--accent);font-family:inherit}
+.cm-add-learn:hover{background:#f5f3ef}
+.cm-ce{min-height:3.5rem;padding:.45rem .6rem;font-size:.82rem;font-family:'Inter',sans-serif;border:1px solid #ddd;background:#fff;color:var(--text);outline:none;line-height:1.6;cursor:text;word-break:break-word}
+.cm-ce:focus{border-color:var(--accent)}
+.cm-ce:empty::before{content:'(vazio)';color:var(--text-3);pointer-events:none}
 
 /* ── PASSWORD GATE ── */
 #pw-gate{
@@ -1173,31 +1181,38 @@ navBtns.forEach(function(b){
 });
 
 // ── TOOLBAR DE FORMATAÇÃO ──
-var cmActiveTA = null;
+var cmActiveCE = null;
 document.addEventListener('focusin', function(e) {
-  if (e.target.classList.contains('cm-ta')) cmActiveTA = e.target;
+  if (e.target.classList.contains('cm-ce')) cmActiveCE = e.target;
 });
 function cmFmt(type) {
-  var ta = cmActiveTA;
-  if (!ta) return;
-  var s = ta.selectionStart, e = ta.selectionEnd;
-  var sel = ta.value.slice(s, e);
-  var pre = ta.value.slice(0, s), post = ta.value.slice(e);
-  var ins = '';
-  if (type === 'bold')   ins = '<strong>' + (sel || 'texto') + '</strong>';
-  else if (type === 'italic') ins = '<em>' + (sel || 'texto') + '</em>';
-  else if (type === 'li')     ins = '<li>' + (sel || 'Item') + '</li>';
-  else if (type === 'ul')     ins = '\n<ul class="body-list">\n  <li>' + (sel || 'Item 1') + '</li>\n  <li>Item 2</li>\n</ul>';
-  else if (type === 'code')   ins = '<code>' + (sel || 'código') + '</code>';
-  else if (type === 'link') {
+  var el = cmActiveCE;
+  if (!el) return;
+  el.focus();
+  if (type === 'bold') {
+    document.execCommand('bold');
+  } else if (type === 'italic') {
+    document.execCommand('italic');
+  } else if (type === 'li' || type === 'ul') {
+    document.execCommand('insertUnorderedList');
+    // add body-list class to any new <ul>
+    el.querySelectorAll('ul:not(.body-list)').forEach(function(u) { u.className = 'body-list'; });
+  } else if (type === 'code') {
+    var sel = window.getSelection();
+    var txt = sel ? sel.toString() : '';
+    document.execCommand('insertHTML', false, '<code>' + (txt || 'código') + '</code>');
+  } else if (type === 'link') {
     var url = prompt('URL:', 'https://');
     if (!url) return;
-    ins = '<a href="' + url + '" target="_blank">' + (sel || url) + '</a>';
+    var sel2 = window.getSelection();
+    if (sel2 && sel2.toString()) {
+      document.execCommand('createLink', false, url);
+      var a = el.querySelector('a:not([target])');
+      if (a) a.target = '_blank';
+    } else {
+      document.execCommand('insertHTML', false, '<a href="' + url + '" target="_blank">' + url + '</a>');
+    }
   }
-  ta.value = pre + ins + post;
-  var p = pre.length + ins.length;
-  ta.focus();
-  ta.setSelectionRange(p, p);
 }
 
 // ── CONTENT MANAGER ──
@@ -1269,14 +1284,14 @@ function buildCMFields(panelId) {
       var lbl = document.createElement('label');
       lbl.className = 'cm-field-label';
       lbl.textContent = getCMLabel(el);
-      var ta = document.createElement('textarea');
-      ta.className = 'cm-ta';
-      ta.dataset.panel = def.id;
-      ta.dataset.index = String(i);
-      ta.value = el.innerHTML.trim();
-      ta.rows = Math.min(Math.max(Math.ceil(el.innerHTML.replace(/<[^>]+>/g,'').length / 90), 2), 10);
+      var ce = document.createElement('div');
+      ce.contentEditable = 'true';
+      ce.className = 'cm-ce';
+      ce.dataset.panel = def.id;
+      ce.dataset.index = String(i);
+      ce.innerHTML = el.innerHTML.trim();
       wrap.appendChild(lbl);
-      wrap.appendChild(ta);
+      wrap.appendChild(ce);
       mainBody.appendChild(wrap);
     });
     mainWrap.appendChild(mainBody);
@@ -1308,6 +1323,7 @@ function buildCMFields(panelId) {
           lbl.textContent = labelText;
           wrap.appendChild(lbl);
           var isLinksSection = linkItems.length > 0 || /link/i.test(labelText);
+          var isLearnSection = !isLinksSection && /aprendizad/i.test(labelText);
           if (isLinksSection) {
             var linksContainer = document.createElement('div');
             linksContainer.className = 'cm-links-container';
@@ -1335,6 +1351,26 @@ function buildCMFields(panelId) {
             })(linksContainer);
             wrap.appendChild(linksContainer);
             wrap.appendChild(addBtn);
+          } else if (isLearnSection) {
+            var learnContainer = document.createElement('div');
+            learnContainer.className = 'cm-learnings-container';
+            learnContainer.dataset.aside = def.id;
+            learnContainer.dataset.asideIndex = String(i);
+            var liItems = Array.from(sec.querySelectorAll('li'));
+            liItems.forEach(function(li, j) {
+              learnContainer.appendChild(buildLearningRow(li.textContent.trim(), j));
+            });
+            var addLearnBtn = document.createElement('button');
+            addLearnBtn.className = 'cm-add-learn';
+            addLearnBtn.textContent = '+ Adicionar aprendizado';
+            addLearnBtn.type = 'button';
+            (function(lc) {
+              addLearnBtn.addEventListener('click', function() {
+                lc.appendChild(buildLearningRow('', lc.querySelectorAll('.cm-learn-row').length));
+              });
+            })(learnContainer);
+            wrap.appendChild(learnContainer);
+            wrap.appendChild(addLearnBtn);
           } else {
             var contentHTML = Array.from(sec.childNodes)
               .filter(function(n) { return n !== labelEl; })
@@ -1387,6 +1423,24 @@ function buildLinkRow(asideId, secIdx, linkIdx, type, name, url) {
   return row;
 }
 
+function buildLearningRow(text) {
+  var row = document.createElement('div');
+  row.className = 'cm-learn-row';
+  var inp = document.createElement('input');
+  inp.type = 'text';
+  inp.className = 'cm-learn-input';
+  inp.placeholder = 'Aprendizado ou observação...';
+  inp.value = text || '';
+  var rm = document.createElement('button');
+  rm.type = 'button';
+  rm.className = 'cm-link-rm';
+  rm.textContent = '×';
+  rm.addEventListener('click', function() { row.remove(); });
+  row.appendChild(inp);
+  row.appendChild(rm);
+  return row;
+}
+
 function setCMStatus(msg, cls) {
   var s = document.getElementById('cm-status');
   s.textContent = msg;
@@ -1418,16 +1472,16 @@ async function cmSave() {
     setCMStatus('Aplicando alterações...', '');
     var parser = new DOMParser();
     var srcDoc = parser.parseFromString(srcHTML, 'text/html');
-    // conteúdo principal
-    document.querySelectorAll('.cm-ta[data-panel]').forEach(function(ta) {
-      if (!ta.dataset.panel) return;
-      var def = cmPanelDefs.find(function(d) { return d.id === ta.dataset.panel; });
+    // conteúdo principal (contenteditable)
+    document.querySelectorAll('.cm-ce[data-panel]').forEach(function(ce) {
+      if (!ce.dataset.panel) return;
+      var def = cmPanelDefs.find(function(d) { return d.id === ce.dataset.panel; });
       if (!def) return;
       var panel = srcDoc.getElementById('panel-' + def.id);
       if (!panel) return;
       var els = Array.from(panel.querySelectorAll(def.sel));
-      var idx = parseInt(ta.dataset.index);
-      if (els[idx]) els[idx].innerHTML = ta.value;
+      var idx = parseInt(ce.dataset.index);
+      if (els[idx]) els[idx].innerHTML = ce.innerHTML;
     });
     // aside: texto livre (Aprendizados)
     document.querySelectorAll('.cm-ta[data-aside]').forEach(function(ta) {
@@ -1469,6 +1523,23 @@ async function cmSave() {
       var labelEl = secs[secIdx].querySelector('.aside-label');
       var labelHTML = labelEl ? labelEl.outerHTML : '';
       secs[secIdx].innerHTML = labelHTML + linksHTML;
+    });
+    // aside: aprendizados estruturados
+    document.querySelectorAll('.cm-learnings-container').forEach(function(container) {
+      var asideId = container.dataset.aside;
+      var secIdx = parseInt(container.dataset.asideIndex);
+      var aside = srcDoc.getElementById('aside-' + asideId);
+      if (!aside) return;
+      var secs = Array.from(aside.querySelectorAll('.aside-section'));
+      if (!secs[secIdx]) return;
+      var rows = Array.from(container.querySelectorAll('.cm-learn-row input'));
+      var items = rows.map(function(inp) { return inp.value.trim(); }).filter(Boolean);
+      var labelEl = secs[secIdx].querySelector('.aside-label');
+      var labelHTML = labelEl ? labelEl.outerHTML : '';
+      var content = items.length
+        ? '<ul class="body-list">' + items.map(function(t) { return '<li>' + t + '</li>'; }).join('') + '</ul>'
+        : '<span class="wip">A preencher</span>';
+      secs[secIdx].innerHTML = labelHTML + content;
     });
     var updated = '<!DOCTYPE html>\n' + srcDoc.documentElement.outerHTML;
     setCMStatus('Publicando...', '');
