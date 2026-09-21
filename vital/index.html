@@ -416,6 +416,7 @@ body{font-family:'Inter',-apple-system,sans-serif;font-size:14px;line-height:1.6
 .cm-save:disabled{opacity:.45;cursor:not-allowed}
 .cm-save-row{padding:1.5rem 0;display:flex;align-items:center;gap:1rem}
 code{font-family:monospace;font-size:.82em;background:#f0ede8;padding:.1em .35em;border-radius:2px}
+#logout-btn:hover{color:rgba(255,255,255,.6) !important}
 
 /* ── PASSWORD GATE ── */
 #pw-gate{
@@ -471,11 +472,25 @@ code{font-family:monospace;font-size:.82em;background:#f0ede8;padding:.1em .35em
 
 <script>
 var SENHA = '__SENHADOPAINEL__';
+var AUTH_KEY = 'vital_auth_ts';
+var AUTH_MAX = 24 * 60 * 60 * 1000; // 24 horas em ms
+
+function isAuthValid() {
+  var ts = localStorage.getItem(AUTH_KEY);
+  return ts && (Date.now() - parseInt(ts)) < AUTH_MAX;
+}
+function setAuth() {
+  localStorage.setItem(AUTH_KEY, String(Date.now()));
+}
+function clearAuth() {
+  localStorage.removeItem(AUTH_KEY);
+}
+
 function checkPassword(e) {
   e.preventDefault();
   if (document.getElementById('pw-input').value.trim() === SENHA.trim()) {
+    setAuth();
     document.getElementById('pw-gate').classList.add('hidden');
-    sessionStorage.setItem('vital_auth', '1');
   } else {
     var err = document.getElementById('pw-error');
     err.style.display = 'block';
@@ -483,7 +498,11 @@ function checkPassword(e) {
     document.getElementById('pw-input').focus();
   }
 }
-if (sessionStorage.getItem('vital_auth') === '1') {
+function doLogout() {
+  clearAuth();
+  location.reload();
+}
+if (isAuthValid()) {
   document.getElementById('pw-gate').classList.add('hidden');
 }
 </script>
@@ -553,6 +572,13 @@ if (sessionStorage.getItem('vital_auth') === '1') {
       <button class="nav-sub" data-panel="sub-4-1">Limpeza e validação</button>
       <button class="nav-sub" data-panel="sub-4-2">Ponderação e análise</button>
       <button class="nav-sub" data-panel="sub-4-3">Relatórios técnicos</button>
+    </div>
+
+    <div style="padding:.75rem 1.4rem 1.5rem;margin-top:auto;border-top:1px solid rgba(255,255,255,.07)">
+      <button id="logout-btn" onclick="doLogout()" style="background:none;border:none;cursor:pointer;font-size:.7rem;color:rgba(255,255,255,.25);font-family:inherit;padding:.3rem 0;display:flex;align-items:center;gap:.4rem;transition:color .15s;width:100%;text-align:left">
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Sair
+      </button>
     </div>
 
   </nav>
