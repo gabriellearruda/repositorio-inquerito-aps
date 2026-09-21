@@ -673,18 +673,31 @@ if (isAuthValid()) {
       <div class="doc-panel" id="panel-como-atualizar">
         <div class="section-wrap">
           <h1 class="section-title">Como atualizar o conteúdo</h1>
-          <p class="section-lead">O gerenciador permite editar todos os textos do site e publicar diretamente. O Vercel detecta o commit e refaz o deploy automaticamente em cerca de 30 segundos.</p>
+          <p class="section-lead">O gerenciador de conteúdo permite editar os textos do site diretamente pelo navegador, sem precisar mexer no código. A atualização é publicada automaticamente em cerca de 30 segundos.</p>
 
           <h3 class="body-subhead">Passo a passo</h3>
           <ol class="body-list" style="list-style-type:decimal;padding-left:1.5rem">
-            <li>Acesse <strong>Gerenciar conteúdo</strong> no menu lateral</li>
-            <li>Expanda a seção que deseja editar e altere o texto</li>
-            <li>Clique em <strong>Salvar no GitHub</strong></li>
-            <li>Aguarde ~30 segundos — o site atualiza automaticamente</li>
+            <li>Clique em <strong>Gerenciar conteúdo</strong> no menu lateral</li>
+            <li>Escolha a seção que deseja editar no seletor</li>
+            <li>Edite o <strong>Título</strong> e o <strong>Texto</strong> diretamente nos campos — o que você vê é o que será publicado</li>
+            <li>Para Links e Aprendizados, preencha os campos no painel lateral direito</li>
+            <li>Clique em <strong>Salvar</strong> — o site será atualizado em ~30 segundos</li>
           </ol>
 
-          <h3 class="body-subhead">Sobre os campos de texto</h3>
-          <p class="body-text">Cada campo exibe o conteúdo HTML do elemento correspondente. É possível usar tags básicas como <code>&lt;strong&gt;</code>, <code>&lt;em&gt;</code> e <code>&lt;a href="..."&gt;</code> dentro dos campos.</p>
+          <h3 class="body-subhead">Ferramentas de formatação</h3>
+          <p class="body-text">A barra de ferramentas acima do campo de texto permite aplicar formatações sem digitar código:</p>
+          <ul class="body-list">
+            <li><strong>N</strong> — negrito no trecho selecionado</li>
+            <li><strong>I</strong> — itálico no trecho selecionado</li>
+            <li><strong>H3</strong> — insere um subtítulo no cursor</li>
+            <li><strong>• Item</strong> — insere um item de lista isolado</li>
+            <li><strong>☰ Lista</strong> — insere uma lista com bullets</li>
+            <li><strong>↗ Link</strong> — cria um link com o trecho selecionado</li>
+            <li><strong>&lt;/&gt;</strong> — formata o trecho como código</li>
+          </ul>
+
+          <h3 class="body-subhead">O que é editável pelo gerenciador</h3>
+          <p class="body-text">Cada seção expõe dois campos: <strong>Título</strong> (nome da subetapa) e <strong>Texto</strong> (conteúdo completo, incluindo parágrafos, subtítulos e listas). A página de Introdução tem campos individuais por elemento. Estruturas como o índice de subetapas e os badges de navegação só podem ser alterados diretamente no HTML.</p>
 
         </div>
       </div>
