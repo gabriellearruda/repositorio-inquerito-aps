@@ -592,14 +592,6 @@ if (isAuthValid()) {
         <div class="section-wrap" style="max-width:680px">
           <h1 class="section-title">Gerenciador de Conteúdo</h1>
           <p class="section-lead">Edite os textos abaixo e clique em <strong>Salvar no GitHub</strong>. O Vercel detecta o commit e faz o redeploy automaticamente em ~30 segundos.</p>
-          <div class="cm-token-box">
-            <span class="cm-token-label">Senha do gerenciador</span>
-            <div class="cm-token-row">
-              <input id="cm-token" type="password" placeholder="Senha ADMIN_PASSWORD configurada no Vercel">
-              <button class="cm-token-btn" onclick="cmSaveToken()">Lembrar</button>
-            </div>
-            <span class="cm-token-hint">Senha definida na variável de ambiente <em>ADMIN_PASSWORD</em> no Vercel.</span>
-          </div>
           <div id="cm-fields"></div>
           <div class="cm-save-row">
             <button class="cm-save" id="cm-save-btn" onclick="cmSave()">Salvar no GitHub</button>
@@ -617,7 +609,6 @@ if (isAuthValid()) {
           <h3 class="body-subhead">Passo a passo</h3>
           <ol class="body-list" style="list-style-type:decimal;padding-left:1.5rem">
             <li>Acesse <strong>Gerenciar conteúdo</strong> no menu lateral</li>
-            <li>Insira a senha de administrador (variável <code>ADMIN_PASSWORD</code> no Vercel)</li>
             <li>Expanda a seção que deseja editar e altere o texto</li>
             <li>Clique em <strong>Salvar no GitHub</strong></li>
             <li>Aguarde ~30 segundos — o site atualiza automaticamente</li>
@@ -629,8 +620,7 @@ if (isAuthValid()) {
           <h3 class="body-subhead">Variáveis de ambiente no Vercel</h3>
           <p class="body-text">As seguintes variáveis devem estar configuradas em <strong>Settings → Environment Variables</strong> no painel do Vercel:</p>
           <ul class="body-list">
-            <li><code>SENHADOPAINEL</code> — senha de acesso ao guia (já configurada)</li>
-            <li><code>ADMIN_PASSWORD</code> — senha de acesso ao gerenciador de conteúdo</li>
+            <li><code>SENHADOPAINEL</code> — senha de acesso ao guia e ao gerenciador de conteúdo</li>
             <li><code>GITHUB_TOKEN</code> — token do GitHub com permissão <em>contents:write</em></li>
           </ul>
 
@@ -1210,10 +1200,6 @@ function buildCMFields() {
   });
 }
 
-function cmSaveToken() {
-  var t = document.getElementById('cm-token').value.trim();
-  if (t) { localStorage.setItem('cm_pwd', t); setCMStatus('Senha salva.', 'ok'); }
-}
 function setCMStatus(msg, cls) {
   var s = document.getElementById('cm-status');
   s.textContent = msg;
@@ -1221,8 +1207,7 @@ function setCMStatus(msg, cls) {
 }
 
 async function cmSave() {
-  var pwd = document.getElementById('cm-token').value.trim();
-  if (!pwd) { setCMStatus('Insira a senha do gerenciador.', 'err'); return; }
+  var pwd = SENHA; // usa a senha do painel (já autenticada)
   var btn = document.getElementById('cm-save-btn');
   btn.disabled = true;
   setCMStatus('Verificando senha...', '');

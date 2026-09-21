@@ -32,8 +32,8 @@ export default async function handler(req, res) {
 
   const { password, html, ping } = req.body || {};
 
-  const adminPassword = process.env.ADMIN_PASSWORD;
-  if (!adminPassword) return res.status(500).json({ error: 'ADMIN_PASSWORD não configurado no Vercel' });
+  const adminPassword = process.env.SENHADOPAINEL;
+  if (!adminPassword) return res.status(500).json({ error: 'SENHADOPAINEL não configurado no Vercel' });
   if (password !== adminPassword) return res.status(401).json({ error: 'Senha incorreta' });
 
   attempts.delete(ip);
