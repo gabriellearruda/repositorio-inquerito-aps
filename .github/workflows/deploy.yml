@@ -36,6 +36,8 @@ jobs:
             const after = (content.match(/__SENHADOPAINEL__/g) || []).length;
             fs.writeFileSync(path, content, 'utf8');
             console.log('Placeholders antes:', before, '| depois:', after);
+            content = content.replace('<!-- BUILD: BRANCH -->', '<!-- BUILD: ACTIONS -->');
+            fs.writeFileSync(path, content, 'utf8');
           "
 
       - name: Setup Pages
