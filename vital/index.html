@@ -655,6 +655,7 @@ if (isAuthValid()) {
           <div class="cm-toolbar">
             <button class="cm-tb-btn" onclick="cmFmt('bold')" title="Negrito"><strong>N</strong></button>
             <button class="cm-tb-btn" onclick="cmFmt('italic')" title="Itálico"><em>I</em></button>
+            <button class="cm-tb-btn" onclick="cmFmt('subhead')" title="Subtítulo">H3</button>
             <button class="cm-tb-btn" onclick="cmFmt('li')" title="Item de lista">• Item</button>
             <button class="cm-tb-btn" onclick="cmFmt('ul')" title="Lista com bullet">☰ Lista</button>
             <button class="cm-tb-btn" onclick="cmFmt('link')" title="Link">↗ Link</button>
@@ -1186,6 +1187,10 @@ function cmFmt(type) {
   el.focus();
   if (type === 'bold') {
     document.execCommand('bold');
+  } else if (type === 'subhead') {
+    var sel0 = window.getSelection();
+    var txt0 = sel0 ? sel0.toString() : '';
+    document.execCommand('insertHTML', false, '<h3 class="body-subhead">' + (txt0 || 'Subtítulo') + '</h3>');
   } else if (type === 'italic') {
     document.execCommand('italic');
   } else if (type === 'li' || type === 'ul') {
