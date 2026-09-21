@@ -26,12 +26,13 @@ jobs:
             const fs = require('fs');
             const path = 'vital/index.html';
             let content = fs.readFileSync(path, 'utf8');
-            const senha = '${{ vars.SENHA }}';
+            const senha = '${{ secrets.SENHADOPAINEL }}';
             const before = (content.match(/__SENHADOPAINEL__/g) || []).length;
             content = content.replaceAll('__SENHADOPAINEL__', senha);
             const after = (content.match(/__SENHADOPAINEL__/g) || []).length;
             fs.writeFileSync(path, content, 'utf8');
             console.log('Placeholders antes:', before, '| depois:', after);
+            console.log('Senha recebida tem', senha.length, 'caracteres');
             content = content.replace('<!-- BUILD: BRANCH -->', '<!-- BUILD: ACTIONS -->');
             fs.writeFileSync(path, content, 'utf8');
           "
