@@ -1,59 +1,57 @@
-# Inquérito APS Recife — Documentação do Projeto
+# Inquérito APS por WhatsApp — Guia de Replicação
 
 Documentação metodológica do inquérito de avaliação de acesso e qualidade da Atenção Primária à Saúde (APS) em Recife, conduzido pelo programa **Mais Dados Mais Saúde (MDMS)** via WhatsApp.
 
-🔗 **Site:** [gabriellearruda.github.io/vital-inquerito-whatsapp-documentacao](https://gabriellearruda.github.io/vital-inquerito-whatsapp-documentacao/)
-
 ---
 
-## Sobre o projeto
+## Estrutura do repositório
 
-O estudo compara Unidades de Saúde da Família convencionais (USF) e expandidas (USF+) no município de Recife, avaliando diferenças na percepção dos usuários sobre acesso e qualidade do cuidado. O inquérito é entregue via WhatsApp, usando a base cadastral do e-SUS APS como frame amostral — uma metodologia inédita no município que reduz custos e ciclos de coleta em relação a pesquisas telefônicas ou presenciais tradicionais.
+```
+/
+├── index.html              → Página "em breve" (domínio raiz)
+├── vital/
+│   └── index.html          → Guia completo (protegido por senha)
+├── api/
+│   └── save.js             → Função serverless para o gerenciador de conteúdo
+├── docs/
+│   └── Roteiro_grupo_focal_MDMS_WPP.pdf
+├── arquivos/               → Documentos e scripts de referência
+├── build.js                → Script de build (injeta senha na variável SENHADOPAINEL)
+├── vercel.json             → Configuração do Vercel
+└── package.json
+```
 
-## Parceiros
+## Deploy
 
-| Organização | Papel |
+O site é servido pelo **Vercel** com build automático a cada push na branch `main`.
+
+O script `build.js` substitui o placeholder `__SENHADOPAINEL__` pela senha real (variável de ambiente `SENHADOPAINEL`) antes do deploy, sem nunca commitá-la no repositório.
+
+## Variáveis de ambiente (Vercel)
+
+Configure em **Settings → Environment Variables**:
+
+| Variável | Descrição |
 |---|---|
-| Umane | Coordenação executiva |
-| Vital Strategies | Parceria técnica principal |
-| UFPel | Metodologia e análise estatística |
-| Instituto Devive | Apoio institucional |
-| Resolve to Save Lives | Apoio institucional |
-| SMS Recife | Dados e parceria local |
+| `SENHADOPAINEL` | Senha de acesso ao guia em `/vital` |
+| `ADMIN_PASSWORD` | Senha de acesso ao gerenciador de conteúdo |
+| `GITHUB_TOKEN` | Token do GitHub com permissão `contents:write` |
 
-## Estrutura da documentação
+## Gerenciador de conteúdo
 
-O site de documentação está organizado em seis seções:
+O guia em `/vital` inclui um gerenciador de conteúdo embutido no menu lateral. Para usar:
 
-1. **Contexto e Objetivos** — escopo, parceiros, perguntas de pesquisa e linha do tempo
-2. **Aspectos Técnicos** — arquitetura, fluxo do questionário, plano amostral e pipeline R
-3. **Governança e Ética** — CEP, LGPD, TCLE e protocolo para casos sensíveis
-4. **Operação e Campo** — estratégia de ondas, monitoramento e suporte
-5. **Arquivos de Referência** — documentos, scripts R e dados
-6. **Desafios e Aprendizados** — o que funcionou, desafios e recomendações
+1. Acesse `/vital` e faça login com `SENHADOPAINEL`
+2. Clique em **Gerenciar conteúdo** no menu lateral
+3. Insira a senha `ADMIN_PASSWORD`
+4. Edite os campos de texto e clique em **Salvar no GitHub**
+5. O Vercel detecta o commit e faz redeploy em ~30 segundos
 
-## Repositório de scripts
+O gerenciador usa uma função serverless (`/api/save`): o token do GitHub nunca vai ao browser, a autenticação é feita no servidor com rate limiting de 5 tentativas por 15 minutos.
 
-Os scripts R de planejamento amostral, análise descritiva do piloto e ponderação estão no repositório de scripts do projeto (acesso restrito):
+## LGPD — Aviso de segurança
 
-```
-planejamento_amostral_dados_aps.R
-planejamento_amostral_dados_aps_TIPO_UNIDADE_E_DISTRITO.R
-planejamento_amostral_dados_aps_USF.R
-piloto_analile_pre_coleta.R
-piloto_descritiva.R
-piloto_grafico_lista.R
-ponderacao_analise_mdms_recife_EXemplo.R
-dados_censo_2022_RECIFE.R
-```
-
-## Como ativar o GitHub Pages
-
-1. Acesse **Settings → Pages** no repositório
-2. Em *Branch*, selecione `main` e pasta `/root`
-3. Clique em **Save**
-
-O site ficará disponível em `https://gabriellearruda.github.io/vital-inquerito-whatsapp-documentacao/`
+> **`07_lista_reserva.csv` e quaisquer arquivos com dados pessoais (telefones, CPFs, endereços) NUNCA devem ser commitados neste repositório público.** Manter esses arquivos localmente ou em ambiente controlado com acesso restrito.
 
 ---
 
