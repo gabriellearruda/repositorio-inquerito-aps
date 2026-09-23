@@ -407,13 +407,21 @@ body{font-family:'Inter',-apple-system,sans-serif;font-size:14px;line-height:1.6
 .cm-field-label{font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#c0bdb7;display:block;margin-bottom:.22rem}
 .cm-ta{width:100%;min-height:48px;padding:.42rem .6rem;font-size:.81rem;border:1px solid #ddd;resize:vertical;font-family:'Inter',sans-serif;line-height:1.55;background:#fff;}
 .cm-ta:focus{outline:none;border-color:var(--accent)}
-#cm-status{font-size:.78rem;color:#aaa}
-#cm-status.ok{color:#22a050}
-#cm-status.err{color:#c0392b}
+#cm-status,#cm-add-status{font-size:.78rem;color:#aaa}
+#cm-status.ok,#cm-add-status.ok{color:#22a050}
+#cm-status.err,#cm-add-status.err{color:#c0392b}
 .cm-save{padding:.52rem 1.5rem;background:var(--accent);color:#fff;border:none;font-size:.78rem;font-weight:700;letter-spacing:.05em;cursor:pointer;}
 .cm-save:hover{background:#0d1666}
 .cm-save:disabled{opacity:.45;cursor:not-allowed}
 .cm-save-row{padding:1.5rem 0;display:flex;align-items:center;gap:1rem}
+.cm-divider{border:none;border-top:1px solid var(--rule);margin:1rem 0 1.5rem}
+.cm-add-section h3{font-size:.85rem;font-weight:700;color:var(--text-1);margin:0 0 .25rem}
+.cm-add-section>p{font-size:.8rem;color:var(--text-3);margin:0 0 1rem}
+.cm-add-row{display:flex;flex-direction:column;gap:.35rem;margin-bottom:.75rem}
+.cm-add-row label{font-size:.7rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--text-3)}
+.cm-add-row select,.cm-add-row input[type=text]{font-family:inherit;font-size:.82rem;padding:.45rem .6rem;border:1px solid var(--rule);border-radius:4px;background:var(--surface-2,#f8f8f8);color:var(--text-1);width:100%;box-sizing:border-box}
+.cm-add-btn{font-family:inherit;font-size:.78rem;font-weight:700;letter-spacing:.05em;padding:.52rem 1.2rem;background:var(--text-3);color:#fff;border:none;border-radius:4px;cursor:pointer}
+.cm-add-btn:hover{background:var(--text-1)}
 code{font-family:monospace;font-size:.82em;background:#f0ede8;padding:.1em .35em;border-radius:2px}
 #logout-btn:hover{color:rgba(255,255,255,.6) !important}
 .cm-selector-wrap{margin-bottom:1.5rem}
@@ -665,6 +673,31 @@ if (isAuthValid()) {
           <div class="cm-save-row">
             <button class="cm-save" id="cm-save-btn" onclick="cmSave()">Salvar</button>
             <span id="cm-status"></span>
+          </div>
+
+          <hr class="cm-divider">
+          <div class="cm-add-section">
+            <h3>Adicionar seção</h3>
+            <p>Cria um novo painel no site e publica as alterações. A seção ficará disponível após o site atualizar (~30 s).</p>
+            <div class="cm-add-row">
+              <label>Tipo</label>
+              <select id="cm-new-type" onchange="cmNewTypeChange()">
+                <option value="sub">Nova subetapa</option>
+                <option value="etapa">Nova etapa</option>
+              </select>
+            </div>
+            <div class="cm-add-row" id="cm-new-parent-row">
+              <label>Etapa pai</label>
+              <select id="cm-new-parent"></select>
+            </div>
+            <div class="cm-add-row">
+              <label>Título</label>
+              <input id="cm-new-title" type="text" placeholder="Título da nova seção">
+            </div>
+            <div class="cm-save-row">
+              <button class="cm-add-btn" onclick="cmAddSection()">Adicionar e publicar</button>
+              <span id="cm-add-status"></span>
+            </div>
           </div>
         </div>
       </div>
@@ -1157,6 +1190,7 @@ function activatePanel(id) {
   if (id === 'gerenciar') {
     var sel = document.getElementById('cm-section-sel');
     buildCMFields(sel ? sel.value : 'intro');
+    cmPopulateParentSel();
   }
 }
 
@@ -1231,36 +1265,22 @@ function cmFmt(type) {
 // ── CONTENT MANAGER ──
 var CM_REPO = 'gabriellearruda/vital-inquerito-whatsapp-documentacao';
 var CM_FILE = 'vital/index.html';
-var ETAPA_DEF = function(id, label) {
-  return {id:id, label:label, titleSel:'.section-title', bodySel:'.section-lead', bodyInsertBefore:'.subetapa-list'};
-};
-var SUB_DEF = function(id, label) {
-  return {id:id, label:label, titleSel:'.sub-title', bodySel:'.body-text,.body-subhead,.body-list,.wip'};
-};
-var cmPanelDefs = [
-  {id:'intro',   label:'Introdução', sel:'.hero-eyebrow,.hero-title,.hero-lead,.intro-section-title,.intro-section>p,.body-subhead,.body-list'},
-  ETAPA_DEF('etapa1','Etapa 1'),
-  SUB_DEF('sub-1-1','1.1 — Objetivo da pesquisa'),
-  SUB_DEF('sub-1-2','1.2 — Projeto de pesquisa'),
-  SUB_DEF('sub-1-3','1.3 — Submissão ao CEP'),
-  SUB_DEF('sub-1-4','1.4 — Definição da amostra'),
-  SUB_DEF('sub-1-5','1.5 — Elaboração do questionário'),
-  SUB_DEF('sub-1-6','1.6 — Aprovação do questionário'),
-  SUB_DEF('sub-1-7','1.7 — Estratégia de coleta'),
-  SUB_DEF('sub-1-8','1.8 — Estratégia de monitoramento'),
-  ETAPA_DEF('etapa2','Etapa 2'),
-  SUB_DEF('sub-2-1','2.1 — Pilotos de coleta'),
-  SUB_DEF('sub-2-2','2.2 — Ajustes pós-piloto'),
-  SUB_DEF('sub-2-3','2.3 — Sistemas tecnológicos'),
-  ETAPA_DEF('etapa3','Etapa 3'),
-  SUB_DEF('sub-3-1','3.1 — Execução da coleta'),
-  SUB_DEF('sub-3-2','3.2 — Monitoramento contínuo'),
-  SUB_DEF('sub-3-3','3.3 — Ajustes operacionais'),
-  ETAPA_DEF('etapa4','Etapa 4'),
-  SUB_DEF('sub-4-1','4.1 — Limpeza e validação'),
-  SUB_DEF('sub-4-2','4.2 — Ponderação e análise'),
-  SUB_DEF('sub-4-3','4.3 — Relatórios'),
-];
+function buildCMPanelDefs() {
+  var defs = [
+    {id:'intro', label:'Introdução', sel:'.hero-eyebrow,.hero-title,.hero-lead,.intro-section-title,.intro-section>p,.body-subhead,.body-list'}
+  ];
+  document.querySelectorAll('#docMain .doc-panel[id^="panel-"]').forEach(function(panel) {
+    var id = panel.id.replace('panel-', '');
+    if (id === 'gerenciar' || id === 'como-atualizar' || id === 'intro') return;
+    if (/^etapa\d+$/.test(id)) {
+      defs.push({id:id, label:id, titleSel:'.section-title', bodySel:'.section-lead', bodyInsertBefore:'.subetapa-list'});
+    } else if (/^sub-\d+-\d+$/.test(id)) {
+      defs.push({id:id, label:id, titleSel:'.sub-title', bodySel:'.body-text,.body-subhead,.body-list,.wip'});
+    }
+  });
+  return defs;
+}
+var cmPanelDefs = buildCMPanelDefs();
 
 function getCMLabel(el) {
   var c = el.className || '';
@@ -1654,6 +1674,211 @@ async function cmSave() {
     setCMStatus(saveData.ok ? (saveData.message || 'Salvo!') : ('Erro: ' + saveData.error), saveData.ok ? 'ok' : 'err');
   } catch(e) {
     setCMStatus('Erro: ' + e.message, 'err');
+  }
+  btn.disabled = false;
+}
+
+function escHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function cmPopulateParentSel() {
+  var sel = document.getElementById('cm-new-parent');
+  if (!sel) return;
+  sel.innerHTML = '';
+  document.querySelectorAll('#docMain .doc-panel[id^="panel-etapa"]').forEach(function(panel) {
+    var num = panel.id.replace('panel-etapa','');
+    var title = panel.querySelector('.section-title');
+    var opt = document.createElement('option');
+    opt.value = num;
+    opt.textContent = 'Etapa ' + num + (title ? ' — ' + title.textContent.trim().substring(0,30) : '');
+    sel.appendChild(opt);
+  });
+}
+
+function cmNewTypeChange() {
+  var type = document.getElementById('cm-new-type').value;
+  var row = document.getElementById('cm-new-parent-row');
+  row.style.display = type === 'sub' ? '' : 'none';
+}
+
+async function cmAddSection() {
+  var type = document.getElementById('cm-new-type').value;
+  var title = document.getElementById('cm-new-title').value.trim();
+  var statusEl = document.getElementById('cm-add-status');
+  var btn = document.querySelector('.cm-add-btn');
+  if (!title) { statusEl.textContent = 'Informe o título.'; statusEl.className=''; return; }
+
+  var pwd = SENHA;
+  if (!pwd) { statusEl.textContent = 'Sessão expirada. Recarregue a página.'; return; }
+
+  btn.disabled = true;
+  statusEl.textContent = 'Buscando fonte...'; statusEl.className='';
+
+  try {
+    var rawUrl = 'https://raw.githubusercontent.com/' + CM_REPO + '/main/' + CM_FILE + '?t=' + Date.now();
+    var rawRes = await fetch(rawUrl);
+    if (!rawRes.ok) throw new Error('Erro ao buscar fonte: ' + rawRes.status);
+    var srcHTML = await rawRes.text();
+
+    statusEl.textContent = 'Criando seção...';
+    var parser = new DOMParser();
+    var srcDoc = parser.parseFromString(srcHTML, 'text/html');
+
+    if (type === 'sub') {
+      var parentNum = document.getElementById('cm-new-parent').value;
+      var existingSubs = srcDoc.querySelectorAll('[id^="panel-sub-' + parentNum + '-"]');
+      var nextIdx = existingSubs.length + 1;
+      var subId = 'sub-' + parentNum + '-' + nextIdx;
+      var badge = 'Etapa ' + parentNum + ' · Subetapa ' + parentNum + '.' + nextIdx;
+
+      // New main panel
+      var newPanel = srcDoc.createElement('div');
+      newPanel.className = 'doc-panel';
+      newPanel.id = 'panel-' + subId;
+      newPanel.innerHTML = '<div class="section-wrap"><span class="sub-badge">' + escHtml(badge) + '</span><h2 class="sub-title">' + escHtml(title) + '</h2><span class="wip">Descrição em construção</span></div>';
+      var lastSub = srcDoc.querySelector('[id="panel-sub-' + parentNum + '-' + existingSubs.length + '"]') ||
+                    srcDoc.querySelector('[id="panel-etapa' + parentNum + '"]');
+      lastSub.insertAdjacentElement('afterend', newPanel);
+
+      // New aside panel
+      var newAside = srcDoc.createElement('div');
+      newAside.className = 'aside-wrap doc-panel';
+      newAside.id = 'aside-' + subId;
+      newAside.innerHTML = '<div class="aside-section"><span class="aside-label">Links</span><span class="wip">A preencher</span></div><div class="aside-section"><span class="aside-label">Aprendizados</span><span class="wip">A preencher</span></div>';
+      var lastAsideSub = null;
+      for (var i = existingSubs.length; i >= 1; i--) {
+        lastAsideSub = srcDoc.querySelector('[id="aside-sub-' + parentNum + '-' + i + '"]');
+        if (lastAsideSub) break;
+      }
+      if (!lastAsideSub) lastAsideSub = srcDoc.querySelector('[id="aside-etapa' + parentNum + '"]');
+      lastAsideSub.insertAdjacentElement('afterend', newAside);
+
+      // Subetapa row in etapa overview
+      var etapaPanel = srcDoc.querySelector('[id="panel-etapa' + parentNum + '"]');
+      var subList = etapaPanel ? etapaPanel.querySelector('.subetapa-list') : null;
+      if (subList) {
+        var newRow = srcDoc.createElement('div');
+        newRow.className = 'subetapa-row';
+        newRow.setAttribute('onclick', "activatePanel('" + subId + "')");
+        newRow.innerHTML = '<span class="subetapa-idx">' + parentNum + '.' + nextIdx + '</span><span class="subetapa-name">' + escHtml(title) + '</span>';
+        subList.appendChild(newRow);
+      }
+
+      // Nav button
+      var navSubBtns = Array.from(srcDoc.querySelectorAll('[data-panel^="sub-' + parentNum + '-"]'));
+      var navInsertAfter = navSubBtns.length ? navSubBtns[navSubBtns.length - 1] : srcDoc.querySelector('[data-panel="etapa' + parentNum + '"]');
+      var newNavBtn = srcDoc.createElement('button');
+      newNavBtn.className = 'nav-sub';
+      newNavBtn.setAttribute('data-panel', subId);
+      var shortTitle = title.length > 28 ? title.substring(0,28) + '…' : title;
+      newNavBtn.textContent = parentNum + '.' + nextIdx + ' ' + shortTitle;
+      navInsertAfter.insertAdjacentElement('afterend', newNavBtn);
+
+      // Dropdown option
+      var optgroup = srcDoc.querySelector('#cm-section-sel optgroup[label="Etapa ' + parentNum + '"]');
+      if (optgroup) {
+        var newOpt = srcDoc.createElement('option');
+        newOpt.value = subId;
+        newOpt.textContent = parentNum + '.' + nextIdx + ' — ' + title;
+        optgroup.appendChild(newOpt);
+      }
+
+      // Update live DOM too
+      var liveOptgroup = document.querySelector('#cm-section-sel optgroup[label="Etapa ' + parentNum + '"]');
+      if (liveOptgroup) {
+        var liveOpt = document.createElement('option');
+        liveOpt.value = subId;
+        liveOpt.textContent = parentNum + '.' + nextIdx + ' — ' + title;
+        liveOptgroup.appendChild(liveOpt);
+      }
+
+    } else {
+      // New etapa
+      var existingEtapas = srcDoc.querySelectorAll('[id^="panel-etapa"]');
+      var nextEtapa = existingEtapas.length + 1;
+      var etapaId = 'etapa' + nextEtapa;
+
+      // New main panel
+      var newEtapaPanel = srcDoc.createElement('div');
+      newEtapaPanel.className = 'doc-panel';
+      newEtapaPanel.id = 'panel-' + etapaId;
+      newEtapaPanel.innerHTML = '<div class="section-wrap"><div class="etapa-badge"><span class="etapa-badge-num">' + nextEtapa + '</span>Etapa ' + nextEtapa + '</div><h1 class="section-title">' + escHtml(title) + '</h1><p class="section-lead"><span class="wip">Descrição em construção</span></p><div class="subetapa-list"></div></div>';
+      var prevSubs = Array.from(srcDoc.querySelectorAll('[id^="panel-sub-' + (nextEtapa - 1) + '-"]'));
+      var etapaInsertAfter = prevSubs.length ? prevSubs[prevSubs.length - 1] : srcDoc.querySelector('[id="panel-etapa' + (nextEtapa - 1) + '"]');
+      etapaInsertAfter.insertAdjacentElement('afterend', newEtapaPanel);
+
+      // New aside panel
+      var newEtapaAside = srcDoc.createElement('div');
+      newEtapaAside.className = 'aside-wrap doc-panel';
+      newEtapaAside.id = 'aside-' + etapaId;
+      newEtapaAside.innerHTML = '<div class="aside-section"><span class="aside-label">Links e recursos</span><span class="wip">A preencher</span></div><div class="aside-section"><span class="aside-label">Aprendizados desta etapa</span><span class="wip">A preencher</span></div>';
+      var prevAsideSubs2 = Array.from(srcDoc.querySelectorAll('[id^="aside-sub-' + (nextEtapa - 1) + '-"]'));
+      var asideInsertAfter = prevAsideSubs2.length ? prevAsideSubs2[prevAsideSubs2.length - 1] : srcDoc.querySelector('[id="aside-etapa' + (nextEtapa - 1) + '"]');
+      asideInsertAfter.insertAdjacentElement('afterend', newEtapaAside);
+
+      // Nav: add to the Etapas nav-group
+      var etapasGroup = null;
+      srcDoc.querySelectorAll('.nav-group').forEach(function(g) {
+        var lbl = g.querySelector('.nav-group-label');
+        if (lbl && lbl.textContent.trim() === 'Etapas') etapasGroup = g;
+      });
+      if (etapasGroup) {
+        var newNavEtapa = srcDoc.createElement('button');
+        newNavEtapa.className = 'nav-etapa';
+        newNavEtapa.setAttribute('data-panel', etapaId);
+        newNavEtapa.innerHTML = '<span class="nav-etapa-num">' + nextEtapa + '</span>' + escHtml(title);
+        etapasGroup.appendChild(newNavEtapa);
+      }
+
+      // Dropdown optgroup
+      var selEl = srcDoc.querySelector('#cm-section-sel');
+      if (selEl) {
+        var newOptgroup = srcDoc.createElement('optgroup');
+        newOptgroup.label = 'Etapa ' + nextEtapa;
+        var newOptVis = srcDoc.createElement('option');
+        newOptVis.value = etapaId;
+        newOptVis.textContent = 'Etapa ' + nextEtapa + ' — Visão geral';
+        newOptgroup.appendChild(newOptVis);
+        selEl.appendChild(newOptgroup);
+      }
+
+      // Update live DOM
+      var liveSel = document.querySelector('#cm-section-sel');
+      if (liveSel) {
+        var liveOg = document.createElement('optgroup');
+        liveOg.label = 'Etapa ' + nextEtapa;
+        var liveOptVis = document.createElement('option');
+        liveOptVis.value = etapaId;
+        liveOptVis.textContent = 'Etapa ' + nextEtapa + ' — Visão geral';
+        liveOg.appendChild(liveOptVis);
+        liveSel.appendChild(liveOg);
+      }
+      cmPopulateParentSel();
+    }
+
+    // Rebuild cmPanelDefs in memory
+    cmPanelDefs = buildCMPanelDefs();
+
+    statusEl.textContent = 'Publicando...';
+    var updated = '<!DOCTYPE html>\n' + srcDoc.documentElement.outerHTML;
+    var saveRes = await fetch('/api/save', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({password: pwd, html: updated})
+    });
+    var saveData = await saveRes.json();
+    if (saveData.ok) {
+      statusEl.textContent = 'Seção criada! ' + (saveData.message || 'O site atualizará em ~30 segundos.');
+      statusEl.className = 'ok';
+      document.getElementById('cm-new-title').value = '';
+    } else {
+      statusEl.textContent = 'Erro: ' + saveData.error;
+      statusEl.className = 'err';
+    }
+  } catch(e) {
+    statusEl.textContent = 'Erro: ' + e.message;
+    statusEl.className = 'err';
   }
   btn.disabled = false;
 }
