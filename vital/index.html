@@ -443,6 +443,9 @@ body{font-family:'Inter',-apple-system,sans-serif;font-size:14px;line-height:1.6
 .est-num{font-size:.71rem;font-weight:700;color:var(--text-3);font-family:Georgia,serif;white-space:nowrap;min-width:28px}
 .est-name{font-size:.82rem;color:var(--text-1);outline:none;border-radius:2px;padding:.1rem .25rem;min-width:0}
 .est-name:focus{background:#eef0ff;outline:1px solid var(--accent)}
+.est-ren-btn{background:none;border:none;cursor:pointer;padding:2px 5px;font-size:.9rem;color:var(--text-3);border-radius:4px;opacity:0;transition:opacity .15s}
+.est-row:hover .est-ren-btn{opacity:1}
+.est-ren-btn:hover{background:var(--surface-2);color:var(--accent)}
 .est-del-btn{font-size:.8rem;line-height:1;padding:.28rem .45rem;background:none;border:1px solid #e0d0d0;border-radius:3px;cursor:pointer;color:#b03a2e;flex-shrink:0;white-space:nowrap}
 .est-del-btn:hover,.est-del-btn.confirming{background:#b03a2e;color:#fff;border-color:#b03a2e}
 .est-add-wrap{border:1px solid var(--rule);border-radius:6px;padding:1rem;margin-top:1rem}
@@ -1749,7 +1752,8 @@ function estBuildList() {
       row.innerHTML = '<span class="est-handle" title="Arrastar">&#8942;&#8942;</span>' +
         '<span class="est-num">' + etapaIdx + '</span>' +
         '<span class="est-name" contenteditable="true">' + (t ? escHtml(t.textContent.trim()) : id) + '</span>' +
-        '<button class="est-del-btn" onclick="estDelRow(this)">&#128465;</button>';
+        '<button class="est-ren-btn" onclick="estRenRow(this)" title="Renomear">&#9998;</button>' +
+        '<button class="est-del-btn" onclick="estDelRow(this)" title="Excluir">&#128465;</button>';
     } else if (/^sub-\d+-\d+$/.test(id)) {
       subMap[etapaIdx] = (subMap[etapaIdx]||0) + 1;
       var sNum = etapaIdx + '.' + subMap[etapaIdx];
@@ -1758,7 +1762,8 @@ function estBuildList() {
       row.innerHTML = '<span class="est-handle" title="Arrastar">&#8942;&#8942;</span>' +
         '<span class="est-num">' + sNum + '</span>' +
         '<span class="est-name" contenteditable="true">' + (t2 ? escHtml(t2.textContent.trim()) : id) + '</span>' +
-        '<button class="est-del-btn" onclick="estDelRow(this)">&#128465;</button>';
+        '<button class="est-ren-btn" onclick="estRenRow(this)" title="Renomear">&#9998;</button>' +
+        '<button class="est-del-btn" onclick="estDelRow(this)" title="Excluir">&#128465;</button>';
     } else { return; }
     row.addEventListener('dragstart', function(e) {
       estDragging = row; row.classList.add('est-dragging');
@@ -1806,6 +1811,17 @@ function estUpdateNums() {
       row.querySelector('.est-num').textContent = ei + '.' + sm[ei];
     }
   });
+}
+
+function estRenRow(btn) {
+  var name = btn.closest('.est-row').querySelector('.est-name');
+  name.focus();
+  var range = document.createRange();
+  range.selectNodeContents(name);
+  range.collapse(false);
+  var sel = window.getSelection();
+  sel.removeAllRanges();
+  sel.addRange(range);
 }
 
 function estDelRow(btn) {
@@ -1901,7 +1917,26 @@ async function estAdd() {
     var updated='<!DOCTYPE html>\n'+srcDoc.documentElement.outerHTML;
     var r=await fetch('/api/save',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:pwd,html:updated})});
     var d=await r.json();
-    if(d.ok){st.textContent='Adicionada! O site atualizará em ~30s.';st.className='ok';document.getElementById('est-new-title').value='';estBuildList();estPopulateParent();cmPanelDefs=buildCMPanelDefs();}
+    if(d.ok){
+      st.textContent='Adicionada! O site atualizará em ~30s.';st.className='ok';
+      document.getElementById('est-new-title').value='';
+      // Inject new panel/aside into live DOM so estBuildList picks them up
+      if(type==='sub'){
+        var liveAnchor=document.querySelector('[id="panel-sub-'+pNum+'-'+existSubs.length+'"]')||document.querySelector('[id="panel-etapa'+pNum+'"]');
+        if(liveAnchor) liveAnchor.insertAdjacentElement('afterend',document.importNode(np,true));
+        var liveAsAnchor=null;for(var ii=existSubs.length;ii>=1;ii--){liveAsAnchor=document.querySelector('[id="aside-sub-'+pNum+'-'+ii+'"]');if(liveAsAnchor)break;}
+        if(!liveAsAnchor) liveAsAnchor=document.querySelector('[id="aside-etapa'+pNum+'"]');
+        if(liveAsAnchor) liveAsAnchor.insertAdjacentElement('afterend',document.importNode(na,true));
+      } else {
+        var liveps=Array.from(document.querySelectorAll('[id^="panel-sub-'+(ne-1)+'-"]'));
+        var liveIns=liveps.length?liveps[liveps.length-1]:document.querySelector('[id="panel-etapa'+(ne-1)+'"]');
+        if(liveIns) liveIns.insertAdjacentElement('afterend',document.importNode(np2,true));
+        var livepas=Array.from(document.querySelectorAll('[id^="aside-sub-'+(ne-1)+'-"]'));
+        var liveAins=livepas.length?livepas[livepas.length-1]:document.querySelector('[id="aside-etapa'+(ne-1)+'"]');
+        if(liveAins) liveAins.insertAdjacentElement('afterend',document.importNode(na2,true));
+      }
+      estBuildList();estPopulateParent();cmPanelDefs=buildCMPanelDefs();
+    }
     else{st.textContent='Erro: '+d.error;st.className='err';}
   } catch(e){st.textContent='Erro: '+e.message;st.className='err';}
 }
