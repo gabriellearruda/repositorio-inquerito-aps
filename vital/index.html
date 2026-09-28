@@ -414,14 +414,23 @@ body{font-family:'Inter',-apple-system,sans-serif;font-size:14px;line-height:1.6
 .cm-save:hover{background:#0d1666}
 .cm-save:disabled{opacity:.45;cursor:not-allowed}
 .cm-save-row{padding:1.5rem 0;display:flex;align-items:center;gap:1rem}
-.cm-divider{border:none;border-top:1px solid var(--rule);margin:1rem 0 1.5rem}
-.cm-add-section h3{font-size:.85rem;font-weight:700;color:var(--text-1);margin:0 0 .25rem}
-.cm-add-section>p{font-size:.8rem;color:var(--text-3);margin:0 0 1rem}
-.cm-add-row{display:flex;flex-direction:column;gap:.35rem;margin-bottom:.75rem}
-.cm-add-row label{font-size:.7rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--text-3)}
-.cm-add-row select,.cm-add-row input[type=text]{font-family:inherit;font-size:.82rem;padding:.45rem .6rem;border:1px solid var(--rule);border-radius:4px;background:var(--surface-2,#f8f8f8);color:var(--text-1);width:100%;box-sizing:border-box}
-.cm-add-btn{font-family:inherit;font-size:.78rem;font-weight:700;letter-spacing:.05em;padding:.52rem 1.2rem;background:var(--text-3);color:#fff;border:none;border-radius:4px;cursor:pointer}
+.cm-divider{border:none;border-top:1px solid var(--rule);margin:1.25rem 0 1.5rem}
+.cm-actions-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1.25rem 0 1.5rem}
+@media(max-width:540px){.cm-actions-row{grid-template-columns:1fr}}
+.cm-action-card{background:var(--surface-2,#f5f5f4);border:1px solid var(--rule);border-radius:6px;padding:1rem}
+.cm-action-card h3{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--text-3);margin:0 0 .75rem}
+.cm-add-row{display:flex;flex-direction:column;gap:.35rem;margin-bottom:.65rem}
+.cm-add-row label{font-size:.68rem;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--text-3)}
+.cm-add-row select,.cm-add-row input[type=text]{font-family:inherit;font-size:.8rem;padding:.4rem .55rem;border:1px solid var(--rule);border-radius:4px;background:#fff;color:var(--text-1);width:100%;box-sizing:border-box}
+.cm-add-btn{font-family:inherit;font-size:.75rem;font-weight:700;letter-spacing:.05em;padding:.46rem 1rem;background:var(--text-3);color:#fff;border:none;border-radius:4px;cursor:pointer;margin-top:.1rem}
 .cm-add-btn:hover{background:var(--text-1)}
+.cm-del-btn{font-family:inherit;font-size:.75rem;font-weight:700;padding:.46rem 1rem;background:none;border:1px solid #b03a2e;color:#b03a2e;border-radius:4px;cursor:pointer;width:100%}
+.cm-del-btn:hover{background:#b03a2e;color:#fff}
+.cm-del-confirm{margin-top:.6rem;padding:.55rem;background:#fdf2f2;border:1px solid #f5c6c6;border-radius:4px}
+.cm-del-confirm p{font-size:.73rem;color:#922b21;margin:0 0 .45rem;line-height:1.4}
+.cm-del-confirm-btns{display:flex;gap:.45rem}
+.cm-del-ok{font-family:inherit;font-size:.72rem;font-weight:700;padding:.36rem .75rem;background:#b03a2e;color:#fff;border:none;border-radius:3px;cursor:pointer}
+.cm-del-cancel{font-family:inherit;font-size:.72rem;padding:.36rem .65rem;background:none;border:1px solid var(--rule);border-radius:3px;cursor:pointer;color:var(--text-2)}
 code{font-family:monospace;font-size:.82em;background:#f0ede8;padding:.1em .35em;border-radius:2px}
 #logout-btn:hover{color:rgba(255,255,255,.6) !important}
 .cm-selector-wrap{margin-bottom:1.5rem}
@@ -625,6 +634,48 @@ if (isAuthValid()) {
         <div class="section-wrap" style="max-width:680px">
           <h1 class="section-title">Gerenciador de Conteúdo</h1>
           <p class="section-lead">Selecione a seção, edite os campos e clique em <strong>Salvar</strong>. O site deve ser atualizado em uns 30 segundos.</p>
+
+          <div class="cm-actions-row">
+            <!-- Card: Adicionar seção -->
+            <div class="cm-action-card">
+              <h3>Adicionar seção</h3>
+              <div class="cm-add-row">
+                <label>Tipo</label>
+                <select id="cm-new-type" onchange="cmNewTypeChange()">
+                  <option value="sub">Nova subetapa</option>
+                  <option value="etapa">Nova etapa</option>
+                </select>
+              </div>
+              <div class="cm-add-row" id="cm-new-parent-row">
+                <label>Etapa pai</label>
+                <select id="cm-new-parent"></select>
+              </div>
+              <div class="cm-add-row">
+                <label>Título</label>
+                <input id="cm-new-title" type="text" placeholder="Título da nova seção">
+              </div>
+              <div style="display:flex;align-items:center;gap:.75rem;flex-wrap:wrap">
+                <button class="cm-add-btn" onclick="cmAddSection()">Adicionar e publicar</button>
+                <span id="cm-add-status"></span>
+              </div>
+            </div>
+            <!-- Card: Excluir seção -->
+            <div class="cm-action-card">
+              <h3>Excluir seção</h3>
+              <p style="font-size:.78rem;color:var(--text-3);margin:0 0 .75rem;line-height:1.5">Exclui a seção atualmente selecionada no seletor abaixo (painel, aside e navegação).</p>
+              <button class="cm-del-btn" id="cm-del-btn" onclick="cmDeleteStep1()">Excluir seção selecionada</button>
+              <div class="cm-del-confirm" id="cm-del-confirm" style="display:none">
+                <p>Tem certeza? Esta ação não pode ser desfeita. A seção será removida permanentemente do site.</p>
+                <div class="cm-del-confirm-btns">
+                  <button class="cm-del-ok" onclick="cmDeleteSection()">Excluir mesmo assim</button>
+                  <button class="cm-del-cancel" onclick="cmDeleteCancel()">Cancelar</button>
+                </div>
+              </div>
+              <span id="cm-del-status" style="display:block;margin-top:.5rem;font-size:.75rem"></span>
+            </div>
+          </div>
+          <hr class="cm-divider">
+
           <div class="cm-selector-wrap">
             <label class="cm-field-label">Seção</label>
             <select id="cm-section-sel" class="cm-select" onchange="buildCMFields(this.value)">
@@ -675,30 +726,6 @@ if (isAuthValid()) {
             <span id="cm-status"></span>
           </div>
 
-          <hr class="cm-divider">
-          <div class="cm-add-section">
-            <h3>Adicionar seção</h3>
-            <p>Cria um novo painel no site e publica as alterações. A seção ficará disponível após o site atualizar (~30 s).</p>
-            <div class="cm-add-row">
-              <label>Tipo</label>
-              <select id="cm-new-type" onchange="cmNewTypeChange()">
-                <option value="sub">Nova subetapa</option>
-                <option value="etapa">Nova etapa</option>
-              </select>
-            </div>
-            <div class="cm-add-row" id="cm-new-parent-row">
-              <label>Etapa pai</label>
-              <select id="cm-new-parent"></select>
-            </div>
-            <div class="cm-add-row">
-              <label>Título</label>
-              <input id="cm-new-title" type="text" placeholder="Título da nova seção">
-            </div>
-            <div class="cm-save-row">
-              <button class="cm-add-btn" onclick="cmAddSection()">Adicionar e publicar</button>
-              <span id="cm-add-status"></span>
-            </div>
-          </div>
         </div>
       </div>
 
@@ -1700,6 +1727,126 @@ function cmNewTypeChange() {
   var type = document.getElementById('cm-new-type').value;
   var row = document.getElementById('cm-new-parent-row');
   row.style.display = type === 'sub' ? '' : 'none';
+}
+
+function cmDeleteStep1() {
+  var sel = document.getElementById('cm-section-sel');
+  var id = sel ? sel.value : '';
+  var blocked = ['intro','gerenciar','como-atualizar'];
+  if (blocked.indexOf(id) !== -1) {
+    var s = document.getElementById('cm-del-status');
+    s.textContent = 'Esta seção não pode ser excluída.';
+    s.className = 'err';
+    return;
+  }
+  document.getElementById('cm-del-confirm').style.display = '';
+  document.getElementById('cm-del-btn').style.display = 'none';
+  document.getElementById('cm-del-status').textContent = '';
+}
+
+function cmDeleteCancel() {
+  document.getElementById('cm-del-confirm').style.display = 'none';
+  document.getElementById('cm-del-btn').style.display = '';
+  document.getElementById('cm-del-status').textContent = '';
+}
+
+async function cmDeleteSection() {
+  var sel = document.getElementById('cm-section-sel');
+  var id = sel ? sel.value : '';
+  var statusEl = document.getElementById('cm-del-status');
+  var blocked = ['intro','gerenciar','como-atualizar'];
+  if (blocked.indexOf(id) !== -1) { statusEl.textContent = 'Esta seção não pode ser excluída.'; return; }
+
+  var pwd = SENHA;
+  if (!pwd) { statusEl.textContent = 'Sessão expirada. Recarregue a página.'; return; }
+
+  document.getElementById('cm-del-confirm').style.display = 'none';
+  statusEl.textContent = 'Buscando fonte...'; statusEl.className = '';
+
+  try {
+    var rawUrl = 'https://raw.githubusercontent.com/' + CM_REPO + '/main/' + CM_FILE + '?t=' + Date.now();
+    var rawRes = await fetch(rawUrl);
+    if (!rawRes.ok) throw new Error('Erro ao buscar fonte: ' + rawRes.status);
+    var srcHTML = await rawRes.text();
+
+    var parser = new DOMParser();
+    var srcDoc = parser.parseFromString(srcHTML, 'text/html');
+
+    // Impede excluir etapa que ainda tem subetapas
+    if (/^etapa(\d+)$/.test(id)) {
+      var num = id.replace('etapa','');
+      var subs = srcDoc.querySelectorAll('[id^="panel-sub-' + num + '-"]');
+      if (subs.length) {
+        statusEl.textContent = 'Exclua primeiro as ' + subs.length + ' subetapa(s) desta etapa.';
+        statusEl.className = 'err';
+        document.getElementById('cm-del-btn').style.display = '';
+        return;
+      }
+    }
+
+    // Remove panel
+    var panel = srcDoc.getElementById('panel-' + id);
+    if (panel) panel.remove();
+
+    // Remove aside
+    var aside = srcDoc.getElementById('aside-' + id);
+    if (aside) aside.remove();
+
+    // Remove nav button
+    var navBtn = srcDoc.querySelector('[data-panel="' + id + '"]');
+    if (navBtn) navBtn.remove();
+
+    // Remove subetapa-row in parent etapa (if sub)
+    var subMatch = id.match(/^sub-(\d+)-(\d+)$/);
+    if (subMatch) {
+      var parentPanel = srcDoc.getElementById('panel-etapa' + subMatch[1]);
+      if (parentPanel) {
+        var rows = parentPanel.querySelectorAll('.subetapa-row');
+        rows.forEach(function(row) {
+          if (row.getAttribute('onclick') && row.getAttribute('onclick').indexOf("'" + id + "'") !== -1) row.remove();
+        });
+      }
+    }
+
+    // Remove dropdown option (and optgroup if empty)
+    var opt = srcDoc.querySelector('#cm-section-sel option[value="' + id + '"]');
+    if (opt) {
+      var og = opt.parentElement;
+      opt.remove();
+      if (og && og.tagName === 'OPTGROUP' && og.querySelectorAll('option').length === 0) og.remove();
+    }
+
+    statusEl.textContent = 'Publicando...';
+    var updated = '<!DOCTYPE html>\n' + srcDoc.documentElement.outerHTML;
+    var saveRes = await fetch('/api/save', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({password: pwd, html: updated})
+    });
+    var saveData = await saveRes.json();
+    if (saveData.ok) {
+      statusEl.textContent = 'Excluída! O site atualizará em ~30 segundos.';
+      statusEl.className = 'ok';
+      // Update live dropdown
+      var liveOpt = document.querySelector('#cm-section-sel option[value="' + id + '"]');
+      if (liveOpt) {
+        var liveOg = liveOpt.parentElement;
+        liveOpt.remove();
+        if (liveOg && liveOg.tagName === 'OPTGROUP' && liveOg.querySelectorAll('option').length === 0) liveOg.remove();
+      }
+      // Select intro
+      var liveSel = document.getElementById('cm-section-sel');
+      if (liveSel) { liveSel.value = 'intro'; buildCMFields('intro'); }
+      cmPanelDefs = buildCMPanelDefs();
+    } else {
+      statusEl.textContent = 'Erro: ' + saveData.error;
+      statusEl.className = 'err';
+    }
+  } catch(e) {
+    statusEl.textContent = 'Erro: ' + e.message;
+    statusEl.className = 'err';
+  }
+  document.getElementById('cm-del-btn').style.display = '';
 }
 
 async function cmAddSection() {
