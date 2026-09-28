@@ -1254,7 +1254,26 @@ var cmPanelDefs = buildCMPanelDefs();
 (function() {
   try {
     var rp = sessionStorage.getItem('restorePanel');
+    var ds = sessionStorage.getItem('deployStarted');
     if (rp) { sessionStorage.removeItem('restorePanel'); activatePanel(rp); }
+    if (ds) {
+      var elapsed = Date.now() - parseInt(ds);
+      var totalWait = 70000; // GitHub Actions ~60-70s total
+      if (elapsed < totalWait) {
+        var wait = totalWait - elapsed;
+        var banner = document.createElement('div');
+        banner.style.cssText = 'position:fixed;bottom:1rem;right:1rem;background:#1a1a2e;color:#fff;padding:.6rem 1rem;border-radius:8px;font-size:.78rem;z-index:9999;box-shadow:0 4px 12px rgba(0,0,0,.3)';
+        banner.textContent = 'Deploy em andamento, recarregando em ' + Math.ceil(wait/1000) + 's...';
+        document.body.appendChild(banner);
+        var bc = setInterval(function() {
+          wait -= 1000;
+          if (wait <= 0) { clearInterval(bc); sessionStorage.setItem('restorePanel','estrutura'); sessionStorage.removeItem('deployStarted'); location.reload(); }
+          else { banner.textContent = 'Deploy em andamento, recarregando em ' + Math.ceil(wait/1000) + 's...'; }
+        }, 1000);
+      } else {
+        sessionStorage.removeItem('deployStarted');
+      }
+    }
   } catch(e) {}
 })();
 
@@ -1741,7 +1760,10 @@ function estScheduleReload(statusEl, seconds) {
   statusEl.className = 'ok';
   var remaining = seconds;
   statusEl.textContent = 'Publicado! Recarregando em ' + remaining + 's...';
-  try { sessionStorage.setItem('restorePanel', 'estrutura'); } catch(e){}
+  try {
+    sessionStorage.setItem('restorePanel', 'estrutura');
+    sessionStorage.setItem('deployStarted', Date.now().toString());
+  } catch(e){}
   var timer = setInterval(function() {
     remaining--;
     statusEl.textContent = 'Publicado! Recarregando em ' + remaining + 's...';
