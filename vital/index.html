@@ -635,47 +635,6 @@ if (isAuthValid()) {
           <h1 class="section-title">Gerenciador de Conteúdo</h1>
           <p class="section-lead">Selecione a seção, edite os campos e clique em <strong>Salvar</strong>. O site deve ser atualizado em uns 30 segundos.</p>
 
-          <div class="cm-actions-row">
-            <!-- Card: Adicionar seção -->
-            <div class="cm-action-card">
-              <h3>Adicionar seção</h3>
-              <div class="cm-add-row">
-                <label>Tipo</label>
-                <select id="cm-new-type" onchange="cmNewTypeChange()">
-                  <option value="sub">Nova subetapa</option>
-                  <option value="etapa">Nova etapa</option>
-                </select>
-              </div>
-              <div class="cm-add-row" id="cm-new-parent-row">
-                <label>Etapa pai</label>
-                <select id="cm-new-parent"></select>
-              </div>
-              <div class="cm-add-row">
-                <label>Título</label>
-                <input id="cm-new-title" type="text" placeholder="Título da nova seção">
-              </div>
-              <div style="display:flex;align-items:center;gap:.75rem;flex-wrap:wrap">
-                <button class="cm-add-btn" onclick="cmAddSection()">Adicionar e publicar</button>
-                <span id="cm-add-status"></span>
-              </div>
-            </div>
-            <!-- Card: Excluir seção -->
-            <div class="cm-action-card">
-              <h3>Excluir seção</h3>
-              <p style="font-size:.78rem;color:var(--text-3);margin:0 0 .75rem;line-height:1.5">Exclui a seção atualmente selecionada no seletor abaixo (painel, aside e navegação).</p>
-              <button class="cm-del-btn" id="cm-del-btn" onclick="cmDeleteStep1()">Excluir seção selecionada</button>
-              <div class="cm-del-confirm" id="cm-del-confirm" style="display:none">
-                <p>Tem certeza? Esta ação não pode ser desfeita. A seção será removida permanentemente do site.</p>
-                <div class="cm-del-confirm-btns">
-                  <button class="cm-del-ok" onclick="cmDeleteSection()">Excluir mesmo assim</button>
-                  <button class="cm-del-cancel" onclick="cmDeleteCancel()">Cancelar</button>
-                </div>
-              </div>
-              <span id="cm-del-status" style="display:block;margin-top:.5rem;font-size:.75rem"></span>
-            </div>
-          </div>
-          <hr class="cm-divider">
-
           <div class="cm-selector-wrap">
             <label class="cm-field-label">Seção</label>
             <select id="cm-section-sel" class="cm-select" onchange="buildCMFields(this.value)">
@@ -1060,6 +1019,42 @@ if (isAuthValid()) {
         <div class="aside-section">
           <span class="aside-label">Lembrete</span>
           <p style="font-size:.78rem;color:var(--text-2);line-height:1.6">Salvar publica diretamente no GitHub. O redeploy no Vercel leva ~30 segundos.</p>
+        </div>
+        <div class="aside-section">
+          <span class="aside-label">Adicionar seção</span>
+          <div class="cm-add-row">
+            <label>Tipo</label>
+            <select id="cm-new-type" onchange="cmNewTypeChange()">
+              <option value="sub">Nova subetapa</option>
+              <option value="etapa">Nova etapa</option>
+            </select>
+          </div>
+          <div class="cm-add-row" id="cm-new-parent-row">
+            <label>Etapa pai</label>
+            <select id="cm-new-parent"></select>
+          </div>
+          <div class="cm-add-row">
+            <label>Título</label>
+            <input id="cm-new-title" type="text" placeholder="Título da nova seção">
+          </div>
+          <button class="cm-add-btn" onclick="cmAddSection()">Adicionar e publicar</button>
+          <span id="cm-add-status" style="display:block;margin-top:.4rem;font-size:.73rem"></span>
+        </div>
+        <div class="aside-section">
+          <span class="aside-label">Excluir seção</span>
+          <div class="cm-add-row">
+            <label>Seção a excluir</label>
+            <select id="cm-del-sel"></select>
+          </div>
+          <button class="cm-del-btn" id="cm-del-btn" onclick="cmDeleteStep1()">Excluir seção</button>
+          <div class="cm-del-confirm" id="cm-del-confirm" style="display:none">
+            <p>Tem certeza? Esta ação não pode ser desfeita.</p>
+            <div class="cm-del-confirm-btns">
+              <button class="cm-del-ok" onclick="cmDeleteSection()">Excluir mesmo assim</button>
+              <button class="cm-del-cancel" onclick="cmDeleteCancel()">Cancelar</button>
+            </div>
+          </div>
+          <span id="cm-del-status" style="display:block;margin-top:.45rem;font-size:.73rem"></span>
         </div>
       </div>
       <div class="aside-wrap doc-panel" id="aside-como-atualizar"></div>
@@ -1711,16 +1706,32 @@ function escHtml(s) {
 
 function cmPopulateParentSel() {
   var sel = document.getElementById('cm-new-parent');
-  if (!sel) return;
-  sel.innerHTML = '';
-  document.querySelectorAll('#docMain .doc-panel[id^="panel-etapa"]').forEach(function(panel) {
-    var num = panel.id.replace('panel-etapa','');
-    var title = panel.querySelector('.section-title');
-    var opt = document.createElement('option');
-    opt.value = num;
-    opt.textContent = 'Etapa ' + num + (title ? ' — ' + title.textContent.trim().substring(0,30) : '');
-    sel.appendChild(opt);
-  });
+  if (sel) {
+    sel.innerHTML = '';
+    document.querySelectorAll('#docMain .doc-panel[id^="panel-etapa"]').forEach(function(panel) {
+      var num = panel.id.replace('panel-etapa','');
+      var title = panel.querySelector('.section-title');
+      var opt = document.createElement('option');
+      opt.value = num;
+      opt.textContent = 'Etapa ' + num + (title ? ' — ' + title.textContent.trim().substring(0,28) : '');
+      sel.appendChild(opt);
+    });
+  }
+  // Populate delete selector (all sections except fixed ones)
+  var delSel = document.getElementById('cm-del-sel');
+  if (!delSel) return;
+  delSel.innerHTML = '';
+  var blocked = ['intro','gerenciar','como-atualizar'];
+  var mainSel = document.getElementById('cm-section-sel');
+  if (mainSel) {
+    Array.from(mainSel.options).forEach(function(o) {
+      if (blocked.indexOf(o.value) !== -1) return;
+      var opt = document.createElement('option');
+      opt.value = o.value;
+      opt.textContent = o.textContent;
+      delSel.appendChild(opt);
+    });
+  }
 }
 
 function cmNewTypeChange() {
@@ -1730,12 +1741,11 @@ function cmNewTypeChange() {
 }
 
 function cmDeleteStep1() {
-  var sel = document.getElementById('cm-section-sel');
+  var sel = document.getElementById('cm-del-sel');
   var id = sel ? sel.value : '';
-  var blocked = ['intro','gerenciar','como-atualizar'];
-  if (blocked.indexOf(id) !== -1) {
+  if (!id) {
     var s = document.getElementById('cm-del-status');
-    s.textContent = 'Esta seção não pode ser excluída.';
+    s.textContent = 'Selecione uma seção.';
     s.className = 'err';
     return;
   }
@@ -1751,11 +1761,10 @@ function cmDeleteCancel() {
 }
 
 async function cmDeleteSection() {
-  var sel = document.getElementById('cm-section-sel');
+  var sel = document.getElementById('cm-del-sel');
   var id = sel ? sel.value : '';
   var statusEl = document.getElementById('cm-del-status');
-  var blocked = ['intro','gerenciar','como-atualizar'];
-  if (blocked.indexOf(id) !== -1) { statusEl.textContent = 'Esta seção não pode ser excluída.'; return; }
+  if (!id) { statusEl.textContent = 'Selecione uma seção.'; statusEl.className = 'err'; return; }
 
   var pwd = SENHA;
   if (!pwd) { statusEl.textContent = 'Sessão expirada. Recarregue a página.'; return; }
@@ -1827,14 +1836,15 @@ async function cmDeleteSection() {
     if (saveData.ok) {
       statusEl.textContent = 'Excluída! O site atualizará em ~30 segundos.';
       statusEl.className = 'ok';
-      // Update live dropdown
-      var liveOpt = document.querySelector('#cm-section-sel option[value="' + id + '"]');
-      if (liveOpt) {
+      // Update live dropdowns
+      [document.querySelector('#cm-section-sel option[value="' + id + '"]'),
+       document.querySelector('#cm-del-sel option[value="' + id + '"]')].forEach(function(liveOpt) {
+        if (!liveOpt) return;
         var liveOg = liveOpt.parentElement;
         liveOpt.remove();
         if (liveOg && liveOg.tagName === 'OPTGROUP' && liveOg.querySelectorAll('option').length === 0) liveOg.remove();
-      }
-      // Select intro
+      });
+      // Reset editor to intro
       var liveSel = document.getElementById('cm-section-sel');
       if (liveSel) { liveSel.value = 'intro'; buildCMFields('intro'); }
       cmPanelDefs = buildCMPanelDefs();
