@@ -431,6 +431,27 @@ body{font-family:'Inter',-apple-system,sans-serif;font-size:14px;line-height:1.6
 .cm-del-confirm-btns{display:flex;gap:.45rem}
 .cm-del-ok{font-family:inherit;font-size:.72rem;font-weight:700;padding:.36rem .75rem;background:#b03a2e;color:#fff;border:none;border-radius:3px;cursor:pointer}
 .cm-del-cancel{font-family:inherit;font-size:.72rem;padding:.36rem .65rem;background:none;border:1px solid var(--rule);border-radius:3px;cursor:pointer;color:var(--text-2)}
+.est-list{border:1px solid var(--rule);border-radius:6px;overflow:hidden;margin:1rem 0}
+.est-row{display:grid;grid-template-columns:22px 44px 1fr auto;align-items:center;gap:.5rem;padding:.55rem .75rem;border-bottom:1px solid var(--rule);background:#fff}
+.est-row:last-child{border-bottom:none}
+.est-row.est-sub{padding-left:1.6rem;background:var(--surface-2,#f8f8f8)}
+.est-row.drag-over-top{box-shadow:inset 0 2px 0 var(--accent)}
+.est-row.drag-over-bot{box-shadow:inset 0 -2px 0 var(--accent)}
+.est-row.est-dragging{opacity:.35}
+.est-row.marked-del .est-name{text-decoration:line-through;color:var(--text-3)}
+.est-handle{cursor:grab;color:var(--text-3);font-size:.95rem;user-select:none;display:flex;align-items:center;justify-content:center}
+.est-num{font-size:.71rem;font-weight:700;color:var(--text-3);font-family:Georgia,serif;white-space:nowrap;min-width:28px}
+.est-name{font-size:.82rem;color:var(--text-1);outline:none;border-radius:2px;padding:.1rem .25rem;min-width:0}
+.est-name:focus{background:#eef0ff;outline:1px solid var(--accent)}
+.est-del-btn{font-size:.8rem;line-height:1;padding:.28rem .45rem;background:none;border:1px solid #e0d0d0;border-radius:3px;cursor:pointer;color:#b03a2e;flex-shrink:0;white-space:nowrap}
+.est-del-btn:hover,.est-del-btn.confirming{background:#b03a2e;color:#fff;border-color:#b03a2e}
+.est-add-wrap{border:1px solid var(--rule);border-radius:6px;padding:1rem;margin-top:1rem}
+.est-add-wrap h3{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--text-3);margin:0 0 .85rem}
+.est-add-grid{display:grid;grid-template-columns:120px 110px 1fr auto;gap:.5rem;align-items:end}
+@media(max-width:580px){.est-add-grid{grid-template-columns:1fr 1fr}}
+.est-add-grid select,.est-add-grid input[type=text]{font-family:inherit;font-size:.79rem;padding:.4rem .5rem;border:1px solid var(--rule);border-radius:4px;background:#fff;color:var(--text-1);width:100%;box-sizing:border-box}
+.est-add-grid label{font-size:.67rem;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--text-3);display:block;margin-bottom:.3rem}
+.est-pub-row{display:flex;align-items:center;gap:1rem;padding:1.25rem 0 .5rem}
 code{font-family:monospace;font-size:.82em;background:#f0ede8;padding:.1em .35em;border-radius:2px}
 #logout-btn:hover{color:rgba(255,255,255,.6) !important}
 .cm-selector-wrap{margin-bottom:1.5rem}
@@ -573,6 +594,7 @@ if (isAuthValid()) {
         Gerenciar conteúdo
       </button>
       <button class="nav-sub" data-panel="como-atualizar">Como atualizar</button>
+      <button class="nav-sub" data-panel="estrutura">Gerenciar seções</button>
     </div>
 
     <div class="nav-group">
@@ -685,6 +707,46 @@ if (isAuthValid()) {
             <span id="cm-status"></span>
           </div>
 
+        </div>
+      </div>
+
+      <!-- ══ GERENCIAR SEÇÕES ══ -->
+      <div class="doc-panel" id="panel-estrutura">
+        <div class="section-wrap" style="max-width:720px">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:.25rem">
+            <h1 class="section-title" style="margin:0">Gerenciar seções</h1>
+            <span style="font-size:.72rem;color:var(--text-3)">Arraste para reordenar · Clique no nome para renomear</span>
+          </div>
+          <div id="est-list"></div>
+          <div class="est-add-wrap">
+            <h3>Adicionar seção</h3>
+            <div class="est-add-grid">
+              <div>
+                <label>Tipo</label>
+                <select id="est-new-type" onchange="estTypeChange()">
+                  <option value="sub">Nova subetapa</option>
+                  <option value="etapa">Nova etapa</option>
+                </select>
+              </div>
+              <div id="est-parent-col">
+                <label>Etapa pai</label>
+                <select id="est-new-parent"></select>
+              </div>
+              <div>
+                <label>Título</label>
+                <input id="est-new-title" type="text" placeholder="Título da nova seção">
+              </div>
+              <div>
+                <label style="visibility:hidden">.</label>
+                <button class="cm-add-btn" onclick="estAdd()">+ Adicionar</button>
+              </div>
+            </div>
+            <span id="est-add-status" style="display:block;margin-top:.4rem;font-size:.73rem"></span>
+          </div>
+          <div class="est-pub-row">
+            <button class="cm-save" id="est-pub-btn" onclick="estPublish()">Publicar alterações</button>
+            <span id="est-pub-status" style="font-size:.78rem;color:#aaa"></span>
+          </div>
         </div>
       </div>
 
@@ -1057,6 +1119,7 @@ if (isAuthValid()) {
           <span id="cm-del-status" style="display:block;margin-top:.45rem;font-size:.73rem"></span>
         </div>
       </div>
+      <div class="aside-wrap doc-panel" id="aside-estrutura"></div>
       <div class="aside-wrap doc-panel" id="aside-como-atualizar"></div>
 
       <!-- intro aside: vazio -->
@@ -1207,7 +1270,8 @@ function activatePanel(id) {
     p.classList.toggle('active', p.id === 'aside-' + id);
   });
   // esconde terceira coluna em intro, gerenciar e como-atualizar
-  document.querySelector('.doc-content').classList.toggle('hide-aside', id === 'intro' || id === 'como-atualizar');
+  document.querySelector('.doc-content').classList.toggle('hide-aside', id === 'intro' || id === 'como-atualizar' || id === 'estrutura');
+  if (id === 'estrutura') { estBuildList(); estPopulateParent(); }
   document.getElementById('docMain').scrollTo(0, 0);
   if (id === 'gerenciar') {
     var sel = document.getElementById('cm-section-sel');
@@ -1698,6 +1762,271 @@ async function cmSave() {
     setCMStatus('Erro: ' + e.message, 'err');
   }
   btn.disabled = false;
+}
+
+/* ── GERENCIAR SEÇÕES ── */
+var estDragging = null;
+
+function estBuildList() {
+  var list = document.getElementById('est-list');
+  if (!list) return;
+  list.innerHTML = '';
+  var etapaIdx = 0, subMap = {};
+  document.querySelectorAll('#docMain .doc-panel[id^="panel-"]').forEach(function(panel) {
+    var id = panel.id.replace('panel-','');
+    if (['gerenciar','como-atualizar','intro','estrutura'].indexOf(id) !== -1) return;
+    var row = document.createElement('div');
+    row.draggable = true;
+    row.dataset.id = id;
+    if (/^etapa\d+$/.test(id)) {
+      etapaIdx++; subMap[etapaIdx] = 0;
+      row.className = 'est-row est-etapa';
+      var t = panel.querySelector('.section-title');
+      row.innerHTML = '<span class="est-handle" title="Arrastar">&#8942;&#8942;</span>' +
+        '<span class="est-num">' + etapaIdx + '</span>' +
+        '<span class="est-name" contenteditable="true">' + (t ? escHtml(t.textContent.trim()) : id) + '</span>' +
+        '<button class="est-del-btn" onclick="estDelRow(this)">&#128465;</button>';
+    } else if (/^sub-\d+-\d+$/.test(id)) {
+      subMap[etapaIdx] = (subMap[etapaIdx]||0) + 1;
+      var sNum = etapaIdx + '.' + subMap[etapaIdx];
+      row.className = 'est-row est-sub';
+      var t2 = panel.querySelector('.sub-title');
+      row.innerHTML = '<span class="est-handle" title="Arrastar">&#8942;&#8942;</span>' +
+        '<span class="est-num">' + sNum + '</span>' +
+        '<span class="est-name" contenteditable="true">' + (t2 ? escHtml(t2.textContent.trim()) : id) + '</span>' +
+        '<button class="est-del-btn" onclick="estDelRow(this)">&#128465;</button>';
+    } else { return; }
+    row.addEventListener('dragstart', function(e) {
+      estDragging = row; row.classList.add('est-dragging');
+      e.dataTransfer.effectAllowed = 'move';
+    });
+    row.addEventListener('dragend', function() {
+      row.classList.remove('est-dragging');
+      document.querySelectorAll('.est-row').forEach(function(r) { r.classList.remove('drag-over-top','drag-over-bot'); });
+      estDragging = null; estUpdateNums();
+    });
+    row.addEventListener('dragover', function(e) {
+      e.preventDefault();
+      if (!estDragging || estDragging === row) return;
+      var rect = row.getBoundingClientRect();
+      var mid = rect.top + rect.height / 2;
+      row.classList.toggle('drag-over-top', e.clientY < mid);
+      row.classList.toggle('drag-over-bot', e.clientY >= mid);
+    });
+    row.addEventListener('dragleave', function() {
+      row.classList.remove('drag-over-top','drag-over-bot');
+    });
+    row.addEventListener('drop', function(e) {
+      e.preventDefault();
+      row.classList.remove('drag-over-top','drag-over-bot');
+      if (!estDragging || estDragging === row) return;
+      var rect = row.getBoundingClientRect();
+      if (e.clientY < rect.top + rect.height / 2) {
+        row.parentElement.insertBefore(estDragging, row);
+      } else {
+        row.parentElement.insertBefore(estDragging, row.nextSibling);
+      }
+    });
+    list.appendChild(row);
+  });
+}
+
+function estUpdateNums() {
+  var ei = 0, sm = {};
+  document.querySelectorAll('#est-list .est-row').forEach(function(row) {
+    if (row.classList.contains('est-etapa')) {
+      ei++; sm[ei] = 0;
+      row.querySelector('.est-num').textContent = ei;
+    } else if (row.classList.contains('est-sub')) {
+      sm[ei] = (sm[ei]||0) + 1;
+      row.querySelector('.est-num').textContent = ei + '.' + sm[ei];
+    }
+  });
+}
+
+function estDelRow(btn) {
+  var row = btn.closest('.est-row');
+  if (btn.classList.contains('confirming')) {
+    row.classList.toggle('marked-del');
+    btn.classList.remove('confirming');
+    btn.innerHTML = '&#128465;';
+  } else {
+    btn.classList.add('confirming');
+    btn.textContent = 'Confirmar';
+    setTimeout(function() { btn.classList.remove('confirming'); btn.innerHTML = '&#128465;'; }, 3000);
+  }
+}
+
+function estPopulateParent() {
+  var sel = document.getElementById('est-new-parent');
+  if (!sel) return;
+  sel.innerHTML = '';
+  document.querySelectorAll('#docMain .doc-panel[id^="panel-etapa"]').forEach(function(p) {
+    var num = p.id.replace('panel-etapa','');
+    var t = p.querySelector('.section-title');
+    var opt = document.createElement('option');
+    opt.value = num;
+    opt.textContent = 'Etapa ' + num + (t ? ' — ' + t.textContent.trim().substring(0,22) : '');
+    sel.appendChild(opt);
+  });
+}
+
+function estTypeChange() {
+  var t = document.getElementById('est-new-type').value;
+  document.getElementById('est-parent-col').style.display = t === 'sub' ? '' : 'none';
+}
+
+async function estAdd() {
+  var type = document.getElementById('est-new-type').value;
+  var title = document.getElementById('est-new-title').value.trim();
+  var st = document.getElementById('est-add-status');
+  if (!title) { st.textContent = 'Informe o título.'; st.className='err'; return; }
+  var pwd = SENHA;
+  if (!pwd) { st.textContent = 'Sessão expirada.'; return; }
+  st.textContent = 'Buscando fonte...'; st.className='';
+  try {
+    var rawUrl = 'https://raw.githubusercontent.com/' + CM_REPO + '/main/' + CM_FILE + '?t=' + Date.now();
+    var rawRes = await fetch(rawUrl);
+    if (!rawRes.ok) throw new Error('Erro ' + rawRes.status);
+    var srcHTML = await rawRes.text();
+    var parser = new DOMParser();
+    var srcDoc = parser.parseFromString(srcHTML, 'text/html');
+    if (type === 'sub') {
+      var pNum = document.getElementById('est-new-parent').value;
+      var existSubs = srcDoc.querySelectorAll('[id^="panel-sub-' + pNum + '-"]');
+      var ni = existSubs.length + 1;
+      var sid = 'sub-' + pNum + '-' + ni;
+      var badge = 'Etapa ' + pNum + ' · Subetapa ' + pNum + '.' + ni;
+      var np = srcDoc.createElement('div'); np.className='doc-panel'; np.id='panel-'+sid;
+      np.innerHTML='<div class="section-wrap"><span class="sub-badge">'+escHtml(badge)+'</span><h2 class="sub-title">'+escHtml(title)+'</h2><span class="wip">Descrição em construção</span></div>';
+      var anchor = srcDoc.querySelector('[id="panel-sub-'+pNum+'-'+existSubs.length+'"]') || srcDoc.querySelector('[id="panel-etapa'+pNum+'"]');
+      anchor.insertAdjacentElement('afterend', np);
+      var na = srcDoc.createElement('div'); na.className='aside-wrap doc-panel'; na.id='aside-'+sid;
+      na.innerHTML='<div class="aside-section"><span class="aside-label">Links</span><span class="wip">A preencher</span></div><div class="aside-section"><span class="aside-label">Aprendizados</span><span class="wip">A preencher</span></div>';
+      var lastAs=null; for(var i=existSubs.length;i>=1;i--){lastAs=srcDoc.querySelector('[id="aside-sub-'+pNum+'-'+i+'"]');if(lastAs)break;}
+      if(!lastAs) lastAs=srcDoc.querySelector('[id="aside-etapa'+pNum+'"]');
+      lastAs.insertAdjacentElement('afterend', na);
+      var ep=srcDoc.querySelector('[id="panel-etapa'+pNum+'"]');
+      var sl=ep?ep.querySelector('.subetapa-list'):null;
+      if(sl){var nr=srcDoc.createElement('div');nr.className='subetapa-row';nr.setAttribute('onclick',"activatePanel('"+sid+"')");nr.innerHTML='<span class="subetapa-idx">'+pNum+'.'+ni+'</span><span class="subetapa-name">'+escHtml(title)+'</span>';sl.appendChild(nr);}
+      var navAfter=Array.from(srcDoc.querySelectorAll('[data-panel^="sub-'+pNum+'-"]'));
+      var navIns=navAfter.length?navAfter[navAfter.length-1]:srcDoc.querySelector('[data-panel="etapa'+pNum+'"]');
+      var nb=srcDoc.createElement('button');nb.className='nav-sub';nb.setAttribute('data-panel',sid);nb.textContent=pNum+'.'+ni+' '+(title.length>26?title.substring(0,26)+'…':title);
+      navIns.insertAdjacentElement('afterend',nb);
+      var og=srcDoc.querySelector('#cm-section-sel optgroup[label="Etapa '+pNum+'"]');
+      if(og){var oo=srcDoc.createElement('option');oo.value=sid;oo.textContent=pNum+'.'+ni+' — '+title;og.appendChild(oo);}
+    } else {
+      var existEt=srcDoc.querySelectorAll('[id^="panel-etapa"]');
+      var ne=existEt.length+1; var eid='etapa'+ne;
+      var np2=srcDoc.createElement('div');np2.className='doc-panel';np2.id='panel-'+eid;
+      np2.innerHTML='<div class="section-wrap"><div class="etapa-badge"><span class="etapa-badge-num">'+ne+'</span>Etapa '+ne+'</div><h1 class="section-title">'+escHtml(title)+'</h1><p class="section-lead"><span class="wip">Descrição em construção</span></p><div class="subetapa-list"></div></div>';
+      var ps=Array.from(srcDoc.querySelectorAll('[id^="panel-sub-'+(ne-1)+'-"]'));
+      var ins=ps.length?ps[ps.length-1]:srcDoc.querySelector('[id="panel-etapa'+(ne-1)+'"]');
+      ins.insertAdjacentElement('afterend',np2);
+      var na2=srcDoc.createElement('div');na2.className='aside-wrap doc-panel';na2.id='aside-'+eid;
+      na2.innerHTML='<div class="aside-section"><span class="aside-label">Links e recursos</span><span class="wip">A preencher</span></div><div class="aside-section"><span class="aside-label">Aprendizados desta etapa</span><span class="wip">A preencher</span></div>';
+      var pas=Array.from(srcDoc.querySelectorAll('[id^="aside-sub-'+(ne-1)+'-"]'));
+      var ains=pas.length?pas[pas.length-1]:srcDoc.querySelector('[id="aside-etapa'+(ne-1)+'"]');
+      ains.insertAdjacentElement('afterend',na2);
+      var eg=null;srcDoc.querySelectorAll('.nav-group').forEach(function(g){var l=g.querySelector('.nav-group-label');if(l&&l.textContent.trim()==='Etapas')eg=g;});
+      if(eg){var nb2=srcDoc.createElement('button');nb2.className='nav-etapa';nb2.setAttribute('data-panel',eid);nb2.innerHTML='<span class="nav-etapa-num">'+ne+'</span>'+escHtml(title);eg.appendChild(nb2);}
+      var cs=srcDoc.querySelector('#cm-section-sel');
+      if(cs){var nog=srcDoc.createElement('optgroup');nog.label='Etapa '+ne;var noo=srcDoc.createElement('option');noo.value=eid;noo.textContent='Etapa '+ne+' — Visão geral';nog.appendChild(noo);cs.appendChild(nog);}
+    }
+    st.textContent='Publicando...';
+    var updated='<!DOCTYPE html>\n'+srcDoc.documentElement.outerHTML;
+    var r=await fetch('/api/save',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:pwd,html:updated})});
+    var d=await r.json();
+    if(d.ok){st.textContent='Adicionada! O site atualizará em ~30s.';st.className='ok';document.getElementById('est-new-title').value='';estBuildList();estPopulateParent();cmPanelDefs=buildCMPanelDefs();}
+    else{st.textContent='Erro: '+d.error;st.className='err';}
+  } catch(e){st.textContent='Erro: '+e.message;st.className='err';}
+}
+
+async function estPublish() {
+  var btn=document.getElementById('est-pub-btn');
+  var st=document.getElementById('est-pub-status');
+  var rows=Array.from(document.querySelectorAll('#est-list .est-row'));
+  var kept=rows.filter(function(r){return !r.classList.contains('marked-del');});
+  var deleted=rows.filter(function(r){return r.classList.contains('marked-del');});
+  var structure=[];var curEtapa=null;
+  kept.forEach(function(row){
+    var id=row.dataset.id;
+    var name=row.querySelector('.est-name').textContent.trim();
+    if(row.classList.contains('est-etapa')){curEtapa={id:id,name:name,subs:[]};structure.push(curEtapa);}
+    else if(row.classList.contains('est-sub')&&curEtapa){curEtapa.subs.push({id:id,name:name});}
+  });
+  btn.disabled=true; st.textContent='Buscando fonte...'; st.className='';
+  try {
+    var rawUrl='https://raw.githubusercontent.com/'+CM_REPO+'/main/'+CM_FILE+'?t='+Date.now();
+    var rawRes=await fetch(rawUrl);
+    if(!rawRes.ok) throw new Error('Erro '+rawRes.status);
+    var srcHTML=await rawRes.text();
+    st.textContent='Aplicando estrutura...';
+    var parser=new DOMParser();
+    var srcDoc=parser.parseFromString(srcHTML,'text/html');
+    var docMain=srcDoc.getElementById('docMain');
+    var docAside=srcDoc.getElementById('docAside');
+    var navGroup=null;
+    srcDoc.querySelectorAll('.nav-group').forEach(function(g){var l=g.querySelector('.nav-group-label');if(l&&l.textContent.trim()==='Etapas')navGroup=g;});
+    var cmSel=srcDoc.querySelector('#cm-section-sel');
+    // Collect and detach all etapa/sub panels
+    var mp={},ap={};
+    srcDoc.querySelectorAll('#docMain .doc-panel[id^="panel-etapa"],#docMain .doc-panel[id^="panel-sub-"]').forEach(function(p){mp[p.id.replace('panel-','')]=p;p.remove();});
+    srcDoc.querySelectorAll('.doc-aside .doc-panel[id^="aside-etapa"],.doc-aside .doc-panel[id^="aside-sub-"]').forEach(function(p){ap[p.id.replace('aside-','')]=p;p.remove();});
+    // Clear nav etapas group
+    var navLbl=navGroup?navGroup.querySelector('.nav-group-label'):null;
+    if(navGroup){navGroup.innerHTML='';if(navLbl)navGroup.appendChild(navLbl);}
+    // Clear dropdown optgroups
+    if(cmSel) cmSel.querySelectorAll('optgroup').forEach(function(o){o.remove();});
+    // Find insertion anchors
+    var insMain=srcDoc.getElementById('panel-estrutura')||srcDoc.getElementById('panel-como-atualizar');
+    var insAside=srcDoc.getElementById('aside-estrutura')||srcDoc.getElementById('aside-como-atualizar');
+    // Rebuild in new order
+    structure.forEach(function(etapa,ei){
+      var eNum=ei+1;
+      var ePanel=mp[etapa.id]; if(!ePanel) return;
+      var eAside=ap[etapa.id];
+      // Update etapa panel
+      var badge=ePanel.querySelector('.etapa-badge');
+      if(badge) badge.innerHTML='<span class="etapa-badge-num">'+eNum+'</span>Etapa '+eNum;
+      var titleEl=ePanel.querySelector('.section-title');
+      if(titleEl) titleEl.textContent=etapa.name;
+      var subList=ePanel.querySelector('.subetapa-list');
+      if(subList) subList.innerHTML='';
+      insMain.insertAdjacentElement('afterend',ePanel); insMain=ePanel;
+      if(eAside){insAside.insertAdjacentElement('afterend',eAside);insAside=eAside;}
+      // Nav etapa
+      if(navGroup){var ne=srcDoc.createElement('button');ne.className='nav-etapa';ne.setAttribute('data-panel',etapa.id);ne.innerHTML='<span class="nav-etapa-num">'+eNum+'</span>'+escHtml(etapa.name);navGroup.appendChild(ne);}
+      // Dropdown optgroup
+      var og=null;
+      if(cmSel){og=srcDoc.createElement('optgroup');og.label='Etapa '+eNum;var ov=srcDoc.createElement('option');ov.value=etapa.id;ov.textContent='Etapa '+eNum+' — Visão geral';og.appendChild(ov);cmSel.appendChild(og);}
+      // Subetapas
+      etapa.subs.forEach(function(sub,si){
+        var sNum=eNum+'.'+(si+1);
+        var sPanel=mp[sub.id]; if(!sPanel) return;
+        var sAside=ap[sub.id];
+        var sb=sPanel.querySelector('.sub-badge');
+        if(sb) sb.textContent='Etapa '+eNum+' · Subetapa '+sNum;
+        var st2=sPanel.querySelector('.sub-title');
+        if(st2) st2.textContent=sub.name;
+        insMain.insertAdjacentElement('afterend',sPanel); insMain=sPanel;
+        if(sAside){insAside.insertAdjacentElement('afterend',sAside);insAside=sAside;}
+        if(subList){var sr=srcDoc.createElement('div');sr.className='subetapa-row';sr.setAttribute('onclick',"activatePanel('"+sub.id+"')");sr.innerHTML='<span class="subetapa-idx">'+sNum+'</span><span class="subetapa-name">'+escHtml(sub.name)+'</span>';subList.appendChild(sr);}
+        if(navGroup){var ns=srcDoc.createElement('button');ns.className='nav-sub';ns.setAttribute('data-panel',sub.id);ns.textContent=sNum+' '+(sub.name.length>26?sub.name.substring(0,26)+'…':sub.name);navGroup.appendChild(ns);}
+        if(og){var so=srcDoc.createElement('option');so.value=sub.id;so.textContent=sNum+' — '+sub.name;og.appendChild(so);}
+      });
+    });
+    st.textContent='Publicando...';
+    var updated='<!DOCTYPE html>\n'+srcDoc.documentElement.outerHTML;
+    var saveRes=await fetch('/api/save',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:SENHA,html:updated})});
+    var sd=await saveRes.json();
+    if(sd.ok){
+      st.textContent='Publicado! O site atualizará em ~30s.';st.className='ok';
+      deleted.forEach(function(r){r.remove();});
+      cmPanelDefs=buildCMPanelDefs();
+    } else {st.textContent='Erro: '+sd.error;st.className='err';}
+  } catch(e){st.textContent='Erro: '+e.message;st.className='err';}
+  btn.disabled=false;
 }
 
 function escHtml(s) {
