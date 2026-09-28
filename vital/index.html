@@ -1908,6 +1908,21 @@ async function estPublish() {
     var mp={},ap={};
     srcDoc.querySelectorAll('#docMain .doc-panel[id^="panel-etapa"],#docMain .doc-panel[id^="panel-sub-"]').forEach(function(p){mp[p.id.replace('panel-','')]=p;p.remove();});
     srcDoc.querySelectorAll('.doc-aside .doc-panel[id^="aside-etapa"],.doc-aside .doc-panel[id^="aside-sub-"]').forEach(function(p){ap[p.id.replace('aside-','')]=p;p.remove();});
+    // Include panels present in GitHub but missing from #est-list (added since last page load)
+    var listIdSet=new Set(rows.map(function(r){return r.dataset.id;}));
+    Object.keys(mp).forEach(function(id){
+      if(listIdSet.has(id)) return;
+      if(/^etapa\d+$/.test(id)){
+        var t=mp[id].querySelector('.section-title');
+        structure.push({id:id,name:t?t.textContent.trim():id,subs:[]});
+      } else if(/^sub-(\d+)-\d+$/.test(id)){
+        var pn=id.match(/^sub-(\d+)-/)[1];
+        var par=null;structure.forEach(function(e){if(e.id==='etapa'+pn)par=e;});
+        var t2=mp[id].querySelector('.sub-title');
+        if(par) par.subs.push({id:id,name:t2?t2.textContent.trim():id});
+        else structure.push({id:id,name:t2?t2.textContent.trim():id,subs:[]});
+      }
+    });
     // Clear nav etapas group
     var navLbl=navGroup?navGroup.querySelector('.nav-group-label'):null;
     if(navGroup){navGroup.innerHTML='';if(navLbl)navGroup.appendChild(navLbl);}
