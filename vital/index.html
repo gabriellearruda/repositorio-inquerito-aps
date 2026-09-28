@@ -1335,6 +1335,14 @@ function buildCMPanelDefs() {
 }
 var cmPanelDefs = buildCMPanelDefs();
 
+// Restore panel after auto-reload from structure manager
+(function() {
+  try {
+    var rp = sessionStorage.getItem('restorePanel');
+    if (rp) { sessionStorage.removeItem('restorePanel'); activatePanel(rp); }
+  } catch(e) {}
+})();
+
 function getCMLabel(el) {
   var c = el.className || '';
   if (c.includes('hero-eyebrow')) return 'Eyebrow';
@@ -1813,6 +1821,19 @@ function estUpdateNums() {
   });
 }
 
+function estScheduleReload(statusEl, seconds) {
+  seconds = seconds || 35;
+  statusEl.className = 'ok';
+  var remaining = seconds;
+  statusEl.textContent = 'Publicado! Recarregando em ' + remaining + 's...';
+  try { sessionStorage.setItem('restorePanel', 'estrutura'); } catch(e){}
+  var timer = setInterval(function() {
+    remaining--;
+    statusEl.textContent = 'Publicado! Recarregando em ' + remaining + 's...';
+    if (remaining <= 0) { clearInterval(timer); location.reload(); }
+  }, 1000);
+}
+
 function estRenRow(btn) {
   var name = btn.closest('.est-row').querySelector('.est-name');
   name.focus();
@@ -1891,7 +1912,7 @@ async function estAdd() {
       if(sl){var nr=srcDoc.createElement('div');nr.className='subetapa-row';nr.setAttribute('onclick',"activatePanel('"+sid+"')");nr.innerHTML='<span class="subetapa-idx">'+pNum+'.'+ni+'</span><span class="subetapa-name">'+escHtml(title)+'</span>';sl.appendChild(nr);}
       var navAfter=Array.from(srcDoc.querySelectorAll('[data-panel^="sub-'+pNum+'-"]'));
       var navIns=navAfter.length?navAfter[navAfter.length-1]:srcDoc.querySelector('[data-panel="etapa'+pNum+'"]');
-      var nb=srcDoc.createElement('button');nb.className='nav-sub';nb.setAttribute('data-panel',sid);nb.textContent=pNum+'.'+ni+' '+(title.length>26?title.substring(0,26)+'…':title);
+      var nb=srcDoc.createElement('button');nb.className='nav-sub';nb.setAttribute('data-panel',sid);nb.textContent=title.length>26?title.substring(0,26)+'…':title;
       navIns.insertAdjacentElement('afterend',nb);
       var og=srcDoc.querySelector('#cm-section-sel optgroup[label="Etapa '+pNum+'"]');
       if(og){var oo=srcDoc.createElement('option');oo.value=sid;oo.textContent=pNum+'.'+ni+' — '+title;og.appendChild(oo);}
@@ -1935,7 +1956,7 @@ async function estAdd() {
         var liveAins=livepas.length?livepas[livepas.length-1]:document.querySelector('[id="aside-etapa'+(ne-1)+'"]');
         if(liveAins) liveAins.insertAdjacentElement('afterend',document.importNode(na2,true));
       }
-      estBuildList();estPopulateParent();cmPanelDefs=buildCMPanelDefs();
+      estScheduleReload(st);
     }
     else{st.textContent='Erro: '+d.error;st.className='err';}
   } catch(e){st.textContent='Erro: '+e.message;st.className='err';}
@@ -2011,7 +2032,7 @@ async function estPublish() {
         insMain.insertAdjacentElement('afterend',sPanel); insMain=sPanel;
         if(sAside){insAside.insertAdjacentElement('afterend',sAside);insAside=sAside;}
         if(subList){var sr=srcDoc.createElement('div');sr.className='subetapa-row';sr.setAttribute('onclick',"activatePanel('"+sub.id+"')");sr.innerHTML='<span class="subetapa-idx">'+sNum+'</span><span class="subetapa-name">'+escHtml(sub.name)+'</span>';subList.appendChild(sr);}
-        if(navGroup){var ns=srcDoc.createElement('button');ns.className='nav-sub';ns.setAttribute('data-panel',sub.id);ns.textContent=sNum+' '+(sub.name.length>26?sub.name.substring(0,26)+'…':sub.name);navGroup.appendChild(ns);}
+        if(navGroup){var ns=srcDoc.createElement('button');ns.className='nav-sub';ns.setAttribute('data-panel',sub.id);ns.textContent=sub.name.length>26?sub.name.substring(0,26)+'…':sub.name;navGroup.appendChild(ns);}
         if(og){var so=srcDoc.createElement('option');so.value=sub.id;so.textContent=sNum+' — '+sub.name;og.appendChild(so);}
       });
     });
@@ -2020,9 +2041,8 @@ async function estPublish() {
     var saveRes=await fetch('/api/save',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:SENHA,html:updated})});
     var sd=await saveRes.json();
     if(sd.ok){
-      st.textContent='Publicado! O site atualizará em ~30s.';st.className='ok';
       deleted.forEach(function(r){r.remove();});
-      cmPanelDefs=buildCMPanelDefs();
+      estScheduleReload(st);
     } else {st.textContent='Erro: '+sd.error;st.className='err';}
   } catch(e){st.textContent='Erro: '+e.message;st.className='err';}
   btn.disabled=false;
