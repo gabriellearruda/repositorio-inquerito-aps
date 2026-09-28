@@ -432,7 +432,7 @@ body{font-family:'Inter',-apple-system,sans-serif;font-size:14px;line-height:1.6
 .cm-del-ok{font-family:inherit;font-size:.72rem;font-weight:700;padding:.36rem .75rem;background:#b03a2e;color:#fff;border:none;border-radius:3px;cursor:pointer}
 .cm-del-cancel{font-family:inherit;font-size:.72rem;padding:.36rem .65rem;background:none;border:1px solid var(--rule);border-radius:3px;cursor:pointer;color:var(--text-2)}
 .est-list{border:1px solid var(--rule);border-radius:6px;overflow:hidden;margin:1rem 0}
-.est-row{display:grid;grid-template-columns:22px 44px 1fr auto;align-items:center;gap:.5rem;padding:.55rem .75rem;border-bottom:1px solid var(--rule);background:#fff}
+.est-row{display:grid;grid-template-columns:22px 44px 1fr auto auto;align-items:center;gap:.5rem;padding:.55rem .75rem;border-bottom:1px solid var(--rule);background:#fff}
 .est-row:last-child{border-bottom:none}
 .est-row.est-sub{padding-left:1.6rem;background:var(--surface-2,#f8f8f8)}
 .est-row.drag-over-top{box-shadow:inset 0 2px 0 var(--accent)}
@@ -658,7 +658,7 @@ if (isAuthValid()) {
       <div class="doc-panel" id="panel-gerenciar">
         <div class="section-wrap" style="max-width:680px">
           <h1 class="section-title">Gerenciador de Conteúdo</h1>
-          <p class="section-lead">Selecione a seção, edite os campos e clique em <strong>Salvar</strong>. O site deve ser atualizado em uns 30 segundos.</p>
+          <p class="section-lead">Selecione a seção, edite os campos e clique em <strong>Salvar</strong>. O site deve ser atualizado em uns 60 segundos.</p>
 
           <div class="cm-selector-wrap">
             <label class="cm-field-label">Seção</label>
@@ -757,7 +757,7 @@ if (isAuthValid()) {
       <div class="doc-panel" id="panel-como-atualizar">
         <div class="section-wrap">
           <h1 class="section-title">Como atualizar o conteúdo</h1>
-          <p class="section-lead">O gerenciador de conteúdo permite editar os textos do site diretamente pelo navegador, sem precisar mexer no código. A atualização é publicada automaticamente em cerca de 30 segundos.</p>
+          <p class="section-lead">O gerenciador de conteúdo permite editar os textos do site diretamente pelo navegador, sem precisar mexer no código. A atualização é publicada automaticamente em cerca de 60 segundos.</p>
 
           <h3 class="body-subhead">Passo a passo</h3>
           <ol class="body-list" style="list-style-type:decimal;padding-left:1.5rem">
@@ -765,7 +765,7 @@ if (isAuthValid()) {
             <li>Escolha a seção que deseja editar no seletor</li>
             <li>Edite o <strong>Título</strong> e o <strong>Texto</strong> diretamente nos campos — o que você vê é o que será publicado</li>
             <li>Para Links e Aprendizados, preencha os campos no painel lateral direito</li>
-            <li>Clique em <strong>Salvar</strong> — o site será atualizado em ~30 segundos</li>
+            <li>Clique em <strong>Salvar</strong> — o site será atualizado em ~60 segundos</li>
           </ol>
 
           <h3 class="body-subhead">Ferramentas de formatação</h3>
@@ -1083,7 +1083,7 @@ if (isAuthValid()) {
       <div class="aside-wrap doc-panel" id="aside-gerenciar">
         <div class="aside-section">
           <span class="aside-label">Lembrete</span>
-          <p style="font-size:.78rem;color:var(--text-2);line-height:1.6">Salvar publica diretamente no GitHub. O redeploy no Vercel leva ~30 segundos.</p>
+          <p style="font-size:.78rem;color:var(--text-2);line-height:1.6">Salvar publica diretamente no GitHub. O deploy via GitHub Actions leva ~60 segundos.</p>
         </div>
       </div>
       <div class="aside-wrap doc-panel" id="aside-estrutura"></div>
@@ -1822,7 +1822,7 @@ function estUpdateNums() {
 }
 
 function estScheduleReload(statusEl, seconds) {
-  seconds = seconds || 35;
+  seconds = seconds || 65;
   statusEl.className = 'ok';
   var remaining = seconds;
   statusEl.textContent = 'Publicado! Recarregando em ' + remaining + 's...';
@@ -1939,7 +1939,7 @@ async function estAdd() {
     var r=await fetch('/api/save',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:pwd,html:updated})});
     var d=await r.json();
     if(d.ok){
-      st.textContent='Adicionada! O site atualizará em ~30s.';st.className='ok';
+      st.textContent='Adicionada! O site atualizará em ~60s.';st.className='ok';
       document.getElementById('est-new-title').value='';
       // Inject new panel/aside into live DOM so estBuildList picks them up
       if(type==='sub'){
@@ -2182,7 +2182,7 @@ async function cmDeleteSection() {
     });
     var saveData = await saveRes.json();
     if (saveData.ok) {
-      statusEl.textContent = 'Excluída! O site atualizará em ~30 segundos.';
+      statusEl.textContent = 'Excluída! O site atualizará em ~60 segundos.';
       statusEl.className = 'ok';
       // Update live dropdowns
       [document.querySelector('#cm-section-sel option[value="' + id + '"]'),
@@ -2374,7 +2374,7 @@ async function cmAddSection() {
     });
     var saveData = await saveRes.json();
     if (saveData.ok) {
-      statusEl.textContent = 'Seção criada! ' + (saveData.message || 'O site atualizará em ~30 segundos.');
+      statusEl.textContent = 'Seção criada! ' + (saveData.message || 'O site atualizará em ~60 segundos.');
       statusEl.className = 'ok';
       document.getElementById('cm-new-title').value = '';
     } else {
