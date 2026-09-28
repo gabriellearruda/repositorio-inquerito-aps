@@ -1082,42 +1082,6 @@ if (isAuthValid()) {
           <span class="aside-label">Lembrete</span>
           <p style="font-size:.78rem;color:var(--text-2);line-height:1.6">Salvar publica diretamente no GitHub. O redeploy no Vercel leva ~30 segundos.</p>
         </div>
-        <div class="aside-section">
-          <span class="aside-label">Adicionar seção</span>
-          <div class="cm-add-row">
-            <label>Tipo</label>
-            <select id="cm-new-type" onchange="cmNewTypeChange()">
-              <option value="sub">Nova subetapa</option>
-              <option value="etapa">Nova etapa</option>
-            </select>
-          </div>
-          <div class="cm-add-row" id="cm-new-parent-row">
-            <label>Etapa pai</label>
-            <select id="cm-new-parent"></select>
-          </div>
-          <div class="cm-add-row">
-            <label>Título</label>
-            <input id="cm-new-title" type="text" placeholder="Título da nova seção">
-          </div>
-          <button class="cm-add-btn" onclick="cmAddSection()">Adicionar e publicar</button>
-          <span id="cm-add-status" style="display:block;margin-top:.4rem;font-size:.73rem"></span>
-        </div>
-        <div class="aside-section">
-          <span class="aside-label">Excluir seção</span>
-          <div class="cm-add-row">
-            <label>Seção a excluir</label>
-            <select id="cm-del-sel"></select>
-          </div>
-          <button class="cm-del-btn" id="cm-del-btn" onclick="cmDeleteStep1()">Excluir seção</button>
-          <div class="cm-del-confirm" id="cm-del-confirm" style="display:none">
-            <p>Tem certeza? Esta ação não pode ser desfeita.</p>
-            <div class="cm-del-confirm-btns">
-              <button class="cm-del-ok" onclick="cmDeleteSection()">Excluir mesmo assim</button>
-              <button class="cm-del-cancel" onclick="cmDeleteCancel()">Cancelar</button>
-            </div>
-          </div>
-          <span id="cm-del-status" style="display:block;margin-top:.45rem;font-size:.73rem"></span>
-        </div>
       </div>
       <div class="aside-wrap doc-panel" id="aside-estrutura"></div>
       <div class="aside-wrap doc-panel" id="aside-como-atualizar"></div>
