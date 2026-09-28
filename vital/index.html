@@ -1941,8 +1941,10 @@ async function estPublish() {
     // Rebuild in new order
     structure.forEach(function(etapa,ei){
       var eNum=ei+1;
-      var ePanel=mp[etapa.id]; if(!ePanel) return;
+      var ePanel=mp[etapa.id];
+      if(!ePanel){var _lp=document.getElementById('panel-'+etapa.id);if(!_lp)return;ePanel=_lp.cloneNode(true);}
       var eAside=ap[etapa.id];
+      if(!eAside){var _la=document.getElementById('aside-'+etapa.id);if(_la)eAside=_la.cloneNode(true);}
       // Update etapa panel
       var badge=ePanel.querySelector('.etapa-badge');
       if(badge) badge.innerHTML='<span class="etapa-badge-num">'+eNum+'</span>Etapa '+eNum;
@@ -1960,8 +1962,10 @@ async function estPublish() {
       // Subetapas
       etapa.subs.forEach(function(sub,si){
         var sNum=eNum+'.'+(si+1);
-        var sPanel=mp[sub.id]; if(!sPanel) return;
+        var sPanel=mp[sub.id];
+        if(!sPanel){var _lsp=document.getElementById('panel-'+sub.id);if(!_lsp)return;sPanel=_lsp.cloneNode(true);}
         var sAside=ap[sub.id];
+        if(!sAside){var _lsa=document.getElementById('aside-'+sub.id);if(_lsa)sAside=_lsa.cloneNode(true);}
         var sb=sPanel.querySelector('.sub-badge');
         if(sb) sb.textContent='Etapa '+eNum+' · Subetapa '+sNum;
         var st2=sPanel.querySelector('.sub-title');
