@@ -1737,7 +1737,7 @@ function estUpdateNums() {
 }
 
 function estScheduleReload(statusEl, seconds) {
-  seconds = seconds || 65;
+  seconds = seconds || 25;
   statusEl.className = 'ok';
   var remaining = seconds;
   statusEl.textContent = 'Publicado! Recarregando em ' + remaining + 's...';
