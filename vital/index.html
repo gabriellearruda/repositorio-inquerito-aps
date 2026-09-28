@@ -1737,7 +1737,7 @@ function estUpdateNums() {
 }
 
 function estScheduleReload(statusEl, seconds) {
-  seconds = seconds || 65;
+  seconds = seconds || 30;
   statusEl.className = 'ok';
   var remaining = seconds;
   statusEl.textContent = 'Publicado! Recarregando em ' + remaining + 's...';
@@ -1890,6 +1890,8 @@ async function estPublish() {
     if(row.classList.contains('est-etapa')){curEtapa={id:id,name:name,subs:[]};structure.push(curEtapa);}
     else if(row.classList.contains('est-sub')&&curEtapa){curEtapa.subs.push({id:id,name:name});}
   });
+  // Commit any active contenteditable edit before reading names
+  if (document.activeElement) document.activeElement.blur();
   btn.disabled=true; st.textContent='Buscando fonte...'; st.className='';
   try {
     var rawUrl='https://raw.githubusercontent.com/'+CM_REPO+'/main/'+CM_FILE+'?t='+Date.now();
