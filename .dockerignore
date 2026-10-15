@@ -1,0 +1,6 @@
+.git
+.github
+arquivos/
+docs/
+node_modules/
+*.md
