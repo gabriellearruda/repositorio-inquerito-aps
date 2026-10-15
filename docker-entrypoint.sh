@@ -1,5 +1,8 @@
 #!/bin/sh
-# Sobe a API (porta 3001) e o site estático (porta 3000) em paralelo
+# Injeta a senha no HTML em runtime (lê do env)
+node build.js
+
+# Sobe a API (porta 3001) em paralelo
 node --input-type=module <<'EOF' &
 import http from 'http';
 import handler from './api/save.js';
@@ -14,4 +17,5 @@ http.createServer(async (req, res) => {
 }).listen(3001, () => console.log('API rodando em http://localhost:3001'));
 EOF
 
+# Sobe o site estático (porta 3000)
 serve -s . -l 3000

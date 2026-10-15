@@ -10,17 +10,11 @@ COPY vital/ ./vital/
 COPY api/ ./api/
 COPY index.html ./
 
-# Injeta a senha no HTML em tempo de build
-ARG SENHADOPAINEL
-ENV SENHADOPAINEL=${SENHADOPAINEL}
-RUN node build.js
-
-# Instala serve para o site estático
 RUN npm install -g serve
+
+EXPOSE 3000 3001
 
 COPY docker-entrypoint.sh ./
 RUN chmod +x docker-entrypoint.sh
-
-EXPOSE 3000 3001
 
 ENTRYPOINT ["./docker-entrypoint.sh"]
