@@ -1,26 +1,14 @@
 # Inquérito APS por WhatsApp — Guia de Replicação
 
-Documentação metodológica do inquérito de avaliação de acesso e qualidade
-da Atenção Primária à Saúde (APS) em Recife, conduzido pelo programa
-**Mais Dados Mais Saúde (MDMS)** via WhatsApp.
+Documentação metodológica do inquérito de avaliação de acesso e qualidade da Atenção Primária à Saúde (APS) em Recife, conduzido pelo programa **Mais Dados Mais Saúde (MDMS)** via WhatsApp.
 
-Este repositório entrega o projeto já codado e pronto para uso. O código foi
-revisado e testado no ambiente Vercel por uma engenheira de software.
+Este projeto foi feito feito com o Claude, porém revisado e testado no ambiente Vercel por uma engenheira de software.
 
-A aplicação é intencionalmente simples — sua única função é servir de
-documentação. A arquitetura foi desenhada em duas camadas: uma área
-administrativa, onde a equipe da Vaito sobe os conteúdos progressivamente,
-e uma versão pública a ser liberada quando toda a documentação estiver
-completa — exceto a seção de notas, que permanece restrita. Por esse motivo,
-**este repositório não deve ser tornado público**: a seção de notas pode
-conter anotações sensíveis sobre o projeto, parceiros e decisões internas,
-destinadas apenas às equipes da Vaito.
+A aplicação é intencionalmente simples dado que sua única função é servir de documentação para a equipe interna da Vital de inquérito. A arquitetura foi desenhada em duas camadas: uma área administrativa, onde a equipe da Vital sobe os conteúdos progressivamente, e uma versão pública a ser liberada quando toda a documentação estiver completa — exceto a seção de notas, que deve permanecer restrita.
 
-A autenticação via variável de ambiente foi escolhida para manter a solução
-simples e sem dependências externas — dado o volume e a natureza do acesso
-(documentação interna de equipe), não havia necessidade de criar um bucket
-ou sistema de autenticação mais robusto. Esses pontos ficam registrados como
-melhorias a considerar caso o projeto cresça em escopo ou audiência.
+Por esse motivo, **este repositório não deve ser tornado público**: a seção de notas pode conter anotações sensíveis sobre o projeto, parceiros e decisões internas, destinadas apenas às equipes da Vital.
+
+A autenticação via variável de ambiente foi escolhida para manter a solução simples e sem dependências externas — dado o volume e a natureza do acesso (documentação interna de equipe), não havia necessidade de criar um bucket de armazenamento ou sistema de autenticação mais robusto. Esses pontos ficam registrados como melhorias a considerar caso o projeto cresça em escopo ou audiência.
 
 ---
 
@@ -88,9 +76,7 @@ docker run --env-file .env -p 3000:3000 -p 3001:3001 vital
 
 ## Gerenciador de conteúdo
 
-O guia em `/vital` inclui um gerenciador embutido no menu lateral
-(seção **Administração**). Permite editar, adicionar, renomear,
-reordenar e excluir seções sem tocar no código.
+O guia em `/vital` inclui um gerenciador embutido no menu lateral (seção **Administração**). Permite editar, adicionar, renomear, reordenar e excluir seções sem tocar no código.
 
 **Para editar conteúdo:**
 1. Acesse `/vital` e faça login com a senha
@@ -103,5 +89,4 @@ reordenar e excluir seções sem tocar no código.
 3. Use o formulário no final para adicionar nova etapa ou subetapa
 4. Clique em **Publicar alterações** — a página recarrega em ~25s
 
-O token do GitHub nunca vai ao browser. A autenticação é feita no
-servidor com rate limiting de 5 tentativas por 15 minutos.
+O token do GitHub nunca vai ao browser. A autenticação é feita no servidor com rate limiting de 5 tentativas por 15 minutos.
