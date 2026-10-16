@@ -1,6 +1,10 @@
 // api/save.js — Vercel Serverless Function
 // Recebe o HTML editado, aplica ao vital/index.html e commita no GitHub.
 // O token do GitHub nunca vai ao browser — fica protegido aqui no servidor.
+// Autenticação por cookie de sessão (ver api/_auth.js).
+import {
+  safeEqual, createSessionToken, isSessionValid, sessionCookie, clearSessionCookie,
+} from './_auth.js';
 
 const attempts = new Map();
 const LIMIT = 5;
@@ -26,17 +30,38 @@ export default async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Método não permitido' });
 
-  const ip = (req.headers['x-forwarded-for'] || '').split(',')[0].trim() || 'unknown';
-  const rl = checkRateLimit(ip);
-  if (rl.blocked) return res.status(429).json({ error: `Muitas tentativas. Tente em ${rl.retryIn}s.` });
+  const { password, html, ping, source, login, logout } = req.body || {};
+  const secure = req.headers['x-forwarded-proto'] === 'https';
 
-  const { password, html, ping, source } = req.body || {};
+  if (logout) {
+    res.setHeader('Set-Cookie', clearSessionCookie(secure));
+    return res.status(200).json({ ok: true });
+  }
 
   const adminPassword = process.env.SENHADOPAINEL;
+  const sessionSecret = process.env.SESSION_SECRET;
   if (!adminPassword) return res.status(500).json({ error: 'SENHADOPAINEL não configurado no servidor' });
-  if (password !== adminPassword) return res.status(401).json({ error: 'Senha incorreta' });
+  if (!sessionSecret || sessionSecret.length < 32) {
+    return res.status(500).json({ error: 'SESSION_SECRET não configurado no servidor (mínimo 32 caracteres)' });
+  }
 
-  attempts.delete(ip);
+  // Login: valida a senha (com limite de tentativas) e grava o cookie de sessão
+  if (login) {
+    const ip = (req.headers['x-forwarded-for'] || '').split(',')[0].trim() || 'unknown';
+    const rl = checkRateLimit(ip);
+    if (rl.blocked) return res.status(429).json({ error: `Muitas tentativas. Tente em ${rl.retryIn}s.` });
+    if (typeof password !== 'string' || !safeEqual(password, adminPassword)) {
+      return res.status(401).json({ error: 'Senha incorreta' });
+    }
+    attempts.delete(ip);
+    res.setHeader('Set-Cookie', sessionCookie(await createSessionToken(sessionSecret), secure));
+    return res.status(200).json({ ok: true });
+  }
+
+  // Demais ações exigem sessão válida
+  if (!(await isSessionValid(req.headers.cookie))) {
+    return res.status(401).json({ error: 'Sessão expirada. Recarregue a página e entre novamente.' });
+  }
   if (ping) return res.status(200).json({ ok: true });
 
   // Repositório definido só por variáveis de ambiente (funciona em forks)

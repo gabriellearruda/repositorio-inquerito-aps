@@ -484,117 +484,21 @@ code{font-family:monospace;font-size:.82em;background:#f0ede8;padding:.1em .35em
 .cm-title-input{width:100%;padding:.4rem .6rem;font-size:.88rem;font-weight:600;font-family:'Inter',sans-serif;border:1px solid #ddd;background:#fff;color:var(--text);outline:none;box-sizing:border-box}
 .cm-title-input:focus{border-color:var(--accent)}
 
-/* ── PASSWORD GATE ── */
-#pw-gate{
-  position:fixed;inset:0;z-index:9999;
-  background:#0A1356;
-  display:flex;align-items:center;justify-content:center;
-  flex-direction:column;gap:1.2rem;padding:2rem;
-}
-#pw-gate.hidden{display:none}
-#pw-form{display:flex;flex-direction:column;align-items:center;gap:.8rem;width:100%;max-width:320px}
-#pw-eyebrow{
-  font-size:.6rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;
-  color:rgba(255,203,55,.8);margin-bottom:.4rem;text-align:center;
-}
-#pw-title{
-  font-family:'Source Serif 4',Georgia,serif;font-size:1.3rem;font-weight:300;
-  color:#fff;text-align:center;margin-bottom:.2rem;
-}
-#pw-input{
-  width:100%;padding:.65rem 1rem;
-  background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);
-  color:#fff;font-family:'Inter',sans-serif;font-size:.88rem;
-  outline:none;border-radius:4px;transition:border-color .15s;
-  text-align:center;letter-spacing:.08em;
-}
-#pw-input::placeholder{color:rgba(255,255,255,.25);letter-spacing:normal}
-#pw-input:focus{border-color:rgba(255,203,55,.5)}
-#pw-btn{
-  width:100%;padding:.65rem 1rem;
-  background:rgba(255,203,55,.15);border:1px solid rgba(255,203,55,.35);
-  color:rgba(255,203,55,.9);font-family:'Inter',sans-serif;font-size:.8rem;
-  font-weight:600;letter-spacing:.08em;text-transform:uppercase;
-  cursor:pointer;border-radius:4px;transition:background .15s;
-}
-#pw-btn:hover{background:rgba(255,203,55,.25)}
-#pw-error{
-  font-size:.75rem;color:rgba(227,106,87,.9);
-  display:none;text-align:center;
-}
 </style>
 </head>
 <body>
 
-<div id="pw-gate">
-  <form id="pw-form" onsubmit="checkPassword(event)">
-    <span id="pw-eyebrow">Acesso restrito</span>
-    <div id="pw-title">Inquérito APS por WhatsApp</div>
-    <input id="pw-input" type="password" placeholder="Senha" autocomplete="current-password">
-    <button id="pw-btn" type="submit">Entrar</button>
-    <span id="pw-error">Senha incorreta</span>
-  </form>
-</div>
-
 <script>
-// A senha é validada no servidor (/api/save) e nunca vai no HTML.
-// Fica só no sessionStorage desta aba, para os saves do gerenciador.
-var PWD_KEY = 'vital_pwd';
-var SENHA = sessionStorage.getItem(PWD_KEY) || '';
-var AUTH_KEY = 'vital_auth_ts';
-var AUTH_MAX = 24 * 60 * 60 * 1000; // 24 horas em ms
-
-function isAuthValid() {
-  var ts = localStorage.getItem(AUTH_KEY);
-  return SENHA && ts && (Date.now() - parseInt(ts)) < AUTH_MAX;
-}
-function setAuth(pwd) {
-  SENHA = pwd;
-  sessionStorage.setItem(PWD_KEY, pwd);
-  localStorage.setItem(AUTH_KEY, String(Date.now()));
-}
-function clearAuth() {
-  SENHA = '';
-  sessionStorage.removeItem(PWD_KEY);
-  localStorage.removeItem(AUTH_KEY);
-}
-
-async function checkPassword(e) {
-  e.preventDefault();
-  var input = document.getElementById('pw-input');
-  var err = document.getElementById('pw-error');
-  var btn = document.getElementById('pw-btn');
-  var pwd = input.value.trim();
-  btn.disabled = true;
-  err.style.display = 'none';
+// O login é feito pelo servidor (middleware.js / server.mjs) antes desta página ser entregue.
+async function doLogout() {
   try {
-    var res = await fetch('/api/save', {
+    await fetch('/api/save', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ password: pwd, ping: true })
+      body: JSON.stringify({ logout: true })
     });
-    if (res.ok) {
-      setAuth(pwd);
-      document.getElementById('pw-gate').classList.add('hidden');
-      return;
-    }
-    var data = await res.json().catch(function() { return {}; });
-    err.textContent = data.error || 'Senha incorreta';
-  } catch (ex) {
-    err.textContent = 'Erro de conexão com o servidor';
-  } finally {
-    btn.disabled = false;
-  }
-  err.style.display = 'block';
-  input.value = '';
-  input.focus();
-}
-function doLogout() {
-  clearAuth();
+  } catch (e) {}
   location.reload();
-}
-if (isAuthValid()) {
-  document.getElementById('pw-gate').classList.add('hidden');
 }
 </script>
 
@@ -1251,12 +1155,12 @@ function cmFmt(type) {
 }
 
 // ── CONTENT MANAGER ──
-// Busca o HTML atual pela API (o repositório é definido nas variáveis de ambiente do servidor)
+// Busca o HTML atual pela API (o repositório é definido nas variáveis de ambiente do servidor; a sessão vai no cookie)
 function cmFetchSource() {
   return fetch('/api/save', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ password: SENHA, source: true })
+    body: JSON.stringify({ source: true })
   });
 }
 function buildCMPanelDefs() {
@@ -1556,7 +1460,6 @@ function setCMStatus(msg, cls) {
 }
 
 async function cmSave() {
-  var pwd = SENHA; // usa a senha do painel (já autenticada)
   var btn = document.getElementById('cm-save-btn');
   btn.disabled = true;
   setCMStatus('Verificando senha...', '');
@@ -1564,7 +1467,7 @@ async function cmSave() {
     var pingRes = await fetch('/api/save', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ password: pwd, ping: true })
+      body: JSON.stringify({ ping: true })
     });
     if (!pingRes.ok) {
       var pingErr = await pingRes.json();
@@ -1688,7 +1591,7 @@ async function cmSave() {
     var saveRes = await fetch('/api/save', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ password: pwd, html: updated })
+      body: JSON.stringify({ html: updated })
     });
     var saveData = await saveRes.json();
     setCMStatus(saveData.ok ? (saveData.message || 'Salvo!') : ('Erro: ' + saveData.error), saveData.ok ? 'ok' : 'err');
@@ -1844,8 +1747,6 @@ async function estAdd() {
   var title = document.getElementById('est-new-title').value.trim();
   var st = document.getElementById('est-add-status');
   if (!title) { st.textContent = 'Informe o título.'; st.className='err'; return; }
-  var pwd = SENHA;
-  if (!pwd) { st.textContent = 'Sessão expirada.'; return; }
   st.textContent = 'Buscando fonte...'; st.className='';
   try {
     var rawRes = await cmFetchSource();
@@ -1897,7 +1798,7 @@ async function estAdd() {
     }
     st.textContent='Publicando...';
     var updated='<!DOCTYPE html>\n'+srcDoc.documentElement.outerHTML;
-    var r=await fetch('/api/save',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:pwd,html:updated})});
+    var r=await fetch('/api/save',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({html:updated})});
     var d=await r.json();
     if(d.ok){
       st.textContent='Adicionada! O site atualizará em ~60s.';st.className='ok';
@@ -2002,7 +1903,7 @@ async function estPublish() {
     });
     st.textContent='Publicando...';
     var updated='<!DOCTYPE html>\n'+srcDoc.documentElement.outerHTML;
-    var saveRes=await fetch('/api/save',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:SENHA,html:updated})});
+    var saveRes=await fetch('/api/save',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({html:updated})});
     var sd=await saveRes.json();
     if(sd.ok){
       deleted.forEach(function(r){r.remove();});
@@ -2078,8 +1979,6 @@ async function cmDeleteSection() {
   var statusEl = document.getElementById('cm-del-status');
   if (!id) { statusEl.textContent = 'Selecione uma seção.'; statusEl.className = 'err'; return; }
 
-  var pwd = SENHA;
-  if (!pwd) { statusEl.textContent = 'Sessão expirada. Recarregue a página.'; return; }
 
   document.getElementById('cm-del-confirm').style.display = 'none';
   statusEl.textContent = 'Buscando fonte...'; statusEl.className = '';
@@ -2141,7 +2040,7 @@ async function cmDeleteSection() {
     var saveRes = await fetch('/api/save', {
       method: 'POST',
       headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({password: pwd, html: updated})
+      body: JSON.stringify({html: updated})
     });
     var saveData = await saveRes.json();
     if (saveData.ok) {
@@ -2177,8 +2076,6 @@ async function cmAddSection() {
   var btn = document.querySelector('.cm-add-btn');
   if (!title) { statusEl.textContent = 'Informe o título.'; statusEl.className=''; return; }
 
-  var pwd = SENHA;
-  if (!pwd) { statusEl.textContent = 'Sessão expirada. Recarregue a página.'; return; }
 
   btn.disabled = true;
   statusEl.textContent = 'Buscando fonte...'; statusEl.className='';
@@ -2332,7 +2229,7 @@ async function cmAddSection() {
     var saveRes = await fetch('/api/save', {
       method: 'POST',
       headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({password: pwd, html: updated})
+      body: JSON.stringify({html: updated})
     });
     var saveData = await saveRes.json();
     if (saveData.ok) {

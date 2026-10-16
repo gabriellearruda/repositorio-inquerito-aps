@@ -2,6 +2,12 @@
   "outputDirectory": ".",
   "headers": [
     {
+      "source": "/(vital|arquivos|docs)(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "private, no-store" }
+      ]
+    },
+    {
       "source": "/api/(.*)",
       "headers": [
         { "key": "X-Content-Type-Options", "value": "nosniff" },

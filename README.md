@@ -15,22 +15,27 @@ A autenticação via variável de ambiente foi escolhida para manter a solução
 ├── vital/
 │   └── index.html          → Guia completo (protegido por senha)
 ├── api/
-│   └── save.js             → Função serverless (Vercel) — gerenciador de conteúdo
+│   ├── save.js             → Função serverless (Vercel) — login e gerenciador de conteúdo
+│   └── _auth.js            → Sessão por cookie e página de login (compartilhado)
+├── middleware.js           → Exige login para /vital, /arquivos e /docs (Vercel)
+├── server.mjs              → Servidor local do Docker (site + API + login)
 ├── arquivos/               → Documentos e scripts de referência
 ├── docs/                   → PDFs complementares
-├── vercel.json             → Configuração da API no Vercel
+├── vercel.json             → Configuração do Vercel
 ├── Dockerfile              → Ambiente local (site + API)
 └── .env.example            → Variáveis de ambiente necessárias
 ```
 
 ## Deploy
 
-O site estático é servido pelo **GitHub Pages** com deploy automático via
-GitHub Actions a cada push na branch `main` (~60 segundos).
+O site e a API rodam na **Vercel**, com deploy automático a cada push na
+branch `main` (~60 segundos).
 
-A API (`/api/save`) roda no **Vercel** (função serverless). O login do painel
-é validado pela própria API (`{ping: true}`), então a senha nunca vai para o
-HTML. Por isso o painel só funciona onde a API está disponível (Vercel ou Docker).
+O acesso a `/vital`, `/arquivos` e `/docs` é protegido no servidor: o
+`middleware.js` só entrega esses caminhos para quem tem um cookie de sessão
+válido (assinado com `SESSION_SECRET`, válido por 24 horas). Sem login, o
+servidor devolve apenas a página de login, então o conteúdo não aparece nem no
+código-fonte. No Docker, o `server.mjs` faz a mesma checagem.
 
 ## Variáveis de ambiente
 
@@ -41,6 +46,7 @@ Configure em **Settings → Environment Variables**:
 | Variável | Descrição |
 |---|---|
 | `SENHADOPAINEL` | Senha de acesso ao guia e ao gerenciador de conteúdo |
+| `SESSION_SECRET` | Chave aleatória que assina o cookie de sessão (veja abaixo como gerar) |
 | `GITHUB_TOKEN` | Token do GitHub com permissão `contents:write` |
 | `GITHUB_OWNER` | Usuário ou organização dona do repositório |
 | `GITHUB_REPO` | Nome do repositório |
@@ -55,6 +61,11 @@ Copie `.env.example` para `.env` e preencha:
 ```env
 # Senha de acesso ao guia /vital e ao gerenciador de conteúdo
 SENHADOPAINEL=suasenha
+
+# Chave aleatória que assina o cookie de sessão. Gere com:
+#   node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+# Trocar essa chave encerra todas as sessões abertas.
+SESSION_SECRET=troque-por-uma-chave-aleatoria
 
 # Token do GitHub com permissão contents:write
 # Gerar em: GitHub → Settings → Developer settings → Personal access tokens
