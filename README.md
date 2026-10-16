@@ -65,6 +65,9 @@ GITHUB_OWNER=seu-usuario
 
 # Nome exato do repositório no GitHub
 GITHUB_REPO=nome-do-repositorio
+
+# Branch onde o gerenciador lê e grava (opcional, padrão main)
+GITHUB_BRANCH=main
 ```
 
 ## Rodando localmente com Docker
