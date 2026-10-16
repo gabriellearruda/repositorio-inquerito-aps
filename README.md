@@ -2,11 +2,9 @@
 
 Esse projeto é a documentação metodológica do inquérito de avaliação de acesso e qualidade da Atenção Primária à Saúde (APS) em Recife, conduzido pelo programa **Mais Dados Mais Saúde (MDMS)** via WhatsApp. O código foi feito feito com o Claude, porém desenhado, revisado e testado por uma engenheira de software.
 
-A aplicação é intencionalmente simples dado que sua única função é servir de documentação para a equipe interna da Vital de inquérito. A arquitetura foi desenhada em duas camadas: uma área administrativa, onde a equipe da Vital sobe os conteúdos progressivamente, e uma versão pública a ser liberada quando toda a documentação estiver completa — exceto a seção de notas, que deve permanecer restrita. Por esse motivo, **este repositório não deve ser tornado público**: a seção de notas pode conter anotações sensíveis sobre o projeto, parceiros e decisões internas, destinadas apenas às equipes da Vital.
+A aplicação é intencionalmente simples dado que sua única função é servir de documentação para a equipe interna da Vital de inquérito. A arquitetura foi desenhada em duas camadas: uma área administrativa, onde a equipe da Vital sobe os conteúdos progressivamente, e uma versão pública a ser liberada quando toda a documentação estiver completa — exceto a seção de aprendizados, que deve permanecer restrita. Por esse motivo, **este repositório não deve ser tornado público**: a seção de aprendizados pode conter anotações sensíveis sobre o projeto.
 
-A autenticação via variável de ambiente foi escolhida para manter a solução simples e sem dependências externas — dado o volume e a natureza do acesso (documentação interna de equipe), não havia necessidade de criar um bucket de armazenamento ou sistema de autenticação mais robusto. Esses pontos ficam registrados como melhorias a considerar caso o projeto cresça em escopo ou audiência.
-
-Há a pendência de quando a equipe terminar de subir seus conteúdos atualizar a versão pública para mostrar o conteúdo com exceção da parte de notas.
+A autenticação via variável de ambiente foi escolhida para manter a solução simples e sem dependências externas — dado o volume e a natureza do acesso (documentação interna de equipe), não havia necessidade de criar um bucket de armazenamento ou sistema de autenticação mais robusto. Esses pontos ficam registrados como melhorias a considerar caso o projeto cresça em escopo ou audiência. Há a pendência de quando a equipe terminar de subir seus conteúdos atualizar a versão pública para mostrar o conteúdo com exceção da parte de notas.
 
 ---
 
@@ -47,6 +45,8 @@ Configure em **Settings → Environment Variables**:
 | `GITHUB_OWNER` | Usuário ou organização dona do repositório |
 | `GITHUB_REPO` | Nome do repositório |
 | `GITHUB_BRANCH` | Branch (opcional, padrão `main`) |
+
+Use um token fine-grained, só para o repositorio e só com Contents: Read and write;
 
 ### Local (Docker)
 
