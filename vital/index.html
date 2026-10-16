@@ -1185,6 +1185,12 @@ var cmPanelDefs = buildCMPanelDefs();
   try {
     var rp = sessionStorage.getItem('restorePanel');
     if (rp) { sessionStorage.removeItem('restorePanel'); activatePanel(rp); }
+    var rs = sessionStorage.getItem('restoreSection');
+    var sel = document.getElementById('cm-section-sel');
+    if (rs) {
+      sessionStorage.removeItem('restoreSection');
+      if (sel && sel.querySelector('option[value="' + rs + '"]')) { sel.value = rs; buildCMFields(rs); }
+    }
   } catch(e) {}
 })();
 
@@ -1575,7 +1581,7 @@ async function cmSave() {
       body: JSON.stringify({ html: updated })
     });
     var saveData = await saveRes.json();
-    if (saveData.ok) cmWaitForDeploy(document.getElementById('cm-status'), 'Salvo!', false);
+    if (saveData.ok) cmWaitForDeploy(document.getElementById('cm-status'), 'Salvo!');
     else setCMStatus('Erro: ' + saveData.error, 'err');
   } catch(e) {
     setCMStatus('Erro: ' + e.message, 'err');
@@ -1667,40 +1673,41 @@ function estUpdateNums() {
 
 // Depois de salvar, baixa a página a cada 5s (sem cache) e compara com a
 // versão de antes; quando mudar, o deploy terminou. Desiste em 2 minutos.
-async function cmWaitForDeploy(statusEl, prefix, reload) {
+async function cmWaitForDeploy(statusEl, prefix) {
   var POLL_MS = 5000, MAX_MS = 120000;
   function getPage() {
     return fetch(location.pathname + '?t=' + Date.now(), { cache: 'no-store', credentials: 'same-origin' })
       .then(function(r) { return r.ok ? r.text() : null; })
       .catch(function() { return null; });
   }
-  function done() {
-    if (reload) {
-      try { sessionStorage.setItem('restorePanel', 'estrutura'); } catch(e) {}
-      location.reload();
-    } else {
-      statusEl.className = 'ok';
-      statusEl.textContent = prefix + ' O site já está atualizado.';
-    }
+  // Recarrega voltando para o mesmo painel (e seção selecionada no gerenciador)
+  function reloadHere() {
+    try {
+      var active = document.querySelector('.doc-panel.active[id^="panel-"]');
+      if (active) sessionStorage.setItem('restorePanel', active.id.replace('panel-', ''));
+      var sel = document.getElementById('cm-section-sel');
+      if (sel && sel.value) sessionStorage.setItem('restoreSection', sel.value);
+    } catch(e) {}
+    location.reload();
   }
   statusEl.className = 'ok';
-  statusEl.textContent = prefix + ' Publicando... ' + (reload ? 'a página recarrega' : 'aviso aqui') + ' quando a nova versão estiver no ar.';
+  statusEl.textContent = prefix + ' Publicando... a página recarrega quando a nova versão estiver no ar.';
   var before = await getPage();
   var start = Date.now();
   var timer = setInterval(async function() {
     var now = await getPage();
-    if (before !== null && now !== null && now !== before) { clearInterval(timer); done(); return; }
+    if (before !== null && now !== null && now !== before) { clearInterval(timer); reloadHere(); return; }
     if (Date.now() - start > MAX_MS) {
       clearInterval(timer);
       statusEl.className = '';
-      statusEl.textContent = prefix + ' O deploy está demorando mais que o normal' + (reload ? '; recarregando mesmo assim...' : '. Recarregue a página em instantes.');
-      if (reload) setTimeout(function() { location.reload(); }, 3000);
+      statusEl.textContent = prefix + ' O deploy está demorando mais que o normal; recarregando mesmo assim...';
+      setTimeout(reloadHere, 3000);
     }
   }, POLL_MS);
 }
 
 function estScheduleReload(statusEl) {
-  cmWaitForDeploy(statusEl, 'Publicado!', true);
+  cmWaitForDeploy(statusEl, 'Publicado!');
 }
 
 function estRenRow(btn) {
@@ -2048,7 +2055,7 @@ async function cmDeleteSection() {
     });
     var saveData = await saveRes.json();
     if (saveData.ok) {
-      cmWaitForDeploy(statusEl, 'Excluída!', false);
+      cmWaitForDeploy(statusEl, 'Excluída!');
       // Update live dropdowns
       [document.querySelector('#cm-section-sel option[value="' + id + '"]'),
        document.querySelector('#cm-del-sel option[value="' + id + '"]')].forEach(function(liveOpt) {
@@ -2236,7 +2243,7 @@ async function cmAddSection() {
     });
     var saveData = await saveRes.json();
     if (saveData.ok) {
-      cmWaitForDeploy(statusEl, 'Seção criada!', false);
+      cmWaitForDeploy(statusEl, 'Seção criada!');
       document.getElementById('cm-new-title').value = '';
     } else {
       statusEl.textContent = 'Erro: ' + saveData.error;
