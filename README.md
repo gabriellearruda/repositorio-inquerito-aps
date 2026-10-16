@@ -20,7 +20,7 @@ Há a pendência de quando a equipe terminar de subir seus conteúdos atualizar 
 │   └── save.js             → Função serverless (Vercel) — gerenciador de conteúdo
 ├── arquivos/               → Documentos e scripts de referência
 ├── docs/                   → PDFs complementares
-├── build.js                → Injeta SENHADOPAINEL no HTML antes do deploy
+├── build.cjs                → Injeta SENHADOPAINEL no HTML antes do deploy
 ├── vercel.json             → Configuração da API no Vercel
 ├── Dockerfile              → Ambiente local (site + API)
 └── .env.example            → Variáveis de ambiente necessárias
@@ -32,7 +32,7 @@ O site estático é servido pelo **GitHub Pages** com deploy automático via
 GitHub Actions a cada push na branch `main` (~60 segundos).
 
 A API (`/api/save`) roda no **Vercel** (função serverless), separada do
-site estático. O script `build.js` substitui o placeholder
+site estático. O script `build.cjs` substitui o placeholder
 `__SENHADOPAINEL__` pela senha real antes do deploy, sem nunca commitá-la.
 
 ## Variáveis de ambiente
@@ -53,9 +53,17 @@ Configure em **Settings → Environment Variables**:
 Copie `.env.example` para `.env` e preencha:
 
 ```env
+# Senha de acesso ao guia /vital e ao gerenciador de conteúdo
 SENHADOPAINEL=suasenha
+
+# Token do GitHub com permissão contents:write
+# Gerar em: GitHub → Settings → Developer settings → Personal access tokens
 GITHUB_TOKEN=ghp_...
+
+# Usuário ou organização dona do repositório
 GITHUB_OWNER=gabriellearruda
+
+# Nome exato do repositório no GitHub
 GITHUB_REPO=repositorio-inquerito-aps
 ```
 
@@ -66,11 +74,11 @@ cp .env.example .env
 # edite .env com os valores reais
 
 docker build -t vital .
-docker run --env-file .env -p 3000:3000 -p 3001:3001 vital
+docker run --env-file .env -p 3000:3000 vital
 ```
 
 - Site: http://localhost:3000/vital
-- API: http://localhost:3001
+- API: http://localhost:3000/api/save
 
 ## Gerenciador de conteúdo
 
