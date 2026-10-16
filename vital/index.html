@@ -548,7 +548,7 @@ async function doLogout() {
       <div class="doc-panel" id="panel-gerenciar">
         <div class="section-wrap" style="max-width:680px">
           <h1 class="section-title">Gerenciador de Conteúdo</h1>
-          <p class="section-lead">Selecione a seção, edite os campos e clique em <strong>Salvar</strong>. O site será atualizado em ~60 segundos.</p>
+          <p class="section-lead">Selecione a seção, edite os campos e clique em <strong>Salvar</strong>. O site é atualizado em menos de 1 minuto.</p>
 
           <div class="cm-selector-wrap">
             <label class="cm-field-label">Seção</label>
@@ -792,7 +792,7 @@ async function doLogout() {
       <div class="doc-panel" id="panel-como-atualizar">
         <div class="section-wrap">
           <h1 class="section-title">Como atualizar o conteúdo</h1>
-          <p class="section-lead">O gerenciador de conteúdo permite editar os textos do site diretamente pelo navegador, sem precisar mexer no código. O site será atualizado em ~60 segundos.</p>
+          <p class="section-lead">O gerenciador de conteúdo permite editar os textos do site diretamente pelo navegador, sem precisar mexer no código. O site é atualizado em menos de 1 minuto.</p>
 
           <h3 class="body-subhead">Passo a passo</h3>
           <ol class="body-list" style="list-style-type:decimal;padding-left:1.5rem">
@@ -800,7 +800,7 @@ async function doLogout() {
             <li>Escolha a seção que deseja editar no seletor</li>
             <li>Edite o <strong>Título</strong> e o <strong>Texto</strong> diretamente nos campos — o que você vê é o que será publicado</li>
             <li>Para Links e Aprendizados, preencha os campos no painel lateral direito</li>
-            <li>Clique em <strong>Salvar</strong> — o site será atualizado em ~60 segundos</li>
+            <li>Clique em <strong>Salvar</strong> — o site é atualizado em menos de 1 minuto</li>
           </ol>
 
           <h3 class="body-subhead">Ferramentas de formatação</h3>
@@ -1184,26 +1184,7 @@ var cmPanelDefs = buildCMPanelDefs();
 (function() {
   try {
     var rp = sessionStorage.getItem('restorePanel');
-    var ds = sessionStorage.getItem('deployStarted');
     if (rp) { sessionStorage.removeItem('restorePanel'); activatePanel(rp); }
-    if (ds) {
-      var elapsed = Date.now() - parseInt(ds);
-      var totalWait = 70000; // GitHub Actions ~60-70s total
-      if (elapsed < totalWait) {
-        var wait = totalWait - elapsed;
-        var banner = document.createElement('div');
-        banner.style.cssText = 'position:fixed;bottom:1rem;right:1rem;background:#1a1a2e;color:#fff;padding:.6rem 1rem;border-radius:8px;font-size:.78rem;z-index:9999;box-shadow:0 4px 12px rgba(0,0,0,.3)';
-        banner.textContent = 'Deploy em andamento, recarregando em ' + Math.ceil(wait/1000) + 's...';
-        document.body.appendChild(banner);
-        var bc = setInterval(function() {
-          wait -= 1000;
-          if (wait <= 0) { clearInterval(bc); sessionStorage.setItem('restorePanel','estrutura'); sessionStorage.removeItem('deployStarted'); location.reload(); }
-          else { banner.textContent = 'Deploy em andamento, recarregando em ' + Math.ceil(wait/1000) + 's...'; }
-        }, 1000);
-      } else {
-        sessionStorage.removeItem('deployStarted');
-      }
-    }
   } catch(e) {}
 })();
 
@@ -1594,7 +1575,8 @@ async function cmSave() {
       body: JSON.stringify({ html: updated })
     });
     var saveData = await saveRes.json();
-    setCMStatus(saveData.ok ? (saveData.message || 'Salvo!') : ('Erro: ' + saveData.error), saveData.ok ? 'ok' : 'err');
+    if (saveData.ok) cmWaitForDeploy(document.getElementById('cm-status'), 'Salvo!', false);
+    else setCMStatus('Erro: ' + saveData.error, 'err');
   } catch(e) {
     setCMStatus('Erro: ' + e.message, 'err');
   }
@@ -1683,20 +1665,42 @@ function estUpdateNums() {
   });
 }
 
-function estScheduleReload(statusEl, seconds) {
-  seconds = seconds || 25;
+// Depois de salvar, baixa a página a cada 5s (sem cache) e compara com a
+// versão de antes; quando mudar, o deploy terminou. Desiste em 2 minutos.
+async function cmWaitForDeploy(statusEl, prefix, reload) {
+  var POLL_MS = 5000, MAX_MS = 120000;
+  function getPage() {
+    return fetch(location.pathname + '?t=' + Date.now(), { cache: 'no-store', credentials: 'same-origin' })
+      .then(function(r) { return r.ok ? r.text() : null; })
+      .catch(function() { return null; });
+  }
+  function done() {
+    if (reload) {
+      try { sessionStorage.setItem('restorePanel', 'estrutura'); } catch(e) {}
+      location.reload();
+    } else {
+      statusEl.className = 'ok';
+      statusEl.textContent = prefix + ' O site já está atualizado.';
+    }
+  }
   statusEl.className = 'ok';
-  var remaining = seconds;
-  statusEl.textContent = 'Publicado! Recarregando em ' + remaining + 's...';
-  try {
-    sessionStorage.setItem('restorePanel', 'estrutura');
-    sessionStorage.setItem('deployStarted', Date.now().toString());
-  } catch(e){}
-  var timer = setInterval(function() {
-    remaining--;
-    statusEl.textContent = 'Publicado! Recarregando em ' + remaining + 's...';
-    if (remaining <= 0) { clearInterval(timer); location.reload(); }
-  }, 1000);
+  statusEl.textContent = prefix + ' Publicando... ' + (reload ? 'a página recarrega' : 'aviso aqui') + ' quando a nova versão estiver no ar.';
+  var before = await getPage();
+  var start = Date.now();
+  var timer = setInterval(async function() {
+    var now = await getPage();
+    if (before !== null && now !== null && now !== before) { clearInterval(timer); done(); return; }
+    if (Date.now() - start > MAX_MS) {
+      clearInterval(timer);
+      statusEl.className = '';
+      statusEl.textContent = prefix + ' O deploy está demorando mais que o normal' + (reload ? '; recarregando mesmo assim...' : '. Recarregue a página em instantes.');
+      if (reload) setTimeout(function() { location.reload(); }, 3000);
+    }
+  }, POLL_MS);
+}
+
+function estScheduleReload(statusEl) {
+  cmWaitForDeploy(statusEl, 'Publicado!', true);
 }
 
 function estRenRow(btn) {
@@ -2044,8 +2048,7 @@ async function cmDeleteSection() {
     });
     var saveData = await saveRes.json();
     if (saveData.ok) {
-      statusEl.textContent = 'Excluída! O site será atualizado em ~60 segundos.';
-      statusEl.className = 'ok';
+      cmWaitForDeploy(statusEl, 'Excluída!', false);
       // Update live dropdowns
       [document.querySelector('#cm-section-sel option[value="' + id + '"]'),
        document.querySelector('#cm-del-sel option[value="' + id + '"]')].forEach(function(liveOpt) {
@@ -2233,8 +2236,7 @@ async function cmAddSection() {
     });
     var saveData = await saveRes.json();
     if (saveData.ok) {
-      statusEl.textContent = 'Seção criada! ' + (saveData.message || 'O site será atualizado em ~60 segundos.');
-      statusEl.className = 'ok';
+      cmWaitForDeploy(statusEl, 'Seção criada!', false);
       document.getElementById('cm-new-title').value = '';
     } else {
       statusEl.textContent = 'Erro: ' + saveData.error;
