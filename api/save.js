@@ -30,7 +30,7 @@ export default async function handler(req, res) {
   const rl = checkRateLimit(ip);
   if (rl.blocked) return res.status(429).json({ error: `Muitas tentativas. Tente em ${rl.retryIn}s.` });
 
-  const { password, html, ping } = req.body || {};
+  const { password, html, ping, source } = req.body || {};
 
   const adminPassword = process.env.SENHADOPAINEL;
   if (!adminPassword) return res.status(500).json({ error: 'SENHADOPAINEL não configurado no servidor' });
@@ -39,6 +39,38 @@ export default async function handler(req, res) {
   attempts.delete(ip);
   if (ping) return res.status(200).json({ ok: true });
 
+  // Repositório definido só por variáveis de ambiente (funciona em forks)
+  const token  = process.env.GITHUB_TOKEN;
+  const owner  = process.env.GITHUB_OWNER;
+  const repo   = process.env.GITHUB_REPO;
+  const branch = process.env.GITHUB_BRANCH || 'main';
+
+  for (const [name, value] of Object.entries({ GITHUB_TOKEN: token, GITHUB_OWNER: owner, GITHUB_REPO: repo })) {
+    if (!value) return res.status(500).json({ error: `${name} não configurado no servidor` });
+  }
+
+  const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/vital/index.html`;
+  const ghHeaders = {
+    Authorization: `Bearer ${token}`,
+    Accept: 'application/vnd.github+json',
+    'X-GitHub-Api-Version': '2022-11-28',
+  };
+
+  // Devolve o HTML atual do repositório (o gerenciador edita a partir dele)
+  if (source) {
+    try {
+      const srcRes = await fetch(`${apiUrl}?ref=${branch}`, {
+        headers: { ...ghHeaders, Accept: 'application/vnd.github.raw+json' },
+      });
+      if (!srcRes.ok) throw new Error('Erro ao buscar arquivo: ' + srcRes.status);
+      res.setHeader('Content-Type', 'text/html; charset=utf-8');
+      res.setHeader('Cache-Control', 'no-store');
+      return res.status(200).send(await srcRes.text());
+    } catch (e) {
+      return res.status(500).json({ error: e.message });
+    }
+  }
+
   if (!html || typeof html !== 'string') return res.status(400).json({ error: 'HTML inválido' });
 
   // Bloqueia commit acidental da senha real no HTML
@@ -46,20 +78,7 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Conteúdo inválido: contém a senha do painel' });
   }
 
-  const token = process.env.GITHUB_TOKEN;
-  const owner = process.env.GITHUB_OWNER || 'gabriellearruda';
-  const repo  = process.env.GITHUB_REPO  || 'vital-inquerito-whatsapp-documentacao';
-  const branch = 'main';
-
-  if (!token) return res.status(500).json({ error: 'GITHUB_TOKEN não configurado no servidor' });
-
   try {
-    const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/vital/index.html`;
-    const ghHeaders = {
-      Authorization: `Bearer ${token}`,
-      Accept: 'application/vnd.github+json',
-      'X-GitHub-Api-Version': '2022-11-28',
-    };
 
     const getRes = await fetch(`${apiUrl}?ref=${branch}`, { headers: ghHeaders });
     if (!getRes.ok) throw new Error('Erro ao buscar arquivo: ' + getRes.status);

@@ -46,6 +46,7 @@ Configure em **Settings → Environment Variables**:
 | `GITHUB_TOKEN` | Token do GitHub com permissão `contents:write` |
 | `GITHUB_OWNER` | Usuário ou organização dona do repositório |
 | `GITHUB_REPO` | Nome do repositório |
+| `GITHUB_BRANCH` | Branch (opcional, padrão `main`) |
 
 ### Local (Docker)
 

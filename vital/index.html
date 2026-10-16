@@ -1251,8 +1251,14 @@ function cmFmt(type) {
 }
 
 // ── CONTENT MANAGER ──
-var CM_REPO = 'gabriellearruda/vital-inquerito-whatsapp-documentacao';
-var CM_FILE = 'vital/index.html';
+// Busca o HTML atual pela API (o repositório é definido nas variáveis de ambiente do servidor)
+function cmFetchSource() {
+  return fetch('/api/save', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ password: SENHA, source: true })
+  });
+}
 function buildCMPanelDefs() {
   var defs = [
     {id:'intro', label:'Introdução', sel:'.hero-eyebrow,.hero-title,.hero-lead,.intro-section-title,.intro-section>p,.body-subhead,.body-list'}
@@ -1567,8 +1573,7 @@ async function cmSave() {
       return;
     }
     setCMStatus('Buscando fonte...', '');
-    var rawUrl = 'https://raw.githubusercontent.com/' + CM_REPO + '/main/' + CM_FILE + '?t=' + Date.now();
-    var rawRes = await fetch(rawUrl);
+    var rawRes = await cmFetchSource();
     if (!rawRes.ok) { setCMStatus('Erro ao buscar fonte: ' + rawRes.status, 'err'); btn.disabled = false; return; }
     var srcHTML = await rawRes.text();
     setCMStatus('Aplicando alterações...', '');
@@ -1843,8 +1848,7 @@ async function estAdd() {
   if (!pwd) { st.textContent = 'Sessão expirada.'; return; }
   st.textContent = 'Buscando fonte...'; st.className='';
   try {
-    var rawUrl = 'https://raw.githubusercontent.com/' + CM_REPO + '/main/' + CM_FILE + '?t=' + Date.now();
-    var rawRes = await fetch(rawUrl);
+    var rawRes = await cmFetchSource();
     if (!rawRes.ok) throw new Error('Erro ' + rawRes.status);
     var srcHTML = await rawRes.text();
     var parser = new DOMParser();
@@ -1934,8 +1938,7 @@ async function estPublish() {
   });
   btn.disabled=true; st.textContent='Buscando fonte...'; st.className='';
   try {
-    var rawUrl='https://raw.githubusercontent.com/'+CM_REPO+'/main/'+CM_FILE+'?t='+Date.now();
-    var rawRes=await fetch(rawUrl);
+    var rawRes = await cmFetchSource();
     if(!rawRes.ok) throw new Error('Erro '+rawRes.status);
     var srcHTML=await rawRes.text();
     st.textContent='Aplicando estrutura...';
@@ -2082,8 +2085,7 @@ async function cmDeleteSection() {
   statusEl.textContent = 'Buscando fonte...'; statusEl.className = '';
 
   try {
-    var rawUrl = 'https://raw.githubusercontent.com/' + CM_REPO + '/main/' + CM_FILE + '?t=' + Date.now();
-    var rawRes = await fetch(rawUrl);
+    var rawRes = await cmFetchSource();
     if (!rawRes.ok) throw new Error('Erro ao buscar fonte: ' + rawRes.status);
     var srcHTML = await rawRes.text();
 
@@ -2182,8 +2184,7 @@ async function cmAddSection() {
   statusEl.textContent = 'Buscando fonte...'; statusEl.className='';
 
   try {
-    var rawUrl = 'https://raw.githubusercontent.com/' + CM_REPO + '/main/' + CM_FILE + '?t=' + Date.now();
-    var rawRes = await fetch(rawUrl);
+    var rawRes = await cmFetchSource();
     if (!rawRes.ok) throw new Error('Erro ao buscar fonte: ' + rawRes.status);
     var srcHTML = await rawRes.text();
 
