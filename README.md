@@ -45,7 +45,7 @@ Configure em **Settings → Environment Variables**:
 |---|---|
 | `SENHADOPAINEL` | Senha de acesso ao guia e ao gerenciador de conteúdo |
 | `GITHUB_TOKEN` | Token do GitHub com permissão `contents:write` |
-| `GITHUB_OWNER` | Dono do repositório (ex: `gabriellearruda`) |
+| `GITHUB_OWNER` | Usuário ou organização dona do repositório |
 | `GITHUB_REPO` | Nome do repositório |
 
 ### Local (Docker)
@@ -61,10 +61,10 @@ SENHADOPAINEL=suasenha
 GITHUB_TOKEN=ghp_...
 
 # Usuário ou organização dona do repositório
-GITHUB_OWNER=gabriellearruda
+GITHUB_OWNER=seu-usuario
 
 # Nome exato do repositório no GitHub
-GITHUB_REPO=repositorio-inquerito-aps
+GITHUB_REPO=nome-do-repositorio
 ```
 
 ## Rodando localmente com Docker
