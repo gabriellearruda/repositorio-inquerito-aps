@@ -100,7 +100,7 @@ export default async function handler(req, res) {
       throw new Error('GitHub: ' + (err.message || putRes.status));
     }
 
-    return res.status(200).json({ ok: true, message: 'Publicado! O site atualizará em ~30 segundos.' });
+    return res.status(200).json({ ok: true, message: 'Publicado! O site será atualizado em ~60 segundos.' });
   } catch (e) {
     return res.status(500).json({ error: e.message });
   }

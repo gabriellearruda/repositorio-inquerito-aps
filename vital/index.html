@@ -644,7 +644,7 @@ if (isAuthValid()) {
       <div class="doc-panel" id="panel-gerenciar">
         <div class="section-wrap" style="max-width:680px">
           <h1 class="section-title">Gerenciador de Conteúdo</h1>
-          <p class="section-lead">Selecione a seção, edite os campos e clique em <strong>Salvar</strong>. O site deve ser atualizado em uns 60 segundos.</p>
+          <p class="section-lead">Selecione a seção, edite os campos e clique em <strong>Salvar</strong>. O site será atualizado em ~60 segundos.</p>
 
           <div class="cm-selector-wrap">
             <label class="cm-field-label">Seção</label>
@@ -888,7 +888,7 @@ if (isAuthValid()) {
       <div class="doc-panel" id="panel-como-atualizar">
         <div class="section-wrap">
           <h1 class="section-title">Como atualizar o conteúdo</h1>
-          <p class="section-lead">O gerenciador de conteúdo permite editar os textos do site diretamente pelo navegador, sem precisar mexer no código. A atualização é publicada automaticamente em cerca de 60 segundos.</p>
+          <p class="section-lead">O gerenciador de conteúdo permite editar os textos do site diretamente pelo navegador, sem precisar mexer no código. O site será atualizado em ~60 segundos.</p>
 
           <h3 class="body-subhead">Passo a passo</h3>
           <ol class="body-list" style="list-style-type:decimal;padding-left:1.5rem">
@@ -2145,7 +2145,7 @@ async function cmDeleteSection() {
     });
     var saveData = await saveRes.json();
     if (saveData.ok) {
-      statusEl.textContent = 'Excluída! O site atualizará em ~60 segundos.';
+      statusEl.textContent = 'Excluída! O site será atualizado em ~60 segundos.';
       statusEl.className = 'ok';
       // Update live dropdowns
       [document.querySelector('#cm-section-sel option[value="' + id + '"]'),
@@ -2336,7 +2336,7 @@ async function cmAddSection() {
     });
     var saveData = await saveRes.json();
     if (saveData.ok) {
-      statusEl.textContent = 'Seção criada! ' + (saveData.message || 'O site atualizará em ~60 segundos.');
+      statusEl.textContent = 'Seção criada! ' + (saveData.message || 'O site será atualizado em ~60 segundos.');
       statusEl.className = 'ok';
       document.getElementById('cm-new-title').value = '';
     } else {
