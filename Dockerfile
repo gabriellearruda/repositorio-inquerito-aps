@@ -2,8 +2,7 @@ FROM node:20-alpine
 
 WORKDIR /app
 
-COPY package.json ./
-COPY build.cjs server.mjs index.html ./
+COPY package.json server.mjs index.html ./
 COPY vital/ ./vital/
 COPY api/ ./api/
 

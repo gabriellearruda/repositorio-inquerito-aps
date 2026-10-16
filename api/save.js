@@ -33,7 +33,7 @@ export default async function handler(req, res) {
   const { password, html, ping } = req.body || {};
 
   const adminPassword = process.env.SENHADOPAINEL;
-  if (!adminPassword) return res.status(500).json({ error: 'SENHADOPAINEL não configurado no Vercel' });
+  if (!adminPassword) return res.status(500).json({ error: 'SENHADOPAINEL não configurado no servidor' });
   if (password !== adminPassword) return res.status(401).json({ error: 'Senha incorreta' });
 
   attempts.delete(ip);
@@ -41,9 +41,9 @@ export default async function handler(req, res) {
 
   if (!html || typeof html !== 'string') return res.status(400).json({ error: 'HTML inválido' });
 
-  // Garante que o placeholder está presente (senha real nunca commitada)
-  if (!html.includes('__SENHADOPAINEL__')) {
-    return res.status(400).json({ error: 'Conteúdo inválido: placeholder da senha ausente' });
+  // Bloqueia commit acidental da senha real no HTML
+  if (html.includes(adminPassword)) {
+    return res.status(400).json({ error: 'Conteúdo inválido: contém a senha do painel' });
   }
 
   const token = process.env.GITHUB_TOKEN;
@@ -51,7 +51,7 @@ export default async function handler(req, res) {
   const repo  = process.env.GITHUB_REPO  || 'vital-inquerito-whatsapp-documentacao';
   const branch = 'main';
 
-  if (!token) return res.status(500).json({ error: 'GITHUB_TOKEN não configurado no Vercel' });
+  if (!token) return res.status(500).json({ error: 'GITHUB_TOKEN não configurado no servidor' });
 
   try {
     const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/vital/index.html`;

@@ -1,6 +1,3 @@
 {
-  "type": "module",
-  "scripts": {
-    "build": "node build.cjs"
-  }
+  "type": "module"
 }

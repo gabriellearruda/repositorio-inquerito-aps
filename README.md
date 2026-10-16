@@ -20,7 +20,6 @@ Há a pendência de quando a equipe terminar de subir seus conteúdos atualizar 
 │   └── save.js             → Função serverless (Vercel) — gerenciador de conteúdo
 ├── arquivos/               → Documentos e scripts de referência
 ├── docs/                   → PDFs complementares
-├── build.cjs                → Injeta SENHADOPAINEL no HTML antes do deploy
 ├── vercel.json             → Configuração da API no Vercel
 ├── Dockerfile              → Ambiente local (site + API)
 └── .env.example            → Variáveis de ambiente necessárias
@@ -31,9 +30,9 @@ Há a pendência de quando a equipe terminar de subir seus conteúdos atualizar 
 O site estático é servido pelo **GitHub Pages** com deploy automático via
 GitHub Actions a cada push na branch `main` (~60 segundos).
 
-A API (`/api/save`) roda no **Vercel** (função serverless), separada do
-site estático. O script `build.cjs` substitui o placeholder
-`__SENHADOPAINEL__` pela senha real antes do deploy, sem nunca commitá-la.
+A API (`/api/save`) roda no **Vercel** (função serverless). O login do painel
+é validado pela própria API (`{ping: true}`), então a senha nunca vai para o
+HTML. Por isso o painel só funciona onde a API está disponível (Vercel ou Docker).
 
 ## Variáveis de ambiente
 

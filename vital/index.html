@@ -537,32 +537,57 @@ code{font-family:monospace;font-size:.82em;background:#f0ede8;padding:.1em .35em
 </div>
 
 <script>
-var SENHA = '__SENHADOPAINEL__';
+// A senha é validada no servidor (/api/save) e nunca vai no HTML.
+// Fica só no sessionStorage desta aba, para os saves do gerenciador.
+var PWD_KEY = 'vital_pwd';
+var SENHA = sessionStorage.getItem(PWD_KEY) || '';
 var AUTH_KEY = 'vital_auth_ts';
 var AUTH_MAX = 24 * 60 * 60 * 1000; // 24 horas em ms
 
 function isAuthValid() {
   var ts = localStorage.getItem(AUTH_KEY);
-  return ts && (Date.now() - parseInt(ts)) < AUTH_MAX;
+  return SENHA && ts && (Date.now() - parseInt(ts)) < AUTH_MAX;
 }
-function setAuth() {
+function setAuth(pwd) {
+  SENHA = pwd;
+  sessionStorage.setItem(PWD_KEY, pwd);
   localStorage.setItem(AUTH_KEY, String(Date.now()));
 }
 function clearAuth() {
+  SENHA = '';
+  sessionStorage.removeItem(PWD_KEY);
   localStorage.removeItem(AUTH_KEY);
 }
 
-function checkPassword(e) {
+async function checkPassword(e) {
   e.preventDefault();
-  if (document.getElementById('pw-input').value.trim() === SENHA.trim()) {
-    setAuth();
-    document.getElementById('pw-gate').classList.add('hidden');
-  } else {
-    var err = document.getElementById('pw-error');
-    err.style.display = 'block';
-    document.getElementById('pw-input').value = '';
-    document.getElementById('pw-input').focus();
+  var input = document.getElementById('pw-input');
+  var err = document.getElementById('pw-error');
+  var btn = document.getElementById('pw-btn');
+  var pwd = input.value.trim();
+  btn.disabled = true;
+  err.style.display = 'none';
+  try {
+    var res = await fetch('/api/save', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password: pwd, ping: true })
+    });
+    if (res.ok) {
+      setAuth(pwd);
+      document.getElementById('pw-gate').classList.add('hidden');
+      return;
+    }
+    var data = await res.json().catch(function() { return {}; });
+    err.textContent = data.error || 'Senha incorreta';
+  } catch (ex) {
+    err.textContent = 'Erro de conexão com o servidor';
+  } finally {
+    btn.disabled = false;
   }
+  err.style.display = 'block';
+  input.value = '';
+  input.focus();
 }
 function doLogout() {
   clearAuth();

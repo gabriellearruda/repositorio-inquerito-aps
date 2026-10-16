@@ -20,23 +20,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Inject password into vital/index.html
-        run: |
-          node -e "
-            const fs = require('fs');
-            const path = 'vital/index.html';
-            let content = fs.readFileSync(path, 'utf8');
-            const senha = '${{ secrets.SENHADOPAINEL }}';
-            const before = (content.match(/__SENHADOPAINEL__/g) || []).length;
-            content = content.replaceAll('__SENHADOPAINEL__', senha);
-            const after = (content.match(/__SENHADOPAINEL__/g) || []).length;
-            fs.writeFileSync(path, content, 'utf8');
-            console.log('Placeholders antes:', before, '| depois:', after);
-            console.log('Senha recebida tem', senha.length, 'caracteres');
-            content = content.replace('<!-- BUILD: BRANCH -->', '<!-- BUILD: ACTIONS -->');
-            fs.writeFileSync(path, content, 'utf8');
-          "
-
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
